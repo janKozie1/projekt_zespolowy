@@ -1,8 +1,8 @@
 ---
-name: Backend issue
-about: New backend issue
+name: Frontend issue
+about: New frontend issue
 title: ''
-labels: 'backend'
+labels: 'frontend'
 assignees: ''
 
 ---
