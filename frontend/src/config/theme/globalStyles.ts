@@ -1,6 +1,6 @@
 import { css } from 'styled-components';
 
-import { htmlFontScale, letterSpacing } from './typography/sizes';
+import { htmlFontScale, letterSpacing } from './fields/typography/sizes';
 
 import theme from '.';
 
@@ -20,7 +20,7 @@ const globalStyle = css`
   html,
   body,
   body > #root {
-    font-family: ${theme.typefaces.default}, sans-serif;
+    font-family: ${theme.typography.typefaces.default}, sans-serif;
     height: 100%;
     letter-spacing: ${letterSpacing};
     overflow: hidden;
