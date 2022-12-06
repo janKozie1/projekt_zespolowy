@@ -26,6 +26,10 @@ urlpatterns = [
     path("", include(router.urls)),
     path("api-auth/", include("rest_framework.urls", namespace="rest_framework")),
     path('admin/', admin.site.urls),
+    path('api/', include('django.contrib.auth.urls')),
+    path('login_user', views.login_user, name = "login"),
+    path('logout_user', views.logout_user, name = "logout"),
+    path('register_user', views.register_user, name = "register_user"),
     # OpenAPI 3 documentation with Swagger UI
     path("schema/", SpectacularAPIView.as_view(), name="schema"),
     path(
