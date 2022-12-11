@@ -1,5 +1,5 @@
 const typefaces = {
-  default: "'Arial'",
+  default: "'Roboto'",
 } as const;
 
 export type Typeface = keyof typeof typefaces;

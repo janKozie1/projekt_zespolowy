@@ -4,12 +4,14 @@ import sizes from './sizes';
 import type { Typeface } from './typefaces';
 import typefaces from './typefaces';
 
+const typography = {
+  typefaces,
+  sizes,
+};
+
 export type {
   Typeface,
   Size,
 };
 
-export {
-  typefaces,
-  sizes,
-};
+export default typography;
