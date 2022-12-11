@@ -1,14 +1,57 @@
 import type { ReactElement } from 'react';
 
+import { PlayArrow } from '@mui/icons-material';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import styled from 'styled-components';
+
+import { toSpacing } from '../../../config/theme/fields/spacing';
+
+import Columns from '../../atoms/Columns';
 import HomeContainer from '../../atoms/HomeContainer';
-import TextContainer from '../../organisms/TextContainer';
+import Rows from '../../atoms/Rows';
+import Text from '../../atoms/Text';
+
+// TODO remove these once we have fonts & colors
+
+const Play = styled.div`
+  margin-top: ${toSpacing(16)};;
+  width: 84px;
+  height: 84px;
+  border: 2px solid #BCE0FD;
+  border-radius: 100%;
+`;
+
+const LogoSize = styled.div`
+  font-size: 15em;
+  color: white;
+`;
+
+const DescSize = styled.div`
+  font-size: 2em;
+  color: white;
+`;
 
 const Home = (): ReactElement => (
   <HomeContainer>
-    <img src="https://images.pexels.com/photos/5414059/pexels-photo-5414059.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="bg" width="100%" height="100%" />
-    <TextContainer />
+    <Box width="max-content" pb={40}>
+      <Rows gap={2}>
+        <LogoSize>
+          <Columns gap={68}>
+            <Text>Giftology</Text>
+            <Button>
+              <Play>
+                <PlayArrow style={{ minWidth: '29px', minHeight: '79px', color: '#BCAAA4' }} />
+              </Play>
+            </Button>
+          </Columns>
+        </LogoSize>
+        <DescSize>
+          <Text>zaplanuj swój prezent dla bliskiej osoby</Text>
+        </DescSize>
+      </Rows>
+    </Box>
   </HomeContainer>
-
 );
 
 export default Home;

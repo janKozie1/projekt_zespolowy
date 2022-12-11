@@ -5,7 +5,7 @@ import { isNil } from 'lodash';
 import { Outlet, useMatch, useNavigate } from 'react-router';
 
 import navigation from '../../config/navigation';
-import { BaseRoutes, HomeRoutes } from '../../config/paths';
+import { BaseRoutes, DashboardRoutes } from '../../config/paths';
 
 import Nav from './Nav';
 
@@ -15,7 +15,7 @@ const SecureRoutesWrapper = (): ReactElement => {
 
   useEffect(() => {
     if (isInRoot) {
-      navigate(HomeRoutes.HOME);
+      navigate(DashboardRoutes.DASHBOARD);
     }
   }, [navigate, isInRoot]);
 
