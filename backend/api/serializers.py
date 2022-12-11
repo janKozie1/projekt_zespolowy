@@ -1,9 +1,8 @@
-from django.contrib.auth.models import User
 from rest_framework import serializers
-from .models import Example
-     
+from .models import *
 
-class ExampleSerializer(serializers.ModelSerializer):
+
+class RoleSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Example
-        fields = ['exampleString', 'exampleInt']
+        model = Roles
+        fields = ['id', 'name']

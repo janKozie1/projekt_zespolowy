@@ -20,10 +20,10 @@ from api import views
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 
 router = routers.DefaultRouter()
-router.register(r"example", views.CatViewSet, basename='example')
+router.register(r'roles', views.RoleViewSet)
 
 urlpatterns = [
-    path("", include(router.urls)),
+    path("api/", include(router.urls)),
     path("api-auth/", include("rest_framework.urls", namespace="rest_framework")),
     path('admin/', admin.site.urls),
     # OpenAPI 3 documentation with Swagger UI
