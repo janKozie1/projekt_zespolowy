@@ -1,6 +1,7 @@
 import SecureRoutesWrapper from '../components/organisms/SecureRoutesWrapper';
 import calendarRoutes from '../components/pages/Calendar/config';
-import homeRoutes from '../components/pages/Dashboard/config';
+import dashboardRoutes from '../components/pages/Dashboard/config';
+import homeRoutes from '../components/pages/Home/config';
 import productRoutes from '../components/pages/Product/config';
 import profileRoutes from '../components/pages/Profile/config';
 import settingsRoutes from '../components/pages/Settings/config';
@@ -22,6 +23,7 @@ const defaultSecureConfig: RoutesConfig<WrapRoutes<typeof BaseRoutes>> = {
 
 const secureRoutes: AnyRoutesConfig = [
   defaultSecureConfig,
+  dashboardRoutes,
   homeRoutes,
   calendarRoutes,
   productRoutes,

@@ -9,6 +9,10 @@ export const DashboardRoutes = separateOptionalPaths({
   DASHBOARD: '/dashboard',
 } as const);
 
+export const HomeRoutes = separateOptionalPaths({
+  HOME: '/home',
+} as const);
+
 export const StoreRoutes = separateOptionalPaths({
   STORE: '/store',
 } as const);
