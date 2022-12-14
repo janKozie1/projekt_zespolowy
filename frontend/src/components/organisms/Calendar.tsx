@@ -41,7 +41,7 @@ const Calendar = ({ month }: Props): ReactElement => {
     <CalendarGrid>
       {days.map((day) => (day.inCurrentMonth ? (
         <CalendarCell key={day.isoDate}>
-          <Text>{day.date.day}</Text>
+          <Text type="body" variant="default">{day.date.day}</Text>
         </CalendarCell>
       ) : <Box key={day.isoDate} />))}
     </CalendarGrid>
