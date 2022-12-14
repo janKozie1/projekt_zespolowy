@@ -16,24 +16,20 @@ const ImageWrapper = styled.div`
 const MainImageWrapper = styled(ImageWrapper)`
   > img {
     height: ${({ theme }) => theme._.sizes.height.productMainImage};
-    width: ${({ theme }) => theme._.sizes.height.productMainImage};
+    width: ${({ theme }) => theme._.sizes.width.productMainImage};
   }
 `;
 
 type Props = Readonly<{
-  images: string[];
+  mainImage: string;
 }>;
 
-const ProductImages = ({ images }: Props): ReactElement => {
-  const [mainImage] = images;
-
-  return (
-    <Rows gap={5}>
-      <MainImageWrapper>
-        <img src={mainImage} alt="present" />
-      </MainImageWrapper>
-    </Rows>
-  );
-};
+const ProductImages = ({ mainImage }: Props): ReactElement => (
+  <Rows gap={5}>
+    <MainImageWrapper>
+      <img src={mainImage} alt="present" />
+    </MainImageWrapper>
+  </Rows>
+);
 
 export default ProductImages;

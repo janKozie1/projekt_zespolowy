@@ -2,6 +2,7 @@ const width = {
   sidebar: '290px',
   playButton: '84px',
   calendarCell: '44px',
+  productMainImage: '669px',
   discoveryCard: '180px',
 } as const;
 

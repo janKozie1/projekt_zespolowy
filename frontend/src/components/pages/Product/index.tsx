@@ -30,9 +30,7 @@ const Product = (): ReactElement => (
         <Rows gap={4}>
           <ProductLayout>
             <ProductImages
-              images={[
-                'https://gallery.yopriceville.com/var/resizes/Free-Clipart-Pictures/Gifts-and-Chocolates-PNG-/Red_Gift_PNG_Transparent_Clipart.png?m=1639734178',
-              ]}
+              mainImage="https://gallery.yopriceville.com/var/resizes/Free-Clipart-Pictures/Gifts-and-Chocolates-PNG-/Red_Gift_PNG_Transparent_Clipart.png?m=1639734178"
             />
             <Box p={8}>
               <Rows gap={8}>
