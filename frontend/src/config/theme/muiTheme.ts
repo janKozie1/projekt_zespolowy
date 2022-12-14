@@ -1,7 +1,8 @@
 import { createTheme } from '@mui/material/styles';
 
+import borders from './fields/borders';
 import colors from './fields/colors';
-import { toMuiSpacing } from './fields/spacing';
+import { toMuiSpacing, toSpacing } from './fields/spacing';
 
 const muiTheme = createTheme({
   spacing: toMuiSpacing,
@@ -14,6 +15,26 @@ const muiTheme = createTheme({
   },
   typography: {
     fontSize: 22.5,
+  },
+  components: {
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          padding: `${toSpacing(1)} ${toSpacing(3)}`,
+        },
+        outlined: {
+          border: borders.styles.thin.greyscale[50],
+          color: colors.greyscale[100],
+        },
+        contained: {
+          border: borders.styles.thin.greyscale[50],
+          boxShadow: 'none',
+        },
+        text: {
+          color: colors.greyscale[100],
+        },
+      },
+    },
   },
 });
 

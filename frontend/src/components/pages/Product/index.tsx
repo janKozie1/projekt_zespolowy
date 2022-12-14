@@ -1,5 +1,6 @@
 import type { ReactElement } from 'react';
 
+import { Add } from '@mui/icons-material';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import styled from 'styled-components';
@@ -29,53 +30,48 @@ const Product = (): ReactElement => (
         <Rows gap={4}>
           <ProductLayout>
             <ProductImages
-              images={[
-                'https://gallery.yopriceville.com/var/resizes/Free-Clipart-Pictures/Gifts-and-Chocolates-PNG-/Red_Gift_PNG_Transparent_Clipart.png?m=1639734178',
-                'https://img.pikbest.com/png-images/20220312/gift-box-with-ribbons-cartoon-isolated_6291751.png!bwr800',
-                'https://img.pikbest.com/png-images/20220312/gift-box-with-ribbons-cartoon-isolated_6291751.png!bwr800',
-                'https://img.pikbest.com/png-images/20220312/gift-box-with-ribbons-cartoon-isolated_6291751.png!bwr800',
-                'https://img.pikbest.com/png-images/20220312/gift-box-with-ribbons-cartoon-isolated_6291751.png!bwr800',
-              ]}
+              mainImage="https://gallery.yopriceville.com/var/resizes/Free-Clipart-Pictures/Gifts-and-Chocolates-PNG-/Red_Gift_PNG_Transparent_Clipart.png?m=1639734178"
             />
-            <Box py={8}>
-              <Rows gap={16}>
-                <Rows gap={0}>
-                  <Rows gap={16}>
-                    <Text type="heading" variant="h4">Produkt</Text>
-                    <Text type="body" variant="default">
-                      Lorem ipsum dolor sit amet, consetetur sadipscing elitr,
-                      sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.
-                      At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren,
-                      no sea takimata sanctus est Lorem ipsum dolor sit amet.
-                      Lorem ipsum dolor sit amet, consetetur sadipscing elitr,
-                      sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
-                      sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.
-                      Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
-                      Lorem ipsum dolor sit amet, consetetur sadipscing elitr,
-                      sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
-                      sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.
-                      Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
-                      Lorem ipsum dolor sit amet, consetetur sadipscing elitr,
-                      sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.
-                      At vero eos et accusam et justo duo dolores et ea rebum.
-                      Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
-                      Lorem ipsum dolor sit amet, consetetur sadipscing elitr,
-                      sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
-                      sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.
-                      Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
-                      Lorem ipsum dolor sit amet, consetetur sadipscing elitr,
-                      sed diam nonumy eirmod tempor invidunt ut labore et dolore magna
-                    </Text>
-                  </Rows>
+            <Box p={8}>
+              <Rows gap={8}>
+                <Rows gap={16}>
+                  <Text type="heading" variant="h4">Produkt</Text>
+                  <Text type="body" variant="default">
+                    Lorem ipsum dolor sit amet, consetetur sadipscing elitr,
+                    sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.
+                    At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren,
+                    no sea takimata sanctus est Lorem ipsum dolor sit amet.
+                    Lorem ipsum dolor sit amet, consetetur sadipscing elitr,
+                    sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
+                    sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.
+                    Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+                    Lorem ipsum dolor sit amet, consetetur sadipscing elitr,
+                    sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
+                    sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.
+                    Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+                    Lorem ipsum dolor sit amet, consetetur sadipscing elitr,
+                    sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.
+                    At vero eos et accusam et justo duo dolores et ea rebum.
+                    Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+                    Lorem ipsum dolor sit amet, consetetur sadipscing elitr,
+                    sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
+                    sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.
+                    Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+                    Lorem ipsum dolor sit amet, consetetur sadipscing elitr,
+                    sed diam nonumy eirmod tempor invidunt ut labore et dolore magna
+                  </Text>
                 </Rows>
-                <Columns gap={8}>
-                  <Button>
-                    Dodaj do ulubionych
-                  </Button>
-                  <Button>
-                    Kup teraz
-                  </Button>
-                </Columns>
+                <Box display="flex" justifyContent="center">
+                  <Text type="heading" variant="h5">84,95 zł</Text>
+                </Box>
+                <Box width="100%" display="flex" justifyContent="center">
+                  <Box width="max-content">
+                    <Columns gap={2}>
+                      <Button variant="contained" startIcon={<Add />}>Dodaj do Ulubionych</Button>
+                      <Button variant="outlined">Kup Teraz</Button>
+                    </Columns>
+                  </Box>
+                </Box>
               </Rows>
             </Box>
           </ProductLayout>

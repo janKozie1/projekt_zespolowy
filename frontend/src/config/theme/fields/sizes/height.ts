@@ -1,9 +1,8 @@
 const height = {
   calendarCell: '44px',
-  discoveryCard: '307px',
+  discoveryCard: '275px',
+  productMainImage: '669px',
   playButton: '84px',
-  productMainImage: '520px',
-  productSmallImage: '150px',
 } as const;
 
 export type Height = typeof height;

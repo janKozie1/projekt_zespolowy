@@ -5,7 +5,7 @@ const sizes = {
   400: '1.6rem',
   500: '1.8rem',
   600: '2.0rem',
-  700: '3.4rem',
+  700: '3.0rem',
   1000: '9.6rem',
 } as const;
 

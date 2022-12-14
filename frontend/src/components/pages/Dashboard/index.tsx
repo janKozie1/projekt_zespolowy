@@ -20,7 +20,7 @@ import DiscoveryCard from '../../organisms/DiscoveryCard';
 const DashboardLayout = styled.div`
   display: grid;
   height: 100%;
-  gap: ${toSpacing(8)};
+  gap: ${toSpacing(4)};
   grid-template-columns: repeat(4, 1fr);
   grid-template-rows: 1fr auto;
   grid-template-areas:
@@ -30,19 +30,19 @@ const DashboardLayout = styled.div`
 
 const Dashboard = (): ReactElement => (
   <PageContainer>
-    <Rows gap={8}>
+    <Rows gap={4}>
       <PageHeader title="Dashboard" />
       <DashboardLayout>
         <Tile gridArea="calendar">
-          <Rows gap={8}>
+          <Rows gap={4}>
             <Text type="heading" variant="h4">Kalendarz</Text>
-            <Box pb={8} width="100%" display="flex" justifyContent="center" alignItems="center">
+            <Box pb={4} width="100%" display="flex" justifyContent="center" alignItems="center">
               <Calendar month={new Date()} />
             </Box>
           </Rows>
         </Tile>
         <Tile gridArea="upcoming">
-          <Rows gap={8}>
+          <Rows gap={4}>
             <Text type="heading" variant="h4">Nadchodzące</Text>
             <Rows gap={4}>
               <Rows gap={2}>
@@ -66,9 +66,9 @@ const Dashboard = (): ReactElement => (
           </Rows>
         </Tile>
         <Tile gridArea="addNew">
-          <Rows gap={8}>
+          <Rows gap={3}>
             <Text type="heading" variant="h4">Zaplanuj coś nowego</Text>
-            <Box display="flex" flexDirection="column" width="max-content" alignItems="flex-start">
+            <Box display="flex" flexDirection="column" width="max-content" alignItems="flex-start" gap={4}>
               <Button variant="text" startIcon={<Add />}>Dodaj wydarzenie</Button>
               <Button variant="text" startIcon={<Add />}>Dodaj pomysł</Button>
               <Button variant="text" startIcon={<Add />}>Dodaj osobę</Button>
@@ -76,7 +76,7 @@ const Dashboard = (): ReactElement => (
           </Rows>
         </Tile>
         <Tile gridArea="explore">
-          <Rows gap={8}>
+          <Rows gap={4}>
             <Text type="heading" variant="h4">Odkrywaj</Text>
             <Box>
               <DiscoveryCard />
@@ -84,7 +84,7 @@ const Dashboard = (): ReactElement => (
           </Rows>
         </Tile>
         <Tile gridArea="news">
-          <Rows gap={8}>
+          <Rows gap={4}>
             <Text type="heading" variant="h4">Aktualizacje</Text>
             <Text type="body" variant="default">Paczka została nadana dla: Zosia</Text>
           </Rows>
