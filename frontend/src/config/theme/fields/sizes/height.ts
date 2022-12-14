@@ -1,6 +1,7 @@
 const height = {
   calendarCell: '44px',
-  discoveryCard: '275px',
+  discoveryCard: '307px',
+  playButton: '84px',
   productMainImage: '520px',
   productSmallImage: '150px',
 } as const;

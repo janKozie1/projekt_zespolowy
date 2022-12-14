@@ -3,6 +3,7 @@ import colors from './colors';
 
 const widths = {
   thin: '1px',
+  default: '2px',
 };
 
 const createBorders = <T extends keyof Colors>(
@@ -20,15 +21,11 @@ const borders = {
   },
   widths,
   styles: {
-    active: {
-    },
-    focus: {
-
+    default: {
+      accent: createBorders('default', 'accent'),
     },
     thin: {
-      grey: createBorders('thin', 'grey'),
-      black: createBorders('thin', 'black'),
-      white: createBorders('thin', 'white'),
+      greyscale: createBorders('thin', 'greyscale'),
     },
   },
 } as const;

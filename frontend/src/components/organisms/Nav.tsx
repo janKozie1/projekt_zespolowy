@@ -10,6 +10,7 @@ import { toSpacing } from '../../config/theme/fields/spacing';
 import type { NonMutable } from '../../utils/types';
 
 import Rows from '../atoms/Rows';
+import Icon from '../molecules/Icon';
 import NavItem from '../molecules/NavItem';
 
 type NavContainerProps = Readonly<{
@@ -29,7 +30,8 @@ const NavSidebarContaier = styled.div<NavContainerProps>`
 
 const NavHeaderContainer = styled.div`
   width: 100%;
-  background-color: ${({ theme }) => theme._.colors.white[100]};
+  background-color: ${({ theme }) => theme._.colors.accent.primary};
+  box-shadow: ${({ theme }) => theme._.shadows.strong};
   padding: ${toSpacing(5)};
   position: relative;
   z-index: 3;
@@ -55,7 +57,9 @@ const Nav = ({ navigation, children }: Props): ReactElement => {
     <Box display="flex" flexDirection="column" height="100%" width="100%">
       <NavHeaderContainer>
         <IconButton onClick={() => setExpanded((prev) => !prev)}>
-          <Menu />
+          <Icon size="lg">
+            <Menu />
+          </Icon>
         </IconButton>
       </NavHeaderContainer>
       <Box display="flex" flexDirection="row" width="100%" flexGrow="1" overflow="hidden">

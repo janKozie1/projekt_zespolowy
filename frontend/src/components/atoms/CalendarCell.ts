@@ -6,7 +6,7 @@ const CalendarCell = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  border: ${({ theme }) => theme._.borders.styles.thin.black[100]};
+  border: ${({ theme }) => theme._.borders.styles.thin.greyscale[100]};
   border-radius: ${({ theme }) => theme._.borders.radii.md};
   cursor: pointer;
 `;

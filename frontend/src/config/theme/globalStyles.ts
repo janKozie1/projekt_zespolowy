@@ -7,8 +7,6 @@ import theme from '.';
 const globalStyle = css`
   * {
     box-sizing: border-box;
-    font-family: inherit;
-    letter-spacing: inherit;
     margin: 0;
     padding: 0;
   }
@@ -24,6 +22,11 @@ const globalStyle = css`
     height: 100%;
     letter-spacing: ${letterSpacing};
     overflow: hidden;
+
+    * {
+      font-family: inherit;
+      letter-spacing: inherit;
+    }
   }
   body > #root {
     display: flex;

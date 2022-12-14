@@ -1,6 +1,7 @@
 import type { ReactElement } from 'react';
 
 import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 import styled from 'styled-components';
 
 import { toSpacing } from '../../../config/theme/fields/spacing';
@@ -40,31 +41,40 @@ const Product = (): ReactElement => (
               <Rows gap={16}>
                 <Rows gap={0}>
                   <Rows gap={16}>
-                    <Text><h1>Title</h1></Text>
-                    <Text>
-                      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-                    </Text>
-                  </Rows>
-                  <Rows gap={2}>
-                    <Text>
-                      aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi
-                    </Text>
-                    <Text>
-                      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-                    </Text>
-                  </Rows>
-                  <Rows gap={8}>
-                    <Text>
-                      It is a long established fact that a reader will be distracted by the readable content
-                    </Text>
-                    <Text>
-                      packages and web page editors now use Lorem Ipsum as their
+                    <Text type="heading" variant="h4">Produkt</Text>
+                    <Text type="body" variant="default">
+                      Lorem ipsum dolor sit amet, consetetur sadipscing elitr,
+                      sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.
+                      At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren,
+                      no sea takimata sanctus est Lorem ipsum dolor sit amet.
+                      Lorem ipsum dolor sit amet, consetetur sadipscing elitr,
+                      sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
+                      sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.
+                      Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+                      Lorem ipsum dolor sit amet, consetetur sadipscing elitr,
+                      sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
+                      sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.
+                      Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+                      Lorem ipsum dolor sit amet, consetetur sadipscing elitr,
+                      sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.
+                      At vero eos et accusam et justo duo dolores et ea rebum.
+                      Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+                      Lorem ipsum dolor sit amet, consetetur sadipscing elitr,
+                      sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
+                      sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.
+                      Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+                      Lorem ipsum dolor sit amet, consetetur sadipscing elitr,
+                      sed diam nonumy eirmod tempor invidunt ut labore et dolore magna
                     </Text>
                   </Rows>
                 </Rows>
                 <Columns gap={8}>
-                  <Text>#ŚWIĘTA</Text>
-                  <Text>#OZDOBNE</Text>
+                  <Button>
+                    Dodaj do ulubionych
+                  </Button>
+                  <Button>
+                    Kup teraz
+                  </Button>
                 </Columns>
               </Rows>
             </Box>
