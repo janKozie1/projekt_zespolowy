@@ -9,7 +9,7 @@ type Props = ComponentProps<typeof Tile> & Readonly<{
 
 const PageHeader = ({ title, ...props }: Props): ReactElement => (
   <Tile width="100%" textAlign="left" {...props}>
-    <Text>
+    <Text type="subtitle" variant="default">
       {title}
     </Text>
   </Tile>

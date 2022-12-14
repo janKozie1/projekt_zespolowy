@@ -7,6 +7,7 @@ import styled from 'styled-components';
 
 import { toSpacing } from '../../../config/theme/fields/spacing';
 
+import Columns from '../../atoms/Columns';
 import PageContainer from '../../atoms/PageContainer';
 import Rows from '../../atoms/Rows';
 import Text from '../../atoms/Text';
@@ -19,35 +20,6 @@ const ProductLayout = styled.div`
   grid-template-columns: 8fr 10fr;
   grid-auto-flow: column;
   gap: ${toSpacing(15)};
-`;
-
-const ButtonFavourite = styled.div`
-  background-color:#D7CCC8;
-  border-radius: ${toSpacing(0.5)};
-  margin:${toSpacing(2)};
-  border: 1px solid #B8B8B8;
-  border-radius: 4px;
-`;
-
-const ButtonBuy = styled.div`
-  background-color:#ffffff;
-  border-radius: ${toSpacing(0.5)};
-  margin:${toSpacing(2)};
-  border: 1px solid #B8B8B8;
-  border-radius: 4px;
-`;
-
-const StyledButton = styled(Button)`
-  color: #303030;
-  height:${toSpacing(10)};
-  font-size:14px;
-`;
-
-const ButtonLayout = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width:100%;
 `;
 
 const Product = (): ReactElement => (
@@ -65,37 +37,43 @@ const Product = (): ReactElement => (
             <Box p={8}>
               <Rows gap={8}>
                 <Rows gap={16}>
-                  <Text><h1 style={{ fontSize: '90px' }}>Title</h1></Text>
-                  <Text>
-                    <p style={{ fontSize: '16px' }}>
-                      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-                      aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi
-                      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-                      aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi
-                      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-                      aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi
-                      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-                      aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi
-                      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-                      aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi
-                      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-                      aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi
-                      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-                      aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi
-                      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-                      aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi
-                    </p>
+                  <Text type="heading" variant="h4">Produkt</Text>
+                  <Text type="body" variant="default">
+                    Lorem ipsum dolor sit amet, consetetur sadipscing elitr,
+                    sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.
+                    At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren,
+                    no sea takimata sanctus est Lorem ipsum dolor sit amet.
+                    Lorem ipsum dolor sit amet, consetetur sadipscing elitr,
+                    sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
+                    sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.
+                    Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+                    Lorem ipsum dolor sit amet, consetetur sadipscing elitr,
+                    sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
+                    sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.
+                    Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+                    Lorem ipsum dolor sit amet, consetetur sadipscing elitr,
+                    sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.
+                    At vero eos et accusam et justo duo dolores et ea rebum.
+                    Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+                    Lorem ipsum dolor sit amet, consetetur sadipscing elitr,
+                    sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
+                    sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.
+                    Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+                    Lorem ipsum dolor sit amet, consetetur sadipscing elitr,
+                    sed diam nonumy eirmod tempor invidunt ut labore et dolore magna
                   </Text>
                 </Rows>
-                <Text><h2 style={{ textAlign: 'center', fontSize: '60px' }}>84,49zł</h2></Text>
-                <ButtonLayout>
-                  <ButtonFavourite>
-                    <StyledButton startIcon={<Add />}>Dodaj do Ulubionych</StyledButton>
-                  </ButtonFavourite>
-                  <ButtonBuy>
-                    <StyledButton>Kup Teraz</StyledButton>
-                  </ButtonBuy>
-                </ButtonLayout>
+                <Box display="flex" justifyContent="center">
+                  <Text type="heading" variant="h5">84,95 zł</Text>
+                </Box>
+                <Box width="100%" display="flex" justifyContent="center">
+                  <Box width="max-content">
+                    <Columns gap={2}>
+                      <Button variant="contained" startIcon={<Add />}>Dodaj do Ulubionych</Button>
+                      <Button variant="outlined">Kup Teraz</Button>
+                    </Columns>
+                  </Box>
+                </Box>
               </Rows>
             </Box>
           </ProductLayout>

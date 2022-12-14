@@ -8,7 +8,7 @@ const OuterContainer = styled.div`
   width: 100%;
   height: 100%;
   overflow: auto;
-  background-color: ${({ theme }) => theme._.colors.grey[10]};
+  background-color: ${({ theme }) => theme._.colors.greyscale[10]};
 `;
 
 const InnerContainer = styled.div`

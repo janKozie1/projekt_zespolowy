@@ -1,7 +1,7 @@
 import type { ReactElement } from 'react';
 
 import {
-  Home, LocalGroceryStore, CalendarMonth, Person, Settings,
+  HomeOutlined, LocalGroceryStoreOutlined, CalendarMonthOutlined, PersonOutlined, SettingsOutlined,
 } from '@mui/icons-material';
 
 import {
@@ -35,31 +35,31 @@ const navigation: readonly NavGroup[] = [
       {
         id: 'dashboard',
         title: 'Dashboard',
-        icon: <Home />,
+        icon: <HomeOutlined />,
         url: DashboardRoutes.DASHBOARD,
       },
       {
         id: 'store',
         title: 'Sklep',
-        icon: <LocalGroceryStore />,
+        icon: <LocalGroceryStoreOutlined />,
         url: StoreRoutes.STORE,
       },
       {
         id: 'calendar',
         title: 'Kalendarz',
-        icon: <CalendarMonth />,
+        icon: <CalendarMonthOutlined />,
         url: CalendarRoutes.CALENDAR,
       },
       {
         id: 'profile',
         title: 'Profil',
-        icon: <Person />,
+        icon: <PersonOutlined />,
         url: ProfileRoutes.profile,
       },
       {
         id: 'settings',
         title: 'Ustawienia',
-        icon: <Settings />,
+        icon: <SettingsOutlined />,
         url: SettingsRoutes.SETTINGS,
       },
     ],
