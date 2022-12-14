@@ -1,11 +1,12 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from .models import Example
 from .serializers import ExampleSerializer
 from django.contrib.auth import authenticate, login, logout
-from django.contrib import messages
-from django.contrib.auth.forms import UserCreationForm
+from django.http import JsonResponse
+from django.views.decorators.csrf import ensure_csrf_cookie
+from django.views.decorators.http import require_POST
 
 class CatViewSet(viewsets.ModelViewSet):
     queryset = Example.objects.all()
@@ -22,40 +23,42 @@ class CatViewSet(viewsets.ModelViewSet):
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-def login_user(request):
-    if request.method == "POST":
-        username = request.POST['username']
-        password = request.POST['password']
-        user = authenticate(request, username=username, password=password)
-        if user is not None:
-            login(request, user)
-            return redirect('home')
-        else:
-            messages.success(request, ("There was an error logging in, Try again..."))
-            return redirect('login')
-    else:
-        return render(request, 'authenticate/login.html', {})
-        #TODO connect it to frontend
+@require_POST
+def login_view(request):
+    data = json.loads(request.body)
+    username = data.get('username')
+    password = data.get('password')
 
-def logout_user(request):
-	logout(request)
-	messages.success(request, ("You were logged out!"))
-	return redirect('home')
+    if username is None or password is None:
+        return JsonResponse({'detail': 'Please provide username and password.'}, status=400)
+
+    user = authenticate(username=username, password=password)
+
+    if user is None:
+        return JsonResponse({'detail': 'Invalid credentials.'}, status=400)
+
+    login(request, user)
+    return JsonResponse({'detail': 'Successfully logged in.'})
 
 
-def register_user(request):
-	if request.method == "POST":
-		form = RegisterUserForm(request.POST)
-		if form.is_valid():
-			form.save()
-			username = form.cleaned_data['username']
-			password = form.cleaned_data['password1']
-			user = authenticate(username=username, password=password)
-			login(request, user)
-			messages.success(request, ("Registration successful!"))
-			return redirect('home')
-	else:
-		form = RegisterUserForm()
+def logout_view(request):
+    if not request.user.is_authenticated:
+        return JsonResponse({'detail': 'You\'re not logged in.'}, status=400)
 
-	return render(request, 'authenticate/register_user.html', {'form':form,})
-        #TODO connect it to frontend
+    logout(request)
+    return JsonResponse({'detail': 'Successfully logged out.'})
+
+
+@ensure_csrf_cookie
+def session_view(request):
+    if not request.user.is_authenticated:
+        return JsonResponse({'isAuthenticated': False})
+
+    return JsonResponse({'isAuthenticated': True})
+
+
+def whoami_view(request):
+    if not request.user.is_authenticated:
+        return JsonResponse({'isAuthenticated': False})
+
+    return JsonResponse({'username': request.user.username})

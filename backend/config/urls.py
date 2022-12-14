@@ -14,6 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
+from django.shortcuts import render
 from django.urls import path, include
 from rest_framework import routers
 from api import views
@@ -26,10 +27,10 @@ urlpatterns = [
     path("", include(router.urls)),
     path("api-auth/", include("rest_framework.urls", namespace="rest_framework")),
     path('admin/', admin.site.urls),
-    path('api/', include('django.contrib.auth.urls')),
-    path('login_user', views.login_user, name = "login"),
-    path('logout_user', views.logout_user, name = "logout"),
-    path('register_user', views.register_user, name = "register_user"),
+    path('login/', views.login_view, name='api-login'),
+    path('logout/', views.logout_view, name='api-logout'),
+    path('session/', views.session_view, name='api-session'),
+    path('whoami/', views.whoami_view, name='api-whoami'),
     # OpenAPI 3 documentation with Swagger UI
     path("schema/", SpectacularAPIView.as_view(), name="schema"),
     path(
