@@ -1,7 +1,7 @@
 import type { ReactElement } from 'react';
 
 import {
-  HomeOutlined, LocalGroceryStoreOutlined, CalendarMonthOutlined, PersonOutlined, SettingsOutlined,
+  HomeOutlined, LocalGroceryStoreOutlined, CalendarMonthOutlined, PersonOutlined, SettingsOutlined, LogoutOutlined,
 } from '@mui/icons-material';
 
 import {
@@ -10,6 +10,7 @@ import {
   CalendarRoutes,
   ProfileRoutes,
   SettingsRoutes,
+  AuthRoutes,
 } from './paths';
 
 export type NavItem = Readonly<{
@@ -28,7 +29,6 @@ export type NavGroup = Readonly<{
 }>;
 
 const navigation: readonly NavGroup[] = [
-
   {
     id: 'main',
     items: [
@@ -63,6 +63,15 @@ const navigation: readonly NavGroup[] = [
         url: SettingsRoutes.SETTINGS,
       },
     ],
+  },
+];
+
+export const authNavigation: NavGroup['items'] = [
+  {
+    id: 'logout',
+    title: 'Wyloguj',
+    icon: <LogoutOutlined />,
+    url: AuthRoutes.LOGOUT,
   },
 ];
 

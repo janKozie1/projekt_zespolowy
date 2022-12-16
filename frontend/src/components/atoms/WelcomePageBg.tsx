@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-const HomeContainer = styled.div`
+const WelcomePageBg = styled.div`
   width: 100%;
   height: 100%;
   display: flex;
@@ -12,4 +12,4 @@ const HomeContainer = styled.div`
   background-size: cover;
 `;
 
-export default HomeContainer;
+export default WelcomePageBg;

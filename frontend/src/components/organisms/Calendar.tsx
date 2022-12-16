@@ -1,7 +1,8 @@
 import type { ReactElement } from 'react';
 
-import Box from '@mui/material/Box';
 import { DateTime } from 'luxon';
+
+import Box from '@mui/material/Box';
 
 import CalendarCell from '../atoms/CalendarCell';
 import CalendarGrid from '../atoms/CalendarGrid';
