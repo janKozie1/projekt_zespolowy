@@ -7,6 +7,12 @@ import sizes from '../../config/theme/fields/typography/sizes';
 
 const types = {
   heading: {
+    h2: {
+      size: sizes[900],
+      weight: 'normal',
+      color: colors.greyscale[100],
+      textTransform: 'none',
+    },
     h4: {
       size: sizes[700],
       weight: 'normal',
