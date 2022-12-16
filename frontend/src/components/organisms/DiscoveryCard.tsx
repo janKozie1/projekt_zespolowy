@@ -1,8 +1,9 @@
 import type { ReactElement } from 'react';
 
+import styled from 'styled-components';
+
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import styled from 'styled-components';
 
 import Rows from '../atoms/Rows';
 import Text from '../atoms/Text';

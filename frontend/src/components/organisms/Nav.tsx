@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import type { ReactElement, ReactNode } from 'react';
 
+import styled from 'styled-components';
+
 import { Menu } from '@mui/icons-material';
 import { Box, IconButton } from '@mui/material';
-import styled from 'styled-components';
 
 import type { NavGroup } from '../../config/navigation';
 import { toSpacing } from '../../config/theme/fields/spacing';
@@ -24,7 +25,7 @@ const NavSidebarContaier = styled.div<NavContainerProps>`
   transition: transform 0.3s;
   position: absolute;
   transform: translateX(calc(-1 * ${({ expanded, theme }) => (expanded ? '0px' : theme._.sizes.width.sidebar)}));
-  padding-top: ${toSpacing(14)};
+  padding: ${toSpacing(14)} 0;
   z-index: 2;
 `;
 
@@ -47,10 +48,11 @@ const ChildrenContainer = styled.div<NavContainerProps>`
 
 type Props = Readonly<{
   navigation: NonMutable<NavGroup[]>;
+  authNav: NonMutable<NavGroup['items']>;
   children: ReactNode;
 }>;
 
-const Nav = ({ navigation, children }: Props): ReactElement => {
+const Nav = ({ navigation, authNav, children }: Props): ReactElement => {
   const [expanded, setExpanded] = useState(true);
 
   return (
@@ -62,15 +64,24 @@ const Nav = ({ navigation, children }: Props): ReactElement => {
           </Icon>
         </IconButton>
       </NavHeaderContainer>
-      <Box display="flex" flexDirection="row" width="100%" flexGrow="1" overflow="hidden">
+      <Box display="flex" flexDirection="row" width="100%" flexGrow="1" overflow="hidden" position="relative">
         <NavSidebarContaier expanded={expanded}>
-          {navigation.map((navGroup) => (
-            <Rows gap={5} key={navGroup.id}>
-              {navGroup.items.map((navItem) => (
-                <NavItem key={navItem.id} item={navItem} />
-              ))}
-            </Rows>
-          ))}
+          <Box display="flex" flexDirection="column" height="100%" flexGrow="1" position="relative" justifyContent="space-between">
+            {navigation.map((navGroup) => (
+              <Rows gap={5} key={navGroup.id}>
+                {navGroup.items.map((navItem) => (
+                  <NavItem key={navItem.id} item={navItem} />
+                ))}
+              </Rows>
+            ))}
+            <Box>
+              <Rows gap={5}>
+                {authNav.map((navItem) => (
+                  <NavItem key={navItem.id} item={navItem} />
+                ))}
+              </Rows>
+            </Box>
+          </Box>
         </NavSidebarContaier>
         <ChildrenContainer expanded={expanded}>
           {children}

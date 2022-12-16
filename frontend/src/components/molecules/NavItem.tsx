@@ -1,10 +1,11 @@
 import type { ReactElement } from 'react';
 
-import { ArrowForwardIosOutlined } from '@mui/icons-material';
-import { Box } from '@mui/material';
 import { isNil } from 'lodash';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+
+import { ArrowForwardIosOutlined } from '@mui/icons-material';
+import { Box } from '@mui/material';
 
 import type { NavItem as NavItemType } from '../../config/navigation';
 

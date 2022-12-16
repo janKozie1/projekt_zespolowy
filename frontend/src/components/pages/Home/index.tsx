@@ -1,12 +1,13 @@
 import type { ReactElement } from 'react';
 
-import Box from '@mui/material/Box';
 import styled from 'styled-components';
 
+import Box from '@mui/material/Box';
+
 import Columns from '../../atoms/Columns';
-import HomeContainer from '../../atoms/HomeContainer';
 import Rows from '../../atoms/Rows';
 import Text from '../../atoms/Text';
+import WelcomePageBg from '../../atoms/WelcomePageBg';
 
 import PlayButton from './components/molecules/PlayButton';
 
@@ -15,7 +16,7 @@ const MainText = styled.span`
 `;
 
 const Home = (): ReactElement => (
-  <HomeContainer>
+  <WelcomePageBg>
     <Box width="max-content" pb={40} pr={30}>
       <Columns gap={40}>
         <Rows gap={8}>
@@ -33,7 +34,7 @@ const Home = (): ReactElement => (
         </Box>
       </Columns>
     </Box>
-  </HomeContainer>
+  </WelcomePageBg>
 );
 
 export default Home;
