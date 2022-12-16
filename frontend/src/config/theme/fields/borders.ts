@@ -23,6 +23,7 @@ const borders = {
   styles: {
     default: {
       accent: createBorders('default', 'accent'),
+      greyscale: createBorders('default', 'greyscale'),
     },
     thin: {
       greyscale: createBorders('thin', 'greyscale'),
