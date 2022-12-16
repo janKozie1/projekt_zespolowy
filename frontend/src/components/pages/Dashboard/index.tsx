@@ -1,9 +1,10 @@
 import type { ReactElement } from 'react';
 
+import styled from 'styled-components';
+
 import { FavoriteBorder, Close, Add } from '@mui/icons-material';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import styled from 'styled-components';
 
 import { toSpacing } from '../../../config/theme/fields/spacing';
 

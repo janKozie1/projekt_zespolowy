@@ -17,6 +17,15 @@ const muiTheme = createTheme({
     fontSize: 22.5,
   },
   components: {
+    MuiInputBase: {
+      styleOverrides: {
+        root: {
+          '& > input': {
+            padding: `${toSpacing(3)} ${toSpacing(3)}`,
+          },
+        },
+      },
+    },
     MuiButton: {
       styleOverrides: {
         root: {

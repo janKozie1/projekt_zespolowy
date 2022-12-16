@@ -1,5 +1,6 @@
-import MuiIcon from '@mui/material/Icon';
 import styled from 'styled-components';
+
+import MuiIcon from '@mui/material/Icon';
 
 import type { IconSizes } from '../../config/theme/fields/icons';
 
