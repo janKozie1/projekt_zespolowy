@@ -20,7 +20,15 @@ from api import views
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 
 router = routers.DefaultRouter()
-router.register(r'roles', views.RoleViewSet)
+# TODO I think we can attach authentication views created in issue #9 by @VV1S here
+# router.register(r'auth/login', views.login_view, name='api-login')
+# router.register(r'auth/register', views.logout_view, name='api-logout')
+router.register(r'dashboard', views.DashboardViewSet, basename='dashboard')
+router.register(r'products', views.ProductsViewSet, basename='products')
+router.register(r'cart', views.CartViewSet, basename='cart')
+router.register(r'profile', views.ProfileViewSet, basename='profile')
+router.register(r'calendar', views.CalendarViewSet, basename='calendar')
+
 
 urlpatterns = [
     path("api/", include(router.urls)),
