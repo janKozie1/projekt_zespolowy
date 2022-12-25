@@ -55,9 +55,11 @@ export const makeLocalStorageAPI = (): SyncApi => ({
           categories: createPayload.categories,
           date: createPayload.date,
           description: createPayload.description,
+          repeatsEvery: createPayload.repeatsEvery,
           members: createPayload.members,
           name: createPayload.name,
           owner: loggedInUser.id,
+          repeated: false,
           createdAt: new Date(),
         };
 

@@ -1,5 +1,7 @@
 import * as yup from 'yup';
 
+import { RepeatsEvery } from '../../../services/api/types/data';
+
 const formSchema = yup.object({
   name: yup
     .string()
@@ -11,6 +13,10 @@ const formSchema = yup.object({
     .array(yup
       .string()
       .required())
+    .required(),
+  repeatsEvery: yup
+    .mixed<RepeatsEvery>()
+    .oneOf(Object.values(RepeatsEvery))
     .required(),
   categories: yup
     .array(yup

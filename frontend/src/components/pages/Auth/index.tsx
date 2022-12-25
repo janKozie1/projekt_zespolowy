@@ -10,7 +10,7 @@ import TabList from '@mui/lab/TabList';
 import Tab from '@mui/material/Tab';
 
 import { AuthRoutes, BaseRoutes, HomeRoutes } from '../../../config/paths';
-import usePromise, { emptyArgs } from '../../../hooks/usePromise';
+import useApiRequest, { emptyArgs } from '../../../hooks/useApiRequest';
 
 import Rows from '../../atoms/Rows';
 import Tile from '../../atoms/Tile';
@@ -26,10 +26,10 @@ type Props = Readonly<{
 }>;
 
 const AuthPage = ({ type }: Props): ReactElement | null => {
-  const api = useAPI();
+  const { api } = useAPI();
   const navigate = useNavigate();
 
-  const [loggedInUser, { loading }] = usePromise(api.auth.loggedInUser, { immediateArgs: emptyArgs });
+  const [loggedInUser, { loading }] = useApiRequest(api.auth.loggedInUser, { immediateArgs: emptyArgs });
 
   const switchType = () => {
     navigate(type === 'login' ? AuthRoutes.REGISTER : AuthRoutes.LOGIN);

@@ -1,3 +1,11 @@
+export enum RepeatsEvery {
+  never = 'never',
+  week = 'week',
+  month = 'month',
+  year = 'year',
+  decade = 'decade',
+}
+
 export type User = Readonly<{
   id: string;
   email: string;
@@ -13,11 +21,13 @@ export type Event = Readonly<{
   id: string;
   name: string;
   description: string;
+  repeated: boolean;
   date: Date;
   createdAt: Date;
   owner: User['id'];
   members: User['id'][];
   categories: EventCategory['id'][];
+  repeatsEvery: RepeatsEvery;
 }>;
 
 export type Store = Readonly<{

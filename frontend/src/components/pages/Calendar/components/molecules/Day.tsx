@@ -6,9 +6,9 @@ import Box from '@mui/material/Box';
 
 import { toSpacing } from '../../../../../config/theme/fields/spacing';
 import type { CalendarDay } from '../../../../../hooks/useCalendar';
-import type { Event } from '../../../../../services/api/types/data';
 import Text from '../../../../atoms/Text';
 import Loading from '../../../../molecules/Loading';
+import type { ParsedEvent } from '../../dataTransformation';
 
 import EventTile from './EventTile';
 
@@ -58,12 +58,13 @@ type Props = Readonly<{
   current: boolean;
   highlighted: boolean;
   loading: boolean;
-  events: Event[];
+  events: ParsedEvent[];
   onClick: (day: CalendarDay) => void;
+  onEventClick: (event: ParsedEvent) => void;
 }>;
 
 const Day = ({
-  day, current, highlighted, onClick, loading, events,
+  day, current, highlighted, onClick, onEventClick, loading, events,
 }: Props): ReactElement => (
   <DayContainer highlighted={highlighted} onClick={() => onClick(day)}>
     <CurrentDayWrapper current={current}>
@@ -78,7 +79,7 @@ const Day = ({
         </Box>
       ) : (
         <Box mt={2}>
-          {events.map((event) => <EventTile key={event.id} event={event} />)}
+          {events.map((event) => <EventTile onClick={onEventClick} key={event.id} event={event} />)}
         </Box>
       )}
     </Box>

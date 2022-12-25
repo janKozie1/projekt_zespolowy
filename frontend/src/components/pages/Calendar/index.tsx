@@ -8,14 +8,11 @@ import { ArrowForwardIosOutlined, ArrowBackIosOutlined } from '@mui/icons-materi
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 
+import useApiRequest, { emptyArgs } from '../../../hooks/useApiRequest';
 import type { CalendarDay } from '../../../hooks/useCalendar';
 import useCalendar from '../../../hooks/useCalendar';
 import { useDrawers } from '../../../hooks/useDrawers';
-import usePromise, { emptyArgs } from '../../../hooks/usePromise';
-import type { Event } from '../../../services/api/types/data';
-import { AddEventDrawerModel } from '../../../services/drawers/models';
-import { isEmpty } from '../../../utils/guards';
-import type { Nullable } from '../../../utils/types';
+import { AddEventDrawerModel, EditEventDrawerModel } from '../../../services/drawers/models';
 
 import CalendarGrid from '../../atoms/CalendarGrid';
 import Columns from '../../atoms/Columns';
@@ -26,25 +23,13 @@ import Tile from '../../atoms/Tile';
 import Icon from '../../molecules/Icon';
 import PageHeader from '../../molecules/PageHeader';
 import { useAPI } from '../../organisms/ApiProvider';
+import { useConstantData } from '../../organisms/ConstantDataProvider';
 import { isDrawer } from '../../organisms/DrawersProvider';
 
+import type { ParsedEvent } from './dataTransformation';
+import { parseEvents } from './dataTransformation';
+
 import Day from './components/molecules/Day';
-
-const parseEvents = (events: Nullable<Event[]>): Map<string, Event[]> => {
-  if (isEmpty(events)) {
-    return new Map<string, Event[]>();
-  }
-
-  return events.reduce<Map<string, Event[]>>((acc, event) => {
-    const dateKey = DateTime.fromJSDate(event.date).toISODate();
-    const alreadyExisting = acc.get(dateKey) ?? [];
-    alreadyExisting.push(event);
-
-    acc.set(dateKey, alreadyExisting);
-
-    return acc;
-  }, new Map());
-};
 
 const CalendarLayout = styled(CalendarGrid)`
   width: 100%;
@@ -53,15 +38,26 @@ const CalendarLayout = styled(CalendarGrid)`
 const Calendar = (): ReactElement => {
   const calendar = useCalendar();
   const drawers = useDrawers();
-  const api = useAPI();
+  const { eventCategories, users } = useConstantData();
 
-  const [events, { loading }] = usePromise(api.event.allUserEvents, {
+  const { api } = useAPI();
+
+  const { year } = calendar.month;
+
+  const [events, { loading: eventsLoading }] = useApiRequest(api.event.allUserEvents, {
     immediateArgs: emptyArgs,
   });
-  const parsedEvents = useMemo(() => parseEvents(events?.data), [events]);
+
+  const parsedEvents = useMemo(() => parseEvents(
+    events?.data, eventCategories, users, year,
+  ), [events, eventCategories, users, year]);
 
   const onDayClick = (day: CalendarDay) => {
     drawers.open(AddEventDrawerModel({ date: day.date.toJSDate() }));
+  };
+
+  const onEventClick = (event: ParsedEvent) => {
+    drawers.open(EditEventDrawerModel({ event: event.originalEvent }));
   };
 
   const currentDay = DateTime.local().toISODate();
@@ -111,8 +107,9 @@ const Calendar = (): ReactElement => {
                     <Day
                       key={day.isoDate}
                       events={parsedEvents.get(day.isoDate) ?? []}
-                      loading={loading}
+                      loading={eventsLoading}
                       onClick={onDayClick}
+                      onEventClick={onEventClick}
                       day={day}
                       current={day.isoDate === currentDay}
                       highlighted={day.isoDate === highlightedDate}

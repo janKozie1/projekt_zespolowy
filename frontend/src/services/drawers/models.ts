@@ -1,7 +1,9 @@
 import { v4 } from 'uuid';
 
-export type AnyDrawerType = 'AddEvent' | 'AddPerson';
-export type AnyDrawerModel = AddEventDrawer | AddPersonDrawer;
+import type { Event } from '../api/types/data';
+
+export type AnyDrawerType = 'AddEvent' | 'AddPerson' | 'EditEvent';
+export type AnyDrawerModel = AddEventDrawer | AddPersonDrawer | EditEventDrawer;
 
 interface Drawer<T extends AnyDrawerType> {
   id: string;
@@ -20,6 +22,19 @@ export const AddEventDrawerModel = (
   date,
   id: v4(),
   type: 'AddEvent',
+  visible: true,
+});
+
+export interface EditEventDrawer extends Drawer<'EditEvent'> {
+  event: Event;
+}
+
+export const EditEventDrawerModel = (
+  { event }: Omit<EditEventDrawer, NonEditableParams>,
+): EditEventDrawer => ({
+  event,
+  id: v4(),
+  type: 'EditEvent',
   visible: true,
 });
 

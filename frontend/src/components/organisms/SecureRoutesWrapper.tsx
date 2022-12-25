@@ -8,11 +8,12 @@ import navigation, { authNavigation } from '../../config/navigation';
 import {
   AuthRoutes, BaseRoutes, DashboardRoutes, HomeRoutes,
 } from '../../config/paths';
-import usePromise, { emptyArgs } from '../../hooks/usePromise';
+import useApiRequest, { emptyArgs } from '../../hooks/useApiRequest';
 
 import Loading from '../molecules/Loading';
 
 import { useAPI } from './ApiProvider';
+import ConstantDataProvider from './ConstantDataProvider';
 import DrawersProvider from './DrawersProvider';
 import Nav from './Nav';
 
@@ -20,9 +21,9 @@ const SecureRoutesWrapper = (): ReactElement => {
   const navigate = useNavigate();
   const isInRoot = !isNil(useMatch(BaseRoutes.BASE));
 
-  const api = useAPI();
+  const { api } = useAPI();
 
-  const [loggedInUser, { loading }] = usePromise(api.auth.loggedInUser, {
+  const [loggedInUser, { loading }] = useApiRequest(api.auth.loggedInUser, {
     immediateArgs: emptyArgs,
   });
 
@@ -42,16 +43,19 @@ const SecureRoutesWrapper = (): ReactElement => {
     }
   }, [navigate, isInRoot, loggedInUser, loading]);
 
-  if (loading || isNil(loggedInUser)) {
+  if (loading || isNil(loggedInUser) || isNil(loggedInUser.data)) {
     return <Loading />;
   }
 
   return (
-    <DrawersProvider>
-      <Nav navigation={navigation} authNav={authNavigation}>
-        <Outlet />
-      </Nav>
-    </DrawersProvider>
+    <ConstantDataProvider loggedInUser={loggedInUser.data}>
+      <DrawersProvider>
+        <Nav navigation={navigation} authNav={authNavigation}>
+          <Outlet />
+        </Nav>
+      </DrawersProvider>
+    </ConstantDataProvider>
+
   );
 };
 

@@ -159,7 +159,7 @@ export const validators: Validators = {
         };
       }
 
-      if (!isNil(selectedEvent)) {
+      if (isNil(selectedEvent)) {
         return {
           ok: false,
           errors: {

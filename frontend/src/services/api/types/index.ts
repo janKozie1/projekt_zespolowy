@@ -1,6 +1,8 @@
 import type { Nullable } from '../../../utils/types';
 
-import type { Event, EventCategory, User } from './data';
+import type {
+  Event, EventCategory, RepeatsEvery, User,
+} from './data';
 import type { APICallFN, RequestWithValidationFN, ToSyncAPI } from './utils';
 
 type AuthAPI = Readonly<{
@@ -22,6 +24,7 @@ type EventAPI = Readonly<{
     name: string;
     description: string;
     date: Date;
+    repeatsEvery: RepeatsEvery;
     members: User['id'][];
     categories: EventCategory['id'][];
   }>;

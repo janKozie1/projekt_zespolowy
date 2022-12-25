@@ -3,6 +3,7 @@ import type {
   MouseEvent as MouseEv, ReactElement, ReactNode,
 } from 'react';
 
+import isNil from 'lodash/isNil';
 import styled from 'styled-components/macro';
 
 import { Close } from '@mui/icons-material';
@@ -18,6 +19,7 @@ import Rows from '../atoms/Rows';
 import Text from '../atoms/Text';
 
 import Icon from './Icon';
+import Loading from './Loading';
 
 export type MouseEventHandler<T extends HTMLElement> = MouseEv<T>;
 
@@ -49,13 +51,17 @@ const StyledDrawer = styled(MuiDrawer)`
 type Props = Readonly<{
   open: boolean;
   children: ReactNode;
+  loading?: boolean;
+  subHeader?: string;
   header: string;
 }>;
 
 const Drawer = ({
   header,
   open = false,
+  loading = false,
   children,
+  subHeader,
 }: Props): ReactElement => {
   const modalRef = useRef<HTMLDivElement>(null);
   const [internalOpenState, setInternalOpenState] = useState(false);
@@ -88,10 +94,14 @@ const Drawer = ({
                       <Close />
                     </Icon>
                   </IconButton>
+
                 </Box>
+                {!isNil(subHeader) && (
+                  <Text type="caption" variant="default">{subHeader}</Text>
+                )}
               </Rows>
             </Box>
-            {children}
+            {loading ? <Loading /> : children}
           </Box>
         </Box>
       </Container>
