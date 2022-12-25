@@ -15,6 +15,7 @@ export type User = Readonly<{
 export type EventCategory = Readonly<{
   id: string;
   name: string;
+  builtInEventCategory: boolean;
 }>;
 
 export type Event = Readonly<{
@@ -22,6 +23,7 @@ export type Event = Readonly<{
   name: string;
   description: string;
   repeated: boolean;
+  builtIn: boolean;
   date: Date;
   createdAt: Date;
   owner: User['id'];

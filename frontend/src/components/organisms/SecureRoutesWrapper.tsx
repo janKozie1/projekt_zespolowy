@@ -34,7 +34,7 @@ const SecureRoutesWrapper = (): ReactElement => {
   }, [navigate, isInRoot, loggedInUser]);
 
   useEffect(() => {
-    if (!loading && isNil(loggedInUser)) {
+    if (!loading && !isNil(loggedInUser) && isNil(loggedInUser.data)) {
       if (isInRoot) {
         navigate(HomeRoutes.HOME);
       } else {

@@ -13,6 +13,7 @@ import Select from '@mui/material/Select';
 import TextField from '@mui/material/TextField';
 
 import useExternalValidation from '../../../hooks/useExternalValidation';
+import { admin } from '../../../services/api/localStorageAPI/defaults';
 import { RepeatsEvery } from '../../../services/api/types/data';
 import type { SubmitHandler } from '../../../utils/forms';
 import { parseFieldState, makeToAutocompleteProps } from '../../../utils/forms';
@@ -39,6 +40,9 @@ const EventForm = ({ submitHandler, initialData }: Props): ReactElement => {
 
   const { onSubmit, submitting } = useExternalValidation({ submitHandler, form });
   const toAutocompleteProps = makeToAutocompleteProps(form);
+
+  const allowedEventCategories = eventCategories.filter((category) => !category.builtInEventCategory);
+  const allowedUsers = users.filter((user) => user.email !== admin.email);
 
   return (
     <FormProvider {...form}>
@@ -79,9 +83,9 @@ const EventForm = ({ submitHandler, initialData }: Props): ReactElement => {
             render={({ field, fieldState }) => (
               <Autocomplete
                 {...field}
-                {...toAutocompleteProps(field, eventCategories)}
+                {...toAutocompleteProps(field, allowedEventCategories)}
                 multiple
-                options={eventCategories}
+                options={allowedEventCategories}
                 getOptionLabel={(option) => option.name}
                 noOptionsText="Brak opcji"
                 renderInput={(params) => (
@@ -126,9 +130,9 @@ const EventForm = ({ submitHandler, initialData }: Props): ReactElement => {
             render={({ field, fieldState }) => (
               <Autocomplete
                 {...field}
-                {...toAutocompleteProps(field, users)}
+                {...toAutocompleteProps(field, allowedUsers)}
                 multiple
-                options={users}
+                options={allowedUsers}
                 getOptionLabel={(option) => option.email}
                 getOptionDisabled={(option) => option.id === loggedInUser.id}
                 noOptionsText="Brak opcji"

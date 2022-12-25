@@ -30,15 +30,14 @@ export const makeLocalStorageAPI = (): SyncApi => ({
       const validation = validators.auth.register(registerPayload);
 
       if (validation.ok) {
-        const matchingUser = getter('users')
-          .find((user) => user.email === registerPayload.email);
-
-        setter('loggedInUser', matchingUser);
-        setter('users', (users = []) => users.concat([{
+        const newUser = {
           id: v4(),
           email: registerPayload.email,
           password: registerPayload.password,
-        }]));
+        };
+
+        setter('users', (users = []) => users.concat([newUser]));
+        setter('loggedInUser', newUser);
       }
 
       return validation;
@@ -58,6 +57,7 @@ export const makeLocalStorageAPI = (): SyncApi => ({
           repeatsEvery: createPayload.repeatsEvery,
           members: createPayload.members,
           name: createPayload.name,
+          builtIn: false,
           owner: loggedInUser.id,
           repeated: false,
           createdAt: new Date(),
@@ -98,7 +98,7 @@ export const makeLocalStorageAPI = (): SyncApi => ({
         return [];
       }
 
-      return events.filter((event) => event.owner === user.id || event.members.includes(user.id));
+      return events.filter((event) => event.owner === user.id || event.members.includes(user.id) || event.builtIn);
     },
   },
   user: {

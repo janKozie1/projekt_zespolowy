@@ -28,7 +28,7 @@ const TooltipContainer = styled.div<TooltipContainerProps>`
   gap: ${toSpacing(1)} ${toSpacing(2)};
 `;
 
-type EventTileContainerProps = Pick<Event, 'repeated'> & Readonly<{
+type EventTileContainerProps = Pick<Event, 'builtIn' | 'repeated'> & Readonly<{
   own: boolean;
 }>;
 
@@ -39,9 +39,10 @@ const EventTileContainer = styled.div<EventTileContainerProps>`
   width: 100%;
   padding: ${toSpacing(1.5)} ${toSpacing(2)};
   border-radius: ${({ theme }) => theme._.borders.radii.sm};
+  cursor: ${({ own }) => (own ? 'pointer' : 'default')};
 
   &:hover {
-    box-shadow: ${({ theme }) => theme._.shadows.weak};
+    box-shadow: ${({ theme, builtIn, own }) => (builtIn || !own ? null : theme._.shadows.weak)};
   }
 `;
 
@@ -56,9 +57,16 @@ const EventTile = ({ event, onClick }: Props): ReactElement => {
 
   const userOwnsEvent = event.owner.id === loggedInUser.id;
 
+  const onEventClick = () => {
+    if (userOwnsEvent && !event.builtIn) {
+      onClick(event);
+    }
+  };
+
   return (
     <Tooltip
       placement="top"
+      open={event.builtIn ? false : undefined}
       title={(
         <TooltipContainer width={width}>
           <span>Opis:</span>
@@ -79,12 +87,12 @@ const EventTile = ({ event, onClick }: Props): ReactElement => {
         </TooltipContainer>
       )}
     >
-      <EventTileContainer ref={ref} {...event} own={userOwnsEvent} onClick={withStopPropagation(() => onClick(event))}>
+      <EventTileContainer ref={ref} {...event} own={userOwnsEvent} onClick={withStopPropagation(onEventClick)}>
         <Box display="flex" alignItems="center" justifyContent="space-between">
           <Text type="caption" variant="default">
             {event.name}
           </Text>
-          {event.repeated ? (
+          {event.repeated && !event.builtIn ? (
             <Icon size="md">
               <Cached />
             </Icon>

@@ -47,7 +47,7 @@ const CurrentDayWrapper = styled.div<CurrentDayWrapperProps>`
     left: 0;
     top: 0;
     transform: translate(-25%, -25%);
-    padding: ${toSpacing(2)};
+    padding: ${toSpacing(1.5)};
     background-color: ${({ theme }) => theme._.colors.accent.primary};
     display: ${({ current }) => (current ? 'block' : 'none')}
   }
@@ -78,7 +78,7 @@ const Day = ({
           <Loading variant="calendarDay" />
         </Box>
       ) : (
-        <Box mt={2}>
+        <Box mt={3}>
           {events.map((event) => <EventTile onClick={onEventClick} key={event.id} event={event} />)}
         </Box>
       )}
