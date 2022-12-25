@@ -57,6 +57,12 @@ const types = {
       color: colors.greyscale[90],
       textTransform: 'none',
     },
+    secondary: {
+      size: sizes[200],
+      weight: 'normal',
+      color: colors.greyscale[50],
+      textTransform: 'none',
+    },
   },
   overline: {
     default: {

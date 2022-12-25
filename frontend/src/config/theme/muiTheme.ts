@@ -26,6 +26,14 @@ const muiTheme = createTheme({
         },
       },
     },
+    MuiDrawer: {
+      styleOverrides: {
+        paper: {
+          background: 'transparent',
+          boxShadow: 'none',
+        },
+      },
+    },
     MuiButton: {
       styleOverrides: {
         root: {

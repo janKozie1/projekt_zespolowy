@@ -1,42 +1,19 @@
 import type { ReactElement } from 'react';
 
-import { DateTime } from 'luxon';
-
 import Box from '@mui/material/Box';
+
+import useCalendar from '../../hooks/useCalendar';
 
 import CalendarCell from '../atoms/CalendarCell';
 import CalendarGrid from '../atoms/CalendarGrid';
 import Text from '../atoms/Text';
-
-type CalendarDay = Readonly<{
-  date: DateTime;
-  isoDate: string;
-  inCurrentMonth: boolean;
-}>;
-
-const getCalendarDays = (month: Date): CalendarDay[] => {
-  const baseDate = DateTime.fromJSDate(month).startOf('month');
-  const daysInMonth = baseDate.endOf('month').diff(baseDate, 'days').as('days');
-
-  const offset = baseDate.weekday - 1;
-
-  return Array.from({ length: daysInMonth + offset }, (_, i) => {
-    const date = baseDate.plus({ days: i - offset });
-
-    return {
-      date,
-      isoDate: date.toISODate(),
-      inCurrentMonth: i - offset >= 0,
-    };
-  });
-};
 
 type Props = Readonly<{
   month: Date;
 }>;
 
 const Calendar = ({ month }: Props): ReactElement => {
-  const days = getCalendarDays(month);
+  const { days } = useCalendar({ month });
 
   return (
     <CalendarGrid>

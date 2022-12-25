@@ -13,6 +13,7 @@ import usePromise, { emptyArgs } from '../../hooks/usePromise';
 import Loading from '../molecules/Loading';
 
 import { useAPI } from './ApiProvider';
+import DrawersProvider from './DrawersProvider';
 import Nav from './Nav';
 
 const SecureRoutesWrapper = (): ReactElement => {
@@ -46,9 +47,11 @@ const SecureRoutesWrapper = (): ReactElement => {
   }
 
   return (
-    <Nav navigation={navigation} authNav={authNavigation}>
-      <Outlet />
-    </Nav>
+    <DrawersProvider>
+      <Nav navigation={navigation} authNav={authNavigation}>
+        <Outlet />
+      </Nav>
+    </DrawersProvider>
   );
 };
 
