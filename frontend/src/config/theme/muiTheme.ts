@@ -18,12 +18,8 @@ const muiTheme = createTheme({
   },
   components: {
     MuiInputBase: {
-      styleOverrides: {
-        root: {
-          '& > input': {
-            padding: `${toSpacing(3)} ${toSpacing(3)}`,
-          },
-        },
+      defaultProps: {
+        autoComplete: 'off',
       },
     },
     MuiDrawer: {

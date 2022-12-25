@@ -20,7 +20,7 @@ const defaultConfig = {
 };
 
 type UsePromiseReturnValue<Args extends unknown[], ReturnValue> = [
-  Nullable<Awaited<ReturnValue>>,
+  Nullable<{ data: Nullable<Awaited<ReturnValue>> } >,
   Readonly<{
     loading: boolean;
     run: (...args: Args) => Promise<void>;
@@ -53,7 +53,7 @@ const usePromise = <Args extends unknown[], ReturnValue extends Promise<unknown>
     }
   }, [memoizedRunPromise]);
 
-  return [value, {
+  return [loading ? null : { data: value }, {
     run: memoizedRunPromise,
     loading,
   }];

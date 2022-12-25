@@ -1,19 +1,45 @@
-import { isFunction, isNil } from 'lodash';
+import {
+  isArray, isFunction, isNil, isString,
+} from 'lodash';
 
+import { isLiteral } from '../../../utils/guards';
+import { replaceObjectValues } from '../../../utils/object';
+
+import defaults from './defaults';
 import type { LocalStorageShape } from './types';
 
+const isDateString = (arg: unknown): arg is string => isString(arg) && arg.includes('T') && /\d{4}-\d{2}-\d{2}/i.test(arg.split('T')[0]);
+
+const withParseDates = (arg: unknown): unknown => {
+  if (isDateString(arg)) {
+    return new Date(arg);
+  }
+
+  if (isLiteral(arg)) {
+    return replaceObjectValues(arg, isDateString, (value) => new Date(value));
+  }
+
+  if (isArray(arg)) {
+    return arg.map((item) => withParseDates(item));
+  }
+
+  return arg;
+};
+
 export const getter = <T extends keyof LocalStorageShape>(
-  key: T, defaultValue?: LocalStorageShape[T],
+  key: T,
 ): LocalStorageShape[T] => {
   const value = localStorage.getItem(key);
 
   if (isNil(value)) {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    return defaultValue!;
+    const defaultValue = defaults[key];
+    localStorage.setItem(key, JSON.stringify(defaultValue));
+    return defaultValue;
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-  return JSON.parse(value);
+  return withParseDates(JSON.parse(value)) as LocalStorageShape[T];
 };
 
 export const setter = <T extends keyof LocalStorageShape>(

@@ -2,6 +2,7 @@
 import type { ReactElement } from 'react';
 import { useEffect } from 'react';
 
+import isNil from 'lodash/isNil';
 import { useNavigate } from 'react-router';
 
 import TabContext from '@mui/lab/TabContext';
@@ -28,7 +29,7 @@ const AuthPage = ({ type }: Props): ReactElement | null => {
   const api = useAPI();
   const navigate = useNavigate();
 
-  const [isLoggedIn, { loading }] = usePromise(api.auth.isLoggedIn, { immediateArgs: emptyArgs });
+  const [loggedInUser, { loading }] = usePromise(api.auth.loggedInUser, { immediateArgs: emptyArgs });
 
   const switchType = () => {
     navigate(type === 'login' ? AuthRoutes.REGISTER : AuthRoutes.LOGIN);
@@ -46,7 +47,7 @@ const AuthPage = ({ type }: Props): ReactElement | null => {
 
   useEffect(() => {
     void (async () => {
-      if (isLoggedIn === true) {
+      if (!isNil(loggedInUser) && !isNil(loggedInUser.data)) {
         if (type === 'logout') {
           await api.auth.logout();
           navigate(HomeRoutes.HOME);
@@ -55,13 +56,13 @@ const AuthPage = ({ type }: Props): ReactElement | null => {
         }
       }
     })();
-  }, [type, navigate, isLoggedIn, api]);
+  }, [type, navigate, loggedInUser, api]);
 
   if (type === 'logout' || loading) {
     return <Loading />;
   }
 
-  if (isLoggedIn !== false) {
+  if (!isNil(loggedInUser) && !isNil(loggedInUser.data)) {
     return null;
   }
 

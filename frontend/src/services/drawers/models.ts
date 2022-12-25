@@ -1,7 +1,7 @@
 import { v4 } from 'uuid';
 
-export type AnyDrawerType = 'AddEvent';
-export type AnyDrawerModel = AddEventDrawer;
+export type AnyDrawerType = 'AddEvent' | 'AddPerson';
+export type AnyDrawerModel = AddEventDrawer | AddPersonDrawer;
 
 interface Drawer<T extends AnyDrawerType> {
   id: string;
@@ -20,6 +20,15 @@ export const AddEventDrawerModel = (
   date,
   id: v4(),
   type: 'AddEvent',
+  visible: true,
+});
+
+export type AddPersonDrawer = Drawer<'AddPerson'>;
+
+export const AddPersonDrawerModal = (
+): AddPersonDrawer => ({
+  id: v4(),
+  type: 'AddPerson',
   visible: true,
 });
 

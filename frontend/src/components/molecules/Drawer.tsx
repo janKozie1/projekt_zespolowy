@@ -12,6 +12,7 @@ import IconButton from '@mui/material/IconButton';
 
 import { toSpacing } from '../../config/theme/fields/spacing';
 import { useDrawers } from '../../hooks/useDrawers';
+import useOnEsc from '../../hooks/useOnEsc';
 
 import Rows from '../atoms/Rows';
 import Text from '../atoms/Text';
@@ -64,6 +65,8 @@ const Drawer = ({
   useEffect(() => {
     setInternalOpenState(true);
   }, []);
+
+  useOnEsc({ onEsc: close, node: modalRef.current });
 
   const visible = open && internalOpenState;
 

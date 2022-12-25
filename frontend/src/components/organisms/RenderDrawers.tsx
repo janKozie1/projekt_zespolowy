@@ -6,11 +6,15 @@ import type { AnyDrawerModel, AnyDrawerType } from '../../services/drawers/model
 import type { Nullable } from '../../utils/types';
 
 import AddEventDrawer from './AddEventDrawer';
+import AddPersonDrawer from './AddPersonDrawer';
+
+type DrawerComponent<Drawer> = (arg: { drawer: Drawer }) => ReactElement;
 
 const drawerMap: Readonly<{
-  [key in AnyDrawerType]: (arg: { drawer: Extract<AnyDrawerModel, { type: key }> }) => ReactElement;
+  [key in AnyDrawerType]: DrawerComponent<Extract<AnyDrawerModel, { type: key }>>;
 }> = {
   AddEvent: AddEventDrawer,
+  AddPerson: AddPersonDrawer,
 };
 
 type Props = Readonly<{
@@ -22,7 +26,7 @@ const RenderDrawers = ({ drawer }: Props): ReactElement | null => {
     return null;
   }
 
-  const DrawerToRender = drawerMap[drawer.type];
+  const DrawerToRender = drawerMap[drawer.type] as DrawerComponent<AnyDrawerModel>;
 
   return <DrawerToRender drawer={drawer} />;
 };

@@ -2,16 +2,26 @@ import type { ReactElement } from 'react';
 
 import styled from 'styled-components';
 
+import Box from '@mui/material/Box';
+
 import { toSpacing } from '../../../../../config/theme/fields/spacing';
 import type { CalendarDay } from '../../../../../hooks/useCalendar';
+import type { Event } from '../../../../../services/api/types/data';
 import Text from '../../../../atoms/Text';
+import Loading from '../../../../molecules/Loading';
 
-const DayContainer = styled.div`
+import EventTile from './EventTile';
+
+type DayContainerProps = Readonly<{
+  highlighted: boolean;
+}>;
+
+const DayContainer = styled.div<DayContainerProps>`
   width: 100%;
   min-height: 120px;
   cursor: pointer;
   border-radius: ${({ theme }) => theme._.borders.radii.sm};
-  box-shadow: ${({ theme }) => theme._.shadows.weak};
+  box-shadow: ${({ theme, highlighted }) => (highlighted ? theme._.shadows.accent.success : theme._.shadows.weak)};
   padding: ${toSpacing(4)};
 `;
 
@@ -46,16 +56,32 @@ const CurrentDayWrapper = styled.div<CurrentDayWrapperProps>`
 type Props = Readonly<{
   day: CalendarDay;
   current: boolean;
+  highlighted: boolean;
+  loading: boolean;
+  events: Event[];
   onClick: (day: CalendarDay) => void;
 }>;
 
-const Day = ({ day, current, onClick }: Props): ReactElement => (
-  <DayContainer onClick={() => onClick(day)}>
+const Day = ({
+  day, current, highlighted, onClick, loading, events,
+}: Props): ReactElement => (
+  <DayContainer highlighted={highlighted} onClick={() => onClick(day)}>
     <CurrentDayWrapper current={current}>
       <Text type="caption" variant={day.inCurrentMonth ? 'default' : 'secondary'} inverted={current}>
         {day.date.day}
       </Text>
     </CurrentDayWrapper>
+    <Box>
+      {loading ? (
+        <Box ml="auto" mr="auto" mt={6}>
+          <Loading variant="calendarDay" />
+        </Box>
+      ) : (
+        <Box mt={2}>
+          {events.map((event) => <EventTile key={event.id} event={event} />)}
+        </Box>
+      )}
+    </Box>
   </DayContainer>
 );
 

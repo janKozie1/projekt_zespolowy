@@ -1,11 +1,17 @@
 import type { ReactElement, ReactNode } from 'react';
 import { useMemo, useState } from 'react';
 
+import { isNil } from 'lodash';
+
 import type { ContextValue } from '../../hooks/useDrawers';
 import { context } from '../../hooks/useDrawers';
-import type { AnyDrawerModel } from '../../services/drawers/models';
+import type { AnyDrawerModel, AnyDrawerType } from '../../services/drawers/models';
 
 import RenderDrawers from './RenderDrawers';
+
+export const isDrawer = <T extends AnyDrawerType>(
+  type: T, drawer: ContextValue['drawer'],
+): drawer is Extract<AnyDrawerModel, { type: T }> => !isNil(drawer) && drawer.visible && drawer.type === type;
 
 type Props = Readonly<{
   children: ReactNode;

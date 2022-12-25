@@ -22,27 +22,27 @@ const SecureRoutesWrapper = (): ReactElement => {
 
   const api = useAPI();
 
-  const [isLoggedIn, { loading }] = usePromise(api.auth.isLoggedIn, {
+  const [loggedInUser, { loading }] = usePromise(api.auth.loggedInUser, {
     immediateArgs: emptyArgs,
   });
 
   useEffect(() => {
-    if (isInRoot && isLoggedIn === true) {
+    if (isInRoot && !isNil(loggedInUser) && !isNil(loggedInUser.data)) {
       navigate(DashboardRoutes.DASHBOARD);
     }
-  }, [navigate, isInRoot, isLoggedIn]);
+  }, [navigate, isInRoot, loggedInUser]);
 
   useEffect(() => {
-    if (!loading && isLoggedIn === false) {
+    if (!loading && isNil(loggedInUser)) {
       if (isInRoot) {
         navigate(HomeRoutes.HOME);
       } else {
         navigate(AuthRoutes.LOGIN);
       }
     }
-  }, [navigate, isInRoot, isLoggedIn, loading]);
+  }, [navigate, isInRoot, loggedInUser, loading]);
 
-  if (loading || isLoggedIn !== true) {
+  if (loading || isNil(loggedInUser)) {
     return <Loading />;
   }
 

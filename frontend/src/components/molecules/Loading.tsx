@@ -6,6 +6,7 @@ import { CircularProgress } from '@mui/material';
 
 const variants = {
   submit: '26px',
+  calendarDay: '18px',
   default: undefined,
 };
 
