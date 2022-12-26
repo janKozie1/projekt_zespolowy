@@ -4,6 +4,7 @@ import { v4 } from 'uuid';
 import type { SyncApi } from '../types';
 import type { Event } from '../types/data';
 
+import { admin, makeBuiltInEvents } from './data';
 import { getter, setter } from './utils';
 import { validators } from './validators';
 
@@ -38,6 +39,7 @@ export const makeLocalStorageAPI = (): SyncApi => ({
 
         setter('users', (users = []) => users.concat([newUser]));
         setter('loggedInUser', newUser);
+        setter('events', (events = []) => events.concat(makeBuiltInEvents(newUser.id, new Date())));
       }
 
       return validation;
@@ -102,7 +104,7 @@ export const makeLocalStorageAPI = (): SyncApi => ({
     },
   },
   user: {
-    allUsers: () => getter('users'),
+    allUsers: () => getter('users').filter((user) => user.email !== admin.email),
   },
 });
 

@@ -5,7 +5,7 @@ import {
 import { isLiteral } from '../../../utils/guards';
 import { replaceObjectValues } from '../../../utils/object';
 
-import defaults from './defaults';
+import defaults from './data';
 import type { LocalStorageShape } from './types';
 
 const isDateString = (arg: unknown): arg is string => isString(arg) && arg.includes('T') && /\d{4}-\d{2}-\d{2}/i.test(arg.split('T')[0]);

@@ -13,7 +13,6 @@ import Select from '@mui/material/Select';
 import TextField from '@mui/material/TextField';
 
 import useExternalValidation from '../../../hooks/useExternalValidation';
-import { admin } from '../../../services/api/localStorageAPI/defaults';
 import { RepeatsEvery } from '../../../services/api/types/data';
 import type { SubmitHandler } from '../../../utils/forms';
 import { parseFieldState, makeToAutocompleteProps } from '../../../utils/forms';
@@ -41,8 +40,8 @@ const EventForm = ({ submitHandler, initialData }: Props): ReactElement => {
   const { onSubmit, submitting } = useExternalValidation({ submitHandler, form });
   const toAutocompleteProps = makeToAutocompleteProps(form);
 
-  const allowedEventCategories = eventCategories.filter((category) => !category.builtInEventCategory);
-  const allowedUsers = users.filter((user) => user.email !== admin.email);
+  const allowedEventCategories = eventCategories
+    .filter((category) => !category.builtInEventCategory || (initialData?.categories ?? []).includes(category.id));
 
   return (
     <FormProvider {...form}>
@@ -130,9 +129,9 @@ const EventForm = ({ submitHandler, initialData }: Props): ReactElement => {
             render={({ field, fieldState }) => (
               <Autocomplete
                 {...field}
-                {...toAutocompleteProps(field, allowedUsers)}
+                {...toAutocompleteProps(field, users)}
                 multiple
-                options={allowedUsers}
+                options={users}
                 getOptionLabel={(option) => option.email}
                 getOptionDisabled={(option) => option.id === loggedInUser.id}
                 noOptionsText="Brak opcji"

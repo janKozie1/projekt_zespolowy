@@ -21,6 +21,7 @@ import type { ParsedEvent } from '../../dataTransformation';
 type TooltipContainerProps = Readonly<{
   width: Nullable<number>;
 }>;
+
 const TooltipContainer = styled.div<TooltipContainerProps>`
   min-width: ${({ width }) => (width ?? 133) - 15}px;
   display: grid;
@@ -42,7 +43,7 @@ const EventTileContainer = styled.div<EventTileContainerProps>`
   cursor: ${({ own }) => (own ? 'pointer' : 'default')};
 
   &:hover {
-    box-shadow: ${({ theme, builtIn, own }) => (builtIn || !own ? null : theme._.shadows.weak)};
+    box-shadow: ${({ theme, own }) => (!own ? null : theme._.shadows.weak)};
   }
 `;
 
@@ -58,7 +59,7 @@ const EventTile = ({ event, onClick }: Props): ReactElement => {
   const userOwnsEvent = event.owner.id === loggedInUser.id;
 
   const onEventClick = () => {
-    if (userOwnsEvent && !event.builtIn) {
+    if (userOwnsEvent) {
       onClick(event);
     }
   };
@@ -66,7 +67,6 @@ const EventTile = ({ event, onClick }: Props): ReactElement => {
   return (
     <Tooltip
       placement="top"
-      open={event.builtIn ? false : undefined}
       title={(
         <TooltipContainer width={width}>
           <span>Opis:</span>
