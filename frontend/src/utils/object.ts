@@ -8,6 +8,16 @@ import {
 } from './guards';
 import type { Literal, Nullable } from './types';
 
+export type MergeDeepObject<ObjA extends Literal, ObjB extends Literal> = {
+  [key in Exclude<keyof ObjA, keyof ObjB>]: ObjA[key]
+} & {
+  [key in Exclude<keyof ObjB, keyof ObjA>]: ObjB[key]
+} & {
+  [key in Extract<keyof ObjA, keyof ObjB>]: ObjB[key] extends Literal
+    ? MergeDeepObject<ObjA[key] extends Literal ? ObjA[key] : ObjB[key], ObjB[key]>
+    : ObjB[key]
+};
+
 type ToDeepOnlyPathObject<T> = Required<T> extends Literal ? {
   [K in keyof Required<T> as `${K & string}${Required<T>[K] extends Literal ? `.${string & keyof ToDeepOnlyPathObject<Required<T>[K]>}` : ''}`]: never
 } : never;
@@ -85,6 +95,29 @@ export const pickDeep = <Obj extends Literal>(
   }, {}) as PartialDeepObject<Obj>;
 
   return recurse(base);
+};
+
+export const deepMerge = <T extends Literal, U extends Partial<T>>(
+  oldData: T, newData: U,
+): T => {
+  const recurse = (oldObj: Literal, newObj: Literal): Literal => {
+    const plainValues = Object.fromEntries(Object.entries(newObj).filter(([, value]) => !isLiteral(value)));
+
+    return mapValues({
+      ...oldObj,
+      ...plainValues,
+    }, (value, key) => {
+      const newValue = newObj[key];
+
+      if (isLiteral(value) && isLiteral(newValue)) {
+        return deepMerge(value, newValue);
+      }
+
+      return value;
+    });
+  };
+
+  return recurse(oldData, newData) as T;
 };
 
 export const compareObjectValues = <ObjA extends Literal, ObjB extends ObjectShape<ObjA>>(

@@ -1,6 +1,8 @@
-import merge from 'lodash/fp/merge';
+
 import isNil from 'lodash/isNil';
 import { v4 } from 'uuid';
+
+import { deepMerge } from '../../../utils/object';
 
 import type { SyncApi } from '../types';
 import type { Event, User } from '../types/data';
@@ -9,11 +11,19 @@ import { admin, makeBuiltInEvents } from './data';
 import { getter, setter } from './utils';
 import { validators } from './validators';
 
-const updateUser = (fields: Partial<User>) => {
-  const loggedInUser = getter('loggedInUser');
+const updateUser = (fields: Partial<User>, forUser = getter('loggedInUser')) => {
+  setter('users', (users = []) => users.map((user) => (user.id === forUser?.id ? deepMerge(user, fields) : user)));
+  setter('loggedInUser', (user = null) => {
+    if (isNil(user)) {
+      return null;
+    }
 
-  setter('users', (users = []) => users.map((user) => (user.id === loggedInUser?.id ? merge(user, fields) : user)));
-  setter('loggedInUser', (user = null) => (isNil(user) ? null : merge(user, fields)));
+    if (user.id === forUser?.id) {
+      return deepMerge(user, fields);
+    }
+
+    return user;
+  });
 };
 
 export const makeLocalStorageAPI = (): SyncApi => ({
@@ -59,6 +69,7 @@ export const makeLocalStorageAPI = (): SyncApi => ({
           id: v4(),
           email: registerPayload.email,
           password: registerPayload.password,
+          friends: [],
           details: null,
         };
 
@@ -125,10 +136,69 @@ export const makeLocalStorageAPI = (): SyncApi => ({
         return [];
       }
 
-      return events.filter((event) => event.owner === user.id || event.members.includes(user.id) || event.builtIn);
+      return events.filter((event) => event.owner === user.id || event.members.includes(user.id));
     },
   },
   user: {
+    notifications: () => {
+      const loggedInUser = getter('loggedInUser');
+
+      return getter('notifications').filter((notification) => {
+        switch (notification.kind) {
+          case 'friendRequest': {
+            return notification.from === loggedInUser?.id || notification.to === loggedInUser?.id;
+          }
+          case 'sale': {
+            return notification.to === loggedInUser?.id;
+          }
+
+          default: {
+            return false;
+          }
+        }
+      });
+    },
+    removeFromFriends: (payload) => {
+      const validation = validators.user.removeFromFriends(payload);
+
+      const friend = getter('users').find((user) => user.id === payload.friendId);
+      const loggedInUser = getter('loggedInUser');
+
+      if (validation.ok && !isNil(friend) && !isNil(loggedInUser)) {
+        updateUser({ friends: loggedInUser.friends.filter((f) => f !== friend.id) }, loggedInUser);
+        updateUser({ friends: friend.friends.filter((f) => f !== loggedInUser.id) }, friend);
+      }
+
+      return validation;
+    },
+    addToFriends: (payload) => {
+      const validation = validators.user.addToFriends(payload);
+
+      const targetUser = getter('users').find((user) => user.email === payload.friendEmail);
+      const loggedInUser = getter('loggedInUser');
+
+      if (validation.ok && !isNil(loggedInUser) && !isNil(targetUser)) {
+        setter('notifications', (notifications = []) => notifications.concat([
+          {
+            id: v4(),
+            kind: 'friendRequest',
+            from: loggedInUser.id,
+            to: targetUser.id,
+          },
+        ]));
+      }
+
+      return validation;
+    },
+    cancelFriendRequest: (payload) => {
+      const validation = validators.user.cancelFriendRequest(payload);
+
+      if (validation.ok) {
+        setter('notifications', (notifications = []) => notifications.filter((notification) => notification.id !== payload.requestId));
+      }
+
+      return validation;
+    },
     allUsers: () => getter('users').filter((user) => user.email !== admin.email),
     updateBillingAddress: (updatePayload) => {
       const validation = validators.user.updateBillingAddress(updatePayload);
@@ -159,6 +229,31 @@ export const makeLocalStorageAPI = (): SyncApi => ({
   },
   payment: {
     availableMethods: () => getter('paymentMethods'),
+  },
+  notifications: {
+    confirmNotification: (payload) => {
+      const validation = validators.notifications.confirmNotification(payload);
+
+      if (validation.ok) {
+        const selectedNotification = getter('notifications')
+          .find((notification) => notification.id === payload.id);
+
+        if (payload.confirmation && !isNil(selectedNotification) && selectedNotification.kind === 'friendRequest') {
+          const from = getter('users').find((user) => user.id === selectedNotification.from);
+          const to = getter('users').find((user) => user.id === selectedNotification.to);
+
+          if (!isNil(from) && !isNil(to)) {
+            updateUser({ friends: [...to.friends, from.id] }, to);
+            updateUser({ friends: [...from.friends, to.id] }, from);
+          }
+        }
+
+        setter('notifications', (notifications = []) => notifications
+          .filter((notification) => notification.id !== selectedNotification?.id));
+      }
+
+      return validation;
+    },
   },
 });
 

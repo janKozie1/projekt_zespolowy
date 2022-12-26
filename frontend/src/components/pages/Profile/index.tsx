@@ -25,6 +25,10 @@ import BillingAddressForm from '../../organisms/BillingAddressForm';
 import type { Props as ChangePasswordFormProps, FormRef as ChangePasswordFormRef } from '../../organisms/ChangePasswordForm';
 import ChangePasswordForm from '../../organisms/ChangePasswordForm';
 import { useConstantData } from '../../organisms/ConstantDataProvider';
+import type { Props as FriendRequestFormProps, FormRef as FriendRequestFormRef } from '../../organisms/FriendRequestForm';
+import FriendRequestForm from '../../organisms/FriendRequestForm';
+import FriendsList from '../../organisms/FriendsList';
+import Notifications from '../../organisms/Notifications';
 import type { Props as PaymentMethodFormProps } from '../../organisms/PaymentMethodForm';
 import PaymentMethodForm from '../../organisms/PaymentMethodForm';
 
@@ -32,6 +36,7 @@ enum Tabs {
   notifications = 'notifications',
   security = 'security',
   paymentPreferences = 'paymentPreferences',
+  friends = 'friends',
 }
 
 const Profile = (): ReactElement => {
@@ -42,6 +47,8 @@ const Profile = (): ReactElement => {
   const [activeTab, setActiveTab] = useState(Tabs.notifications);
 
   const changePasswordFormRef = useRef<ChangePasswordFormRef>(null);
+  const frirendRequestFormRef = useRef<FriendRequestFormRef>(null);
+
   const changePasswordSubmitHandler: ChangePasswordFormProps['submitHandler'] = {
     onSubmit: api.auth.changePassword,
     onSuccess: () => {
@@ -61,6 +68,16 @@ const Profile = (): ReactElement => {
   const paymentMethodSubmitHandler: PaymentMethodFormProps['submitHandler'] = {
     onSubmit: api.user.updatePaymentInfo,
     onSuccess: () => refreshQueries([api.auth.loggedInUser]),
+  };
+
+  const friendRequestSubmitHandler: FriendRequestFormProps['submitHandler'] = {
+    onSubmit: api.user.addToFriends,
+    onSuccess: () => {
+      frirendRequestFormRef.current?.reset({
+        friendEmail: '',
+      });
+      refreshQueries([api.user.notifications]);
+    },
   };
 
   const onAccountDelete = async () => {
@@ -89,11 +106,12 @@ const Profile = (): ReactElement => {
                   <Tab label="Powiadomienia" value={Tabs.notifications} />
                   <Tab label="Płatności" value={Tabs.paymentPreferences} />
                   <Tab label="Bezpieczeństwo" value={Tabs.security} />
+                  <Tab label="Znajomi" value={Tabs.friends} />
                 </TabList>
                 <Box mt={-0.5} width="100%"><Divider /></Box>
                 <Box p={4}>
                   <TabPanel value={Tabs.notifications}>
-                    Item One
+                    <Notifications />
                   </TabPanel>
                   <TabPanel value={Tabs.paymentPreferences}>
                     <Rows gap={6}>
@@ -145,6 +163,28 @@ const Profile = (): ReactElement => {
                             Usuń
                           </Button>
                         </Box>
+                      </Rows>
+                    </Rows>
+                  </TabPanel>
+                  <TabPanel value={Tabs.friends}>
+                    <Rows gap={6}>
+                      <Rows gap={4}>
+                        <Text type="body" variant="default">
+                          Dodaj znajomego
+                        </Text>
+                        <Box width="30%">
+                          <FriendRequestForm
+                            submitHandler={friendRequestSubmitHandler}
+                            ref={frirendRequestFormRef}
+                          />
+                        </Box>
+                      </Rows>
+                      <Divider />
+                      <Rows gap={4}>
+                        <Text type="body" variant="default">
+                          Wszyscy znajomi
+                        </Text>
+                        <FriendsList />
                       </Rows>
                     </Rows>
                   </TabPanel>

@@ -17,6 +17,7 @@ import Chip from '../../molecules/Chip';
 import PageHeader from '../../molecules/PageHeader';
 import Calendar from '../../organisms/Calendar';
 import DiscoveryCard from '../../organisms/DiscoveryCard';
+import Notifications from '../../organisms/Notifications';
 
 const DashboardLayout = styled.div`
   display: grid;
@@ -85,10 +86,12 @@ const Dashboard = (): ReactElement => (
           </Rows>
         </Tile>
         <Tile gridArea="news">
-          <Rows gap={4}>
-            <Text type="heading" variant="h4">Aktualizacje</Text>
-            <Text type="body" variant="default">Paczka została nadana dla: Zosia</Text>
-          </Rows>
+          <Box display="flex" flexDirection="column" height="100%">
+            <Text type="heading" variant="h4">Powiadomienia</Text>
+            <Box flex="1">
+              <Notifications />
+            </Box>
+          </Box>
         </Tile>
       </DashboardLayout>
     </Rows>

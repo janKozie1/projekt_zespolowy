@@ -245,6 +245,79 @@ export const validators: Validators = {
   },
   user: {
     allUsers: null,
+    notifications: null,
+    cancelFriendRequest: () => ({
+      ok: true,
+      errors: {},
+    }),
+    removeFromFriends: () => ({
+      ok: true,
+      errors: {},
+    }),
+    addToFriends: (payload) => {
+      const loggedInUser = getter('loggedInUser');
+      const targetUser = getter('users').find((user) => user.email === payload.friendEmail);
+      const notifications = getter('notifications');
+
+      if (isNil(targetUser)) {
+        return {
+          ok: false,
+          errors: {
+            friendEmail: 'Użytkownik o takim e-mailu nie istnieje',
+          },
+        };
+      }
+
+      if ((loggedInUser?.friends ?? []).some((friendId) => friendId === targetUser.id)) {
+        return {
+          ok: false,
+          errors: {
+            friendEmail: 'Już jesteście znajomymi',
+          },
+        };
+      }
+
+      if (targetUser.id === loggedInUser?.id) {
+        return {
+          ok: false,
+          errors: {
+            friendEmail: 'Nie możesz zaprosić samego siebie',
+          },
+        };
+      }
+
+      const existingRequest = notifications.find((notification) => {
+        if (notification.kind === 'friendRequest') {
+          return (notification.from === loggedInUser?.id && notification.to === targetUser.id)
+            || (notification.to === loggedInUser?.id && notification.from === targetUser.id);
+        }
+
+        return false;
+      });
+
+      if (!isNil(existingRequest)) {
+        if (existingRequest.to === loggedInUser?.id) {
+          return {
+            ok: false,
+            errors: {
+              friendEmail: 'Użytkownik wysyłał Ci ju zaproszenie',
+            },
+          };
+        }
+
+        return {
+          ok: false,
+          errors: {
+            friendEmail: 'Użytkownik nie potwierdził jeszcze poprzedniego zaproszenia',
+          },
+        };
+      }
+
+      return {
+        ok: true,
+        errors: {},
+      };
+    },
     updateBillingAddress: () => ({
       ok: true,
       errors: {},
@@ -256,6 +329,12 @@ export const validators: Validators = {
   },
   payment: {
     availableMethods: null,
+  },
+  notifications: {
+    confirmNotification: () => ({
+      ok: true,
+      errors: {},
+    }),
   },
 };
 

@@ -1,7 +1,7 @@
 import type { Nullable } from '../../../utils/types';
 
 import type {
-  Event, EventCategory, PaymentMethod, RepeatsEvery, User,
+  Event, EventCategory, PaymentMethod, RepeatsEvery, User, Notification,
 } from './data';
 import type { APICallFN, RequestWithValidationFN, ToSyncAPI } from './utils';
 
@@ -53,10 +53,27 @@ type UserAPI = Readonly<{
   allUsers: APICallFN<null, User[]>;
   updateBillingAddress: RequestWithValidationFN<NonNullable<NonNullable<User['details']>['billingAddress']>>;
   updatePaymentInfo: RequestWithValidationFN<NonNullable<NonNullable<User['details']>['payments']>>;
+  addToFriends: RequestWithValidationFN<{
+    friendEmail: string;
+  }>;
+  cancelFriendRequest: RequestWithValidationFN<{
+    requestId: string;
+  }>;
+  removeFromFriends: RequestWithValidationFN<{
+    friendId: string;
+  }>;
+  notifications: APICallFN<null, Notification[]>;
 }>;
 
 type PaymentAPI = Readonly<{
   availableMethods: APICallFN<null, PaymentMethod[]>;
+}>;
+
+type NotificationsAPI = Readonly<{
+  confirmNotification: RequestWithValidationFN<{
+    id: Notification['id'];
+    confirmation: boolean;
+  }>;
 }>;
 
 export type API = Readonly<{
@@ -64,6 +81,7 @@ export type API = Readonly<{
   event: EventAPI;
   user: UserAPI;
   payment: PaymentAPI;
+  notifications: NotificationsAPI;
 }>;
 
 export type SyncApi = ToSyncAPI<API>;

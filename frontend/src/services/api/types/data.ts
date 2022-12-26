@@ -8,10 +8,22 @@ export enum RepeatsEvery {
   decade = 'decade',
 }
 
+export type Notification = Readonly<{
+  id: string;
+  kind: 'friendRequest';
+  from: User['id'];
+  to: User['id'];
+}> | Readonly<{
+  id: string;
+  kind: 'sale';
+  to: User['id'];
+}>;
+
 export type User = Readonly<{
   id: string;
   email: string;
   password: string;
+  friends: User['id'][];
   details: Nullable<Partial<{
     billingAddress: Readonly<{
       nameAndSurname: string;
