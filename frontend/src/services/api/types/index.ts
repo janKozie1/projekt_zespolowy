@@ -1,7 +1,7 @@
 import type { Nullable } from '../../../utils/types';
 
 import type {
-  Event, EventCategory, RepeatsEvery, User,
+  Event, EventCategory, PaymentMethod, RepeatsEvery, User,
 } from './data';
 import type { APICallFN, RequestWithValidationFN, ToSyncAPI } from './utils';
 
@@ -15,7 +15,13 @@ type AuthAPI = Readonly<{
     password: string;
     repeatedPassword: string;
   }>;
+  changePassword: RequestWithValidationFN<{
+    currentPassword: string;
+    password: string;
+    repeatedPassword: string;
+  }>;
   loggedInUser: APICallFN<null, Nullable<User>>;
+  deleteAccount: APICallFN<null, boolean>;
   logout: APICallFN<null, boolean>;
 }>;
 
@@ -43,14 +49,21 @@ type EventAPI = Readonly<{
   allCategories: APICallFN<null, EventCategory[]>;
 }>;
 
-type UserApi = Readonly<{
+type UserAPI = Readonly<{
   allUsers: APICallFN<null, User[]>;
+  updateBillingAddress: RequestWithValidationFN<NonNullable<NonNullable<User['details']>['billingAddress']>>;
+  updatePaymentInfo: RequestWithValidationFN<NonNullable<NonNullable<User['details']>['payments']>>;
+}>;
+
+type PaymentAPI = Readonly<{
+  availableMethods: APICallFN<null, PaymentMethod[]>;
 }>;
 
 export type API = Readonly<{
   auth: AuthAPI;
   event: EventAPI;
-  user: UserApi;
+  user: UserAPI;
+  payment: PaymentAPI;
 }>;
 
 export type SyncApi = ToSyncAPI<API>;

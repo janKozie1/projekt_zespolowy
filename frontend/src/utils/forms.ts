@@ -9,7 +9,7 @@ import type { Literal, Nullable } from './types';
 
 export type SubmitHandler<UserInput extends Literal> = Readonly<{
   onSubmit: (input: UserInput) => Promise<ValidationResult<UserInput>>;
-  onSuccess: (input: UserInput) => void;
+  onSuccess?: Nullable<(input: UserInput) => void>;
 }>;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -21,7 +21,7 @@ export const withErrorHandler = <UserInput extends Literal>(
     const validationResult = await submitHandler.onSubmit(...args);
 
     if (validationResult.ok) {
-      submitHandler.onSuccess(...args);
+      submitHandler.onSuccess?.(...args);
     }
 
     Object.entries(validationResult.errors).forEach(([field, error]) => {

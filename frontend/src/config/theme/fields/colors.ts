@@ -13,6 +13,16 @@ const colors = {
     error: '#FF6868',
     success: '#81F689',
   },
+  avatars: [
+    '#513DB6',
+    '#349B9B',
+    '#CF2670',
+    '#678CD8',
+    '#BA4E00',
+    '#36A236',
+    '#E46565',
+    '#F1C119',
+  ],
 } as const;
 
 export type Colors = typeof colors;

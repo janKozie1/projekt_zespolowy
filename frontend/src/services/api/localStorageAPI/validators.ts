@@ -24,6 +24,7 @@ export const validators: Validators = {
   auth: {
     loggedInUser: null,
     logout: null,
+    deleteAccount: null,
     login: (loginPayload) => {
       const { email, password } = loginPayload;
 
@@ -64,6 +65,42 @@ export const validators: Validators = {
           ok: false,
           errors: {
             email: ERRORS.auth.register.alreadyExists,
+          },
+        };
+      }
+
+      if (isEmpty(password) || password.length < 3) {
+        return {
+          ok: false,
+          errors: {
+            password: ERRORS.auth.register.invalidPassword,
+          },
+        };
+      }
+
+      if (password !== repeatedPassword) {
+        return {
+          ok: false,
+          errors: {
+            password: ERRORS.auth.register.passwordsDontMatch,
+          },
+        };
+      }
+
+      return {
+        ok: true,
+        errors: {},
+      };
+    },
+    changePassword: (changePasswordPayload) => {
+      const { password, repeatedPassword, currentPassword } = changePasswordPayload;
+      const loggedInUser = getter('loggedInUser');
+
+      if (isNil(loggedInUser) || loggedInUser.password !== currentPassword) {
+        return {
+          ok: false,
+          errors: {
+            currentPassword: ERRORS.auth.register.invalidPassword,
           },
         };
       }
@@ -208,6 +245,17 @@ export const validators: Validators = {
   },
   user: {
     allUsers: null,
+    updateBillingAddress: () => ({
+      ok: true,
+      errors: {},
+    }),
+    updatePaymentInfo: () => ({
+      ok: true,
+      errors: {},
+    }),
+  },
+  payment: {
+    availableMethods: null,
   },
 };
 

@@ -10,6 +10,7 @@ export const admin: User = {
   email: 'admin@giftology.com',
   id: v4(),
   password: 'admin',
+  details: null,
 };
 
 const builtInEventCategories = {
@@ -96,6 +97,28 @@ const defaults: Defaults = {
   users: [admin],
   giftCategories: [],
   loggedInUser: null,
+  paymentMethods: [
+    {
+      id: v4(),
+      name: 'Blik',
+      imageURL: 'https://a.allegroimg.com/original/2f1e9f/6b99459e48ccb0a607d90a0fa8e9',
+    },
+    {
+      id: v4(),
+      name: 'Google pay',
+      imageURL: 'https://a.allegroimg.com/original/2f2cbd/a491099346bea3bb781eecd1da65',
+    },
+    {
+      id: v4(),
+      name: 'Karta płatnicza',
+      imageURL: 'https://a.allegroimg.com/original/2f80b1/3b48708d44248480af5d245b73ba',
+    },
+    {
+      id: v4(),
+      name: 'Przelew',
+      imageURL: 'https://a.allegroimg.com/original/2f932b/eb7b0cc84eff9d75efb9968563ee',
+    },
+  ],
   eventCategories: [
     ...Object.values(builtInEventCategories),
     {
