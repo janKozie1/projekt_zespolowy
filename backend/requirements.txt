@@ -14,3 +14,5 @@ PyYAML==6.0
 sqlparse==0.4.3
 uritemplate==4.1.1
 zipp==3.11.0
+mysqlclient
+
