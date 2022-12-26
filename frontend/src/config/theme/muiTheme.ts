@@ -18,11 +18,15 @@ const muiTheme = createTheme({
   },
   components: {
     MuiInputBase: {
+      defaultProps: {
+        autoComplete: 'off',
+      },
+    },
+    MuiDrawer: {
       styleOverrides: {
-        root: {
-          '& > input': {
-            padding: `${toSpacing(3)} ${toSpacing(3)}`,
-          },
+        paper: {
+          background: 'transparent',
+          boxShadow: 'none',
         },
       },
     },

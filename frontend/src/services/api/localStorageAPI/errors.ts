@@ -10,6 +10,22 @@ export const ERRORS = {
       passwordsDontMatch: 'Provided passwords don\'t match',
     },
   },
+  events: {
+    create: {
+      unknownCategories: 'Some of the selected categories don\'t exist',
+      unknownMembers: 'Some of the selected members don\'t exist',
+      emptyDescription: 'Description cannot be empty',
+      emptyName: 'Name cannot be empty',
+    },
+    remove: {
+      doesNotExist: 'Selected event does not exist',
+      notAnOwner: 'You are not the owner of the selected event',
+    },
+    update: {
+      doesNotExist: 'Selected event does not exist',
+      notAnOwner: 'You are not the owner of the selected event',
+    },
+  },
 };
 
 export default {};

@@ -3,10 +3,11 @@ import isNil from 'lodash/isNil';
 import { isEmpty } from '../../../utils/guards';
 import type { Literal } from '../../../utils/types';
 
-import type { RequestWithValidationFN, API, SyncRequestWithValidationFN } from '../types';
+import type { API } from '../types';
+import type { RequestWithValidationFN, SyncRequestWithValidationFN } from '../types/utils';
 
 import { ERRORS } from './errors';
-import { getter, setter } from './utils';
+import { getter } from './utils';
 
 type ToValidators<T> = T extends Literal
   ? {
@@ -21,12 +22,12 @@ type Validators = ToValidators<API>;
 
 export const validators: Validators = {
   auth: {
-    isLoggedIn: null,
+    loggedInUser: null,
     logout: null,
     login: (loginPayload) => {
       const { email, password } = loginPayload;
 
-      const matchingUser = getter('users', [])
+      const matchingUser = getter('users')
         .find((user) => user.email === email);
 
       if (isNil(matchingUser)) {
@@ -39,7 +40,6 @@ export const validators: Validators = {
       }
 
       if (matchingUser.password === password) {
-        setter('isLoggedIn', true);
         return {
           ok: true,
           errors: {},
@@ -56,7 +56,7 @@ export const validators: Validators = {
     register: (registerPayload) => {
       const { email, password, repeatedPassword } = registerPayload;
 
-      const matchingUser = getter('users', [])
+      const matchingUser = getter('users')
         .find((user) => user.email === email);
 
       if (!isNil(matchingUser)) {
@@ -91,6 +91,123 @@ export const validators: Validators = {
         errors: {},
       };
     },
+  },
+  event: {
+    allCategories: null,
+    allUserEvents: null,
+    create: (createPayload) => {
+      const {
+        categories, description, members, name,
+      } = createPayload;
+
+      const eventCategories = getter('eventCategories')
+        .map((category) => category.id);
+
+      const users = getter('users')
+        .map((user) => user.id);
+
+      if (!categories.every((id) => eventCategories.includes(id))) {
+        return {
+          ok: false,
+          errors: {
+            categories: ERRORS.events.create.unknownCategories,
+          },
+        };
+      }
+
+      if (isEmpty(description)) {
+        return {
+          ok: false,
+          errors: {
+            description: ERRORS.events.create.emptyDescription,
+          },
+        };
+      }
+
+      if (isEmpty(name)) {
+        return {
+          ok: false,
+          errors: {
+            name: ERRORS.events.create.emptyName,
+          },
+        };
+      }
+
+      if (!members.every((id) => users.includes(id))) {
+        return {
+          ok: false,
+          errors: {
+            members: ERRORS.events.create.unknownMembers,
+          },
+        };
+      }
+
+      return { ok: true, errors: {} };
+    },
+    remove: (removePayload) => {
+      const { eventId } = removePayload;
+
+      const loggedInUser = getter('loggedInUser');
+      const selectedEvent = getter('events').find((event) => event.id === eventId);
+
+      if (isNil(loggedInUser) || loggedInUser.id !== selectedEvent?.owner) {
+        return {
+          ok: false,
+          errors: {
+            eventId: ERRORS.events.remove.notAnOwner,
+          },
+        };
+      }
+
+      if (isNil(selectedEvent)) {
+        return {
+          ok: false,
+          errors: {
+            eventId: ERRORS.events.remove.doesNotExist,
+          },
+        };
+      }
+
+      return {
+        ok: true,
+        errors: {},
+      };
+    },
+    update: (updatePayload) => {
+      const { eventId } = updatePayload;
+
+      const events = getter('events')
+        .map((event) => event.id);
+
+      const loggedInUser = getter('loggedInUser');
+      const selectedEvent = getter('events').find((event) => event.id === eventId);
+
+      if (isNil(loggedInUser) || loggedInUser.id !== selectedEvent?.owner) {
+        return {
+          ok: false,
+          errors: {
+            eventId: ERRORS.events.update.notAnOwner,
+          },
+        };
+      }
+
+      if (!events.includes(eventId)) {
+        return {
+          ok: false,
+          errors: {
+            eventId: ERRORS.events.update.doesNotExist,
+          },
+        };
+      }
+
+      return {
+        ok: true,
+        errors: {},
+      };
+    },
+  },
+  user: {
+    allUsers: null,
   },
 };
 

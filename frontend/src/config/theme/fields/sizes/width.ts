@@ -5,6 +5,7 @@ const width = {
   productMainImage: '669px',
   productListImage: '256px',
   discoveryCard: '180px',
+  drawer: '360px',
 } as const;
 
 export type Width = typeof width;

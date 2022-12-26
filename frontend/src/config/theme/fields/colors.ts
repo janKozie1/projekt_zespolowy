@@ -2,6 +2,7 @@ const colors = {
   greyscale: {
     0: '#fff',
     10: '#F8F8F8',
+    30: '#d1d1d1',
     50: '#BBBBBB',
     90: '#303030',
     100: '#000',

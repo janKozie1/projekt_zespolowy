@@ -1,28 +1,9 @@
-import type { Literal } from '../../../utils/types';
+import type { Nullable } from '../../../utils/types';
 
-export type ValidationResult<T extends Literal> = Readonly<{
-  ok: boolean;
-  errors: Partial<{
-    [key in keyof T]: string;
-  }>;
-}>;
-
-type SyncAPICallFN<Arg, Output> = null extends Arg
-  ? () => Output
-  : (arg: Arg) => Output;
-
-type APICallFN<Arg, Output> = null extends Arg
-  ? () => Promise<Output>
-  : (arg: Arg) => Promise<Output>;
-
-export type SyncRequestWithValidationFN<T extends Literal> = SyncAPICallFN<T, ValidationResult<T>>;
-
-export type RequestWithValidationFN<T extends Literal> = APICallFN<T, {
-  ok: boolean;
-  errors: Partial<{
-    [key in keyof T]: string;
-  }>;
-}>;
+import type {
+  Event, EventCategory, RepeatsEvery, User,
+} from './data';
+import type { APICallFN, RequestWithValidationFN, ToSyncAPI } from './utils';
 
 type AuthAPI = Readonly<{
   login: RequestWithValidationFN<{
@@ -34,20 +15,42 @@ type AuthAPI = Readonly<{
     password: string;
     repeatedPassword: string;
   }>;
-  isLoggedIn: APICallFN<null, boolean>;
+  loggedInUser: APICallFN<null, Nullable<User>>;
   logout: APICallFN<null, boolean>;
 }>;
 
-export type ToSyncAPI<T> = T extends Literal
-  ? {
-    [key in keyof T]: ToSyncAPI<T[key]>
-  }
-  : T extends APICallFN<infer Arg, infer Output>
-    ? SyncAPICallFN<Arg, Output>
-    : never;
+type EventAPI = Readonly<{
+  create: RequestWithValidationFN<{
+    name: string;
+    description: string;
+    date: Date;
+    repeatsEvery: RepeatsEvery;
+    members: User['id'][];
+    categories: EventCategory['id'][];
+  }>;
+  update: RequestWithValidationFN<{
+    eventId: Event['id'];
+    name: string;
+    description: string;
+    date: Date;
+    members: User['id'][];
+    categories: EventCategory['id'][];
+  }>;
+  remove: RequestWithValidationFN<{
+    eventId: string;
+  }>;
+  allUserEvents: APICallFN<null, Event[]>;
+  allCategories: APICallFN<null, EventCategory[]>;
+}>;
+
+type UserApi = Readonly<{
+  allUsers: APICallFN<null, User[]>;
+}>;
 
 export type API = Readonly<{
   auth: AuthAPI;
+  event: EventAPI;
+  user: UserApi;
 }>;
 
 export type SyncApi = ToSyncAPI<API>;

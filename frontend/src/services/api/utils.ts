@@ -3,7 +3,8 @@ import { makeDelayed } from '../../utils/fn';
 import { isLiteral } from '../../utils/guards';
 import type { Literal } from '../../utils/types';
 
-import type { API, SyncApi, ToSyncAPI } from './types';
+import type { API, SyncApi } from './types';
+import type { ToSyncAPI } from './types/utils';
 
 export const syncToDelayedAPI = (
   syncApi: SyncApi, maxDelay: number,

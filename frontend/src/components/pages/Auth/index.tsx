@@ -2,6 +2,7 @@
 import type { ReactElement } from 'react';
 import { useEffect } from 'react';
 
+import isNil from 'lodash/isNil';
 import { useNavigate } from 'react-router';
 
 import TabContext from '@mui/lab/TabContext';
@@ -9,7 +10,7 @@ import TabList from '@mui/lab/TabList';
 import Tab from '@mui/material/Tab';
 
 import { AuthRoutes, BaseRoutes, HomeRoutes } from '../../../config/paths';
-import usePromise, { emptyArgs } from '../../../hooks/usePromise';
+import useApiRequest, { emptyArgs } from '../../../hooks/useApiRequest';
 
 import Rows from '../../atoms/Rows';
 import Tile from '../../atoms/Tile';
@@ -25,10 +26,10 @@ type Props = Readonly<{
 }>;
 
 const AuthPage = ({ type }: Props): ReactElement | null => {
-  const api = useAPI();
+  const { api } = useAPI();
   const navigate = useNavigate();
 
-  const [isLoggedIn, { loading }] = usePromise(api.auth.isLoggedIn, { immediateArgs: emptyArgs });
+  const [loggedInUser, { loading }] = useApiRequest(api.auth.loggedInUser, { immediateArgs: emptyArgs });
 
   const switchType = () => {
     navigate(type === 'login' ? AuthRoutes.REGISTER : AuthRoutes.LOGIN);
@@ -46,7 +47,7 @@ const AuthPage = ({ type }: Props): ReactElement | null => {
 
   useEffect(() => {
     void (async () => {
-      if (isLoggedIn === true) {
+      if (!isNil(loggedInUser) && !isNil(loggedInUser.data)) {
         if (type === 'logout') {
           await api.auth.logout();
           navigate(HomeRoutes.HOME);
@@ -55,13 +56,13 @@ const AuthPage = ({ type }: Props): ReactElement | null => {
         }
       }
     })();
-  }, [type, navigate, isLoggedIn, api]);
+  }, [type, navigate, loggedInUser, api]);
 
   if (type === 'logout' || loading) {
     return <Loading />;
   }
 
-  if (isLoggedIn !== false) {
+  if (!isNil(loggedInUser) && !isNil(loggedInUser.data)) {
     return null;
   }
 
