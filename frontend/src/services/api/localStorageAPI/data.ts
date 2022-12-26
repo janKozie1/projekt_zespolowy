@@ -10,6 +10,7 @@ export const admin: User = {
   email: 'admin@giftology.com',
   id: v4(),
   password: 'admin',
+  details: null,
 };
 
 const builtInEventCategories = {

@@ -14,6 +14,31 @@ export const makeLocalStorageAPI = (): SyncApi => ({
       setter('loggedInUser', null);
       return true;
     },
+    deleteAccount: () => {
+      const loggedInUser = getter('loggedInUser');
+
+      setter('loggedInUser', null);
+      setter('users', (users = []) => users.filter((user) => user.id !== loggedInUser?.id));
+      return true;
+    },
+    changePassword: (changePasswordPayload) => {
+      const validation = validators.auth.changePassword(changePasswordPayload);
+      const loggedInUser = getter('loggedInUser');
+
+      if (validation.ok) {
+        setter('users', (users = []) => users.map((user) => (user.id === loggedInUser?.id ? {
+          ...user,
+          password: changePasswordPayload.password,
+        } : user)));
+
+        setter('loggedInUser', (user = null) => (isNil(user) ? null : {
+          ...user,
+          password: changePasswordPayload.password,
+        }));
+      }
+
+      return validation;
+    },
     loggedInUser: () => getter('loggedInUser'),
     login: (loginPayload) => {
       const validation = validators.auth.login(loginPayload);
@@ -35,6 +60,7 @@ export const makeLocalStorageAPI = (): SyncApi => ({
           id: v4(),
           email: registerPayload.email,
           password: registerPayload.password,
+          details: null,
         };
 
         setter('users', (users = []) => users.concat([newUser]));

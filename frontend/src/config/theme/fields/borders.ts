@@ -6,7 +6,7 @@ const widths = {
   default: '2px',
 };
 
-const createBorders = <T extends keyof Colors>(
+const createBorders = <T extends keyof Omit<Colors, 'avatars'>>(
   width: keyof typeof widths, color: T,
 ): Record<keyof Colors[T], string> => Object.fromEntries(
     Object.entries(colors[color]).map(([key, colorCode]) => [key, `${widths[width]} solid ${colorCode}`]),

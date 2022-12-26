@@ -15,7 +15,13 @@ type AuthAPI = Readonly<{
     password: string;
     repeatedPassword: string;
   }>;
+  changePassword: RequestWithValidationFN<{
+    currentPassword: string;
+    password: string;
+    repeatedPassword: string;
+  }>;
   loggedInUser: APICallFN<null, Nullable<User>>;
+  deleteAccount: APICallFN<null, boolean>;
   logout: APICallFN<null, boolean>;
 }>;
 

@@ -1,3 +1,5 @@
+import type { Nullable } from '../../../utils/types';
+
 export enum RepeatsEvery {
   never = 'never',
   week = 'week',
@@ -10,6 +12,15 @@ export type User = Readonly<{
   id: string;
   email: string;
   password: string;
+  details: Nullable<Partial<{
+    billingAddress: Readonly<{
+      houseNumber: string;
+      streetName: string;
+      town: string;
+      postalCode: string;
+      country: string;
+    }>;
+  }>>;
 }>;
 
 export type EventCategory = Readonly<{
