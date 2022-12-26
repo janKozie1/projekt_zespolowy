@@ -1,7 +1,7 @@
 import type { Nullable } from '../../../utils/types';
 
 import type {
-  Event, EventCategory, GiftCategory, PaymentMethod, User,
+  Event, EventCategory, GiftCategory, PaymentMethod, User, Notification,
 } from '../types/data';
 
 export type LocalStorageShape = Readonly<{
@@ -11,4 +11,5 @@ export type LocalStorageShape = Readonly<{
   eventCategories: EventCategory[];
   events: Event[];
   paymentMethods: PaymentMethod[];
+  notifications: Notification[];
 }>;

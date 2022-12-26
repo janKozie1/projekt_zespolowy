@@ -42,6 +42,8 @@ const EventForm = ({ submitHandler, initialData }: Props): ReactElement => {
 
   const allowedEventCategories = eventCategories
     .filter((category) => !category.builtInEventCategory || (initialData?.categories ?? []).includes(category.id));
+  const allowedUsers = users
+    .filter((user) => loggedInUser.friends.includes(user.id) || (initialData?.members ?? []).includes(user.id));
 
   return (
     <FormProvider {...form}>
@@ -129,9 +131,9 @@ const EventForm = ({ submitHandler, initialData }: Props): ReactElement => {
             render={({ field, fieldState }) => (
               <Autocomplete
                 {...field}
-                {...toAutocompleteProps(field, users)}
+                {...toAutocompleteProps(field, allowedUsers)}
                 multiple
-                options={users}
+                options={allowedUsers}
                 getOptionLabel={(option) => option.email}
                 getOptionDisabled={(option) => option.id === loggedInUser.id}
                 noOptionsText="Brak opcji"

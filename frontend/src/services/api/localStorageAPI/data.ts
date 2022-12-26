@@ -10,6 +10,7 @@ export const admin: User = {
   email: 'admin@giftology.com',
   id: v4(),
   password: 'admin',
+  friends: [],
   details: null,
 };
 
@@ -96,6 +97,7 @@ const defaults: Defaults = {
   events: [],
   users: [admin],
   giftCategories: [],
+  notifications: [],
   loggedInUser: null,
   paymentMethods: [
     {
