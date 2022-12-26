@@ -245,6 +245,17 @@ export const validators: Validators = {
   },
   user: {
     allUsers: null,
+    updateBillingAddress: () => ({
+      ok: true,
+      errors: {},
+    }),
+    updatePaymentInfo: () => ({
+      ok: true,
+      errors: {},
+    }),
+  },
+  payment: {
+    availableMethods: null,
   },
 };
 

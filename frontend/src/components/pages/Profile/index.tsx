@@ -20,22 +20,26 @@ import Tile from '../../atoms/Tile';
 import Avatar from '../../molecules/Avatar';
 import PageHeader from '../../molecules/PageHeader';
 import { useAPI } from '../../organisms/ApiProvider';
+import type { Props as BillingAddressFormProps } from '../../organisms/BillingAddressForm';
+import BillingAddressForm from '../../organisms/BillingAddressForm';
 import type { Props as ChangePasswordFormProps, FormRef as ChangePasswordFormRef } from '../../organisms/ChangePasswordForm';
 import ChangePasswordForm from '../../organisms/ChangePasswordForm';
 import { useConstantData } from '../../organisms/ConstantDataProvider';
+import type { Props as PaymentMethodFormProps } from '../../organisms/PaymentMethodForm';
+import PaymentMethodForm from '../../organisms/PaymentMethodForm';
 
 enum Tabs {
-  details = 'details',
+  notifications = 'notifications',
   security = 'security',
   paymentPreferences = 'paymentPreferences',
 }
 
 const Profile = (): ReactElement => {
   const { loggedInUser } = useConstantData();
-  const { api } = useAPI();
+  const { api, refreshQueries } = useAPI();
   const navigate = useNavigate();
 
-  const [activeTab, setActiveTab] = useState(Tabs.details);
+  const [activeTab, setActiveTab] = useState(Tabs.notifications);
 
   const changePasswordFormRef = useRef<ChangePasswordFormRef>(null);
   const changePasswordSubmitHandler: ChangePasswordFormProps['submitHandler'] = {
@@ -47,6 +51,16 @@ const Profile = (): ReactElement => {
         currentPassword: '',
       });
     },
+  };
+
+  const billingAddressSubmitHandler: BillingAddressFormProps['submitHandler'] = {
+    onSubmit: api.user.updateBillingAddress,
+    onSuccess: () => refreshQueries([api.auth.loggedInUser]),
+  };
+
+  const paymentMethodSubmitHandler: PaymentMethodFormProps['submitHandler'] = {
+    onSubmit: api.user.updatePaymentInfo,
+    onSuccess: () => refreshQueries([api.auth.loggedInUser]),
   };
 
   const onAccountDelete = async () => {
@@ -72,17 +86,41 @@ const Profile = (): ReactElement => {
             <Box mt={-4} width="100%">
               <TabContext value={activeTab}>
                 <TabList onChange={(_, newTab: Tabs) => setActiveTab(newTab)} aria-label="lab API tabs example">
-                  <Tab label="Szczegóły" value={Tabs.details} />
+                  <Tab label="Powiadomienia" value={Tabs.notifications} />
                   <Tab label="Płatności" value={Tabs.paymentPreferences} />
                   <Tab label="Bezpieczeństwo" value={Tabs.security} />
                 </TabList>
                 <Box mt={-0.5} width="100%"><Divider /></Box>
                 <Box p={4}>
-                  <TabPanel value={Tabs.details}>
+                  <TabPanel value={Tabs.notifications}>
                     Item One
                   </TabPanel>
                   <TabPanel value={Tabs.paymentPreferences}>
-                    Item Two
+                    <Rows gap={6}>
+                      <Rows gap={4}>
+                        <Text type="body" variant="default">
+                          Adres rozliczeniowy
+                        </Text>
+                        <Box width="30%">
+                          <BillingAddressForm
+                            submitHandler={billingAddressSubmitHandler}
+                            initialData={loggedInUser.details?.billingAddress}
+                          />
+                        </Box>
+                      </Rows>
+                      <Divider />
+                      <Rows gap={4}>
+                        <Text type="body" variant="default">
+                          Preferowana metoda płatności
+                        </Text>
+                        <Box width="30%">
+                          <PaymentMethodForm
+                            submitHandler={paymentMethodSubmitHandler}
+                            initialData={loggedInUser.details?.payments}
+                          />
+                        </Box>
+                      </Rows>
+                    </Rows>
                   </TabPanel>
                   <TabPanel value={Tabs.security}>
                     <Rows gap={6}>

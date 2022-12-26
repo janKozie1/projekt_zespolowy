@@ -3,9 +3,11 @@ import {
   useEffect, useMemo, useRef, useState,
 } from 'react';
 
-import { isNil } from 'lodash';
+import isNil from 'lodash/isNil';
+import last from 'lodash/last';
 
 import { refreshableContext } from '../components/organisms/ApiProvider';
+import { omitLoading } from '../utils/fn';
 import type { Nullable } from '../utils/types';
 
 import useSelfUpdatingRef from './useSelfUpdatingRef';
@@ -44,7 +46,7 @@ const useApiRequest = <Args extends unknown[], ReturnValue extends Promise<unkno
 
   const runPromiseRef = useSelfUpdatingRef<UseApiRequestReturnValue<Args, ReturnValue>[1]['run']>(async (...args) => {
     lastUsedArgsRef.current = args;
-    setLoading(true);
+    setLoading(last(args) !== omitLoading);
     setValue(await getter(...args));
     setLoading(false);
   });
@@ -62,7 +64,8 @@ const useApiRequest = <Args extends unknown[], ReturnValue extends Promise<unkno
 
   useEffect(() => {
     if (toRefresh.some((fn) => fn === getter) && !isNil(lastUsedArgsRef.current)) {
-      void memoizedRunPromise(...lastUsedArgsRef.current);
+      const args = [...lastUsedArgsRef.current, omitLoading] as typeof lastUsedArgsRef.current;
+      void memoizedRunPromise(...args);
     }
   }, [getter, toRefresh, memoizedRunPromise]);
 

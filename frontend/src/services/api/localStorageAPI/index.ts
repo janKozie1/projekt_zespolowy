@@ -1,12 +1,20 @@
-import { isNil } from 'lodash';
+import merge from 'lodash/fp/merge';
+import isNil from 'lodash/isNil';
 import { v4 } from 'uuid';
 
 import type { SyncApi } from '../types';
-import type { Event } from '../types/data';
+import type { Event, User } from '../types/data';
 
 import { admin, makeBuiltInEvents } from './data';
 import { getter, setter } from './utils';
 import { validators } from './validators';
+
+const updateUser = (fields: Partial<User>) => {
+  const loggedInUser = getter('loggedInUser');
+
+  setter('users', (users = []) => users.map((user) => (user.id === loggedInUser?.id ? merge(user, fields) : user)));
+  setter('loggedInUser', (user = null) => (isNil(user) ? null : merge(user, fields)));
+};
 
 export const makeLocalStorageAPI = (): SyncApi => ({
   auth: {
@@ -23,18 +31,9 @@ export const makeLocalStorageAPI = (): SyncApi => ({
     },
     changePassword: (changePasswordPayload) => {
       const validation = validators.auth.changePassword(changePasswordPayload);
-      const loggedInUser = getter('loggedInUser');
 
       if (validation.ok) {
-        setter('users', (users = []) => users.map((user) => (user.id === loggedInUser?.id ? {
-          ...user,
-          password: changePasswordPayload.password,
-        } : user)));
-
-        setter('loggedInUser', (user = null) => (isNil(user) ? null : {
-          ...user,
-          password: changePasswordPayload.password,
-        }));
+        updateUser({ password: changePasswordPayload.password });
       }
 
       return validation;
@@ -131,6 +130,35 @@ export const makeLocalStorageAPI = (): SyncApi => ({
   },
   user: {
     allUsers: () => getter('users').filter((user) => user.email !== admin.email),
+    updateBillingAddress: (updatePayload) => {
+      const validation = validators.user.updateBillingAddress(updatePayload);
+
+      if (validation.ok) {
+        updateUser({
+          details: {
+            billingAddress: updatePayload,
+          },
+        });
+      }
+
+      return validation;
+    },
+    updatePaymentInfo: (updatePayload) => {
+      const validation = validators.user.updatePaymentInfo(updatePayload);
+
+      if (validation.ok) {
+        updateUser({
+          details: {
+            payments: updatePayload,
+          },
+        });
+      }
+
+      return validation;
+    },
+  },
+  payment: {
+    availableMethods: () => getter('paymentMethods'),
   },
 });
 

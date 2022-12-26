@@ -14,11 +14,13 @@ export type User = Readonly<{
   password: string;
   details: Nullable<Partial<{
     billingAddress: Readonly<{
-      houseNumber: string;
-      streetName: string;
+      nameAndSurname: string;
+      streetAddress: string;
       town: string;
       postalCode: string;
-      country: string;
+    }>;
+    payments: Readonly<{
+      preferredPaymentMethod: string;
     }>;
   }>>;
 }>;
@@ -41,6 +43,12 @@ export type Event = Readonly<{
   members: User['id'][];
   categories: EventCategory['id'][];
   repeatsEvery: RepeatsEvery;
+}>;
+
+export type PaymentMethod = Readonly<{
+  id: string;
+  name: string;
+  imageURL: string;
 }>;
 
 export type Store = Readonly<{
