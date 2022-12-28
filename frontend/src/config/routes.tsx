@@ -1,5 +1,12 @@
 import SecureRoutesWrapper from '../components/organisms/SecureRoutesWrapper';
+import authRoutes from '../components/pages/Auth/config';
+import calendarRoutes from '../components/pages/Calendar/config';
+import dashboardRoutes from '../components/pages/Dashboard/config';
 import homeRoutes from '../components/pages/Home/config';
+import productRoutes from '../components/pages/Product/config';
+import profileRoutes from '../components/pages/Profile/config';
+import settingsRoutes from '../components/pages/Settings/config';
+import storeRoutes from '../components/pages/Store/config';
 import type { AnyRoutesConfig } from '../hooks/useRoutes';
 import { emptyRoutesConfig } from '../hooks/useRoutes';
 import type { RoutesConfig, WrapRoutes } from '../utils/routes';
@@ -17,10 +24,17 @@ const defaultSecureConfig: RoutesConfig<WrapRoutes<typeof BaseRoutes>> = {
 
 const secureRoutes: AnyRoutesConfig = [
   defaultSecureConfig,
-  homeRoutes,
+  dashboardRoutes,
+  calendarRoutes,
+  productRoutes,
+  profileRoutes,
+  settingsRoutes,
+  storeRoutes,
 ].reduce(mergeConfigs, emptyRoutesConfig);
 
 const insecureRoutes: AnyRoutesConfig = [
+  homeRoutes,
+  authRoutes,
 ].reduce(mergeConfigs, emptyRoutesConfig);
 
 const config = mergeConfigs(insecureRoutes, secureRoutes);

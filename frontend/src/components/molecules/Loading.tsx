@@ -1,7 +1,16 @@
 import type { ReactElement } from 'react';
 
-import { CircularProgress, Fade } from '@mui/material';
 import styled from 'styled-components';
+
+import { CircularProgress } from '@mui/material';
+
+const variants = {
+  submit: '26px',
+  calendarDay: '18px',
+  default: undefined,
+};
+
+type Variant = keyof typeof variants;
 
 const Container = styled.div`
   align-items: center;
@@ -11,11 +20,13 @@ const Container = styled.div`
   width: 100%;
 `;
 
-const Loading = (): ReactElement => (
+type Props = Readonly<{
+  variant?: Variant;
+}>;
+
+const Loading = ({ variant = 'default' }: Props): ReactElement => (
   <Container>
-    <Fade>
-      <CircularProgress color="primary" />
-    </Fade>
+    <CircularProgress color="primary" size={variants[variant]} />
   </Container>
 );
 

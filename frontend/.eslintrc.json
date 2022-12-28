@@ -40,6 +40,7 @@
     "react/jsx-indent-props": [2, 2],
     "no-debugger": "warn",
     "no-multiple-empty-lines": ["error", { "max": 1 }],
+    "@typescript-eslint/no-misused-promises": "off",
     "react/function-component-definition": "off",
     "@typescript-eslint/no-type-alias": "off",
     "@typescript-eslint/object-curly-spacing": ["error", "always"],
@@ -80,7 +81,7 @@
             "position": "before"
           },
           {
-            "pattern": "{@mui/**}",
+            "pattern": "@mui/**",
             "group": "external",
             "position": "after"
           },

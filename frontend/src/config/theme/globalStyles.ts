@@ -1,14 +1,12 @@
 import { css } from 'styled-components';
 
-import { htmlFontScale, letterSpacing } from './typography/sizes';
+import { htmlFontScale, letterSpacing } from './fields/typography/sizes';
 
 import theme from '.';
 
 const globalStyle = css`
   * {
     box-sizing: border-box;
-    font-family: inherit;
-    letter-spacing: inherit;
     margin: 0;
     padding: 0;
   }
@@ -20,10 +18,15 @@ const globalStyle = css`
   html,
   body,
   body > #root {
-    font-family: ${theme.typefaces.default}, sans-serif;
+    font-family: ${theme.typography.typefaces.default}, sans-serif;
     height: 100%;
     letter-spacing: ${letterSpacing};
     overflow: hidden;
+
+    * {
+      font-family: inherit;
+      letter-spacing: inherit;
+    }
   }
   body > #root {
     display: flex;

@@ -4,8 +4,10 @@ const sizes = {
   300: '1.4rem',
   400: '1.6rem',
   500: '1.8rem',
-  600: '2.4rem',
-  700: '3.2rem',
+  600: '2.0rem',
+  700: '3.0rem',
+  900: '6.0rem',
+  1000: '9.6rem',
 } as const;
 
 export const htmlFontScale = 0.625;

@@ -1,7 +1,6 @@
 const config = {
   basePath: '/',
-  titleName: 'Giftly',
-
+  titleName: 'Giftology',
 };
 
 export default config;
