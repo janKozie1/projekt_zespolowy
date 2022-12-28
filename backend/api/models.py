@@ -63,7 +63,7 @@ class CartGifts(models.Model):
 class ShoppingCart(models.Model):
     id_event = models.ForeignKey('UserEvents', on_delete=models.CASCADE)
     due_date = models.DateTimeField()
-    completed = models.BooleanField()
+    completed = models.BooleanField(default = False)
 
 
 class EventCategories(models.Model):
