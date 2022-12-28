@@ -1,11 +1,13 @@
 from django.db import models
 
+
 class Example(models.Model):
     exampleString = models.CharField(max_length=50)
     exampleInt = models.IntegerField()
 
     def __str__(self):
         return self.name
+
 
 class Users(models.Model):
     name = models.CharField(max_length=255)
@@ -42,7 +44,6 @@ class Gifts(models.Model):
     price = models.FloatField()
     store_id = models.ForeignKey('Store', on_delete=models.CASCADE)
     picture = models.CharField(max_length=255)
-    id_category = models.ForeignKey('GiftsCategories', on_delete=models.CASCADE)
 
 
 class GiftsCategories(models.Model):
