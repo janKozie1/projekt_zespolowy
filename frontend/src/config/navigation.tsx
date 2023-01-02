@@ -1,7 +1,13 @@
 import type { ReactElement } from 'react';
 
 import {
-  HomeOutlined, LocalGroceryStoreOutlined, CalendarMonthOutlined, PersonOutlined, SettingsOutlined, LogoutOutlined,
+  HomeOutlined,
+  LocalGroceryStoreOutlined,
+  CalendarMonthOutlined,
+  PersonOutlined,
+  SettingsOutlined,
+  LogoutOutlined,
+  PeopleOutline,
 } from '@mui/icons-material';
 
 import {
@@ -11,6 +17,7 @@ import {
   ProfileRoutes,
   SettingsRoutes,
   AuthRoutes,
+  PeopleRoutes,
 } from './paths';
 
 export type NavItem = Readonly<{
@@ -55,6 +62,12 @@ const navigation: readonly NavGroup[] = [
         title: 'Profil',
         icon: <PersonOutlined />,
         url: ProfileRoutes.profile,
+      },
+      {
+        id: 'people',
+        title: 'Osoby',
+        icon: <PeopleOutline />,
+        url: PeopleRoutes.people,
       },
       {
         id: 'settings',

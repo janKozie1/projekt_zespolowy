@@ -12,13 +12,15 @@ import type { User } from '../../services/api/types/data';
 
 import Avatar from '../molecules/Avatar';
 
-type Props = Readonly<{
-  user: User;
+type BaseUser = Pick<User, 'email' | 'id'>;
+
+type Props<T extends BaseUser> = Readonly<{
+  user: T;
   pending?: boolean;
-  onRemove: (user: User) => void;
+  onRemove: (user: T) => void;
 }>;
 
-const FriendListItem = ({ user, pending = false, onRemove }: Props): ReactElement => (
+const FriendListItem = <T extends BaseUser>({ user, pending = false, onRemove }: Props<T>): ReactElement => (
   <ListItem>
     <ListItemAvatar>
       <Avatar user={user} variant="md" />

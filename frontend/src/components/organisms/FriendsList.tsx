@@ -27,12 +27,12 @@ const FriendsList = (): ReactElement => {
   });
 
   const onCancelFriendRequest = async (requestId: string) => {
-    await api.user.cancelFriendRequest({ requestId });
+    await api.user.friends.cancelRequest({ requestId });
     refreshQueries([api.user.notifications]);
   };
 
   const onRemoveFriend = async (friend: User) => {
-    await api.user.removeFromFriends({ friendId: friend.id });
+    await api.user.friends.remove({ friendId: friend.id });
     refreshQueries([api.auth.loggedInUser]);
   };
 

@@ -38,12 +38,12 @@ const TextContainer = styled.div<TextContainerProps>`
 `;
 
 type Props = Readonly<{
-  user: User;
+  user: Pick<User, 'email' | 'id'>;
   variant: Variant;
 }>;
 
 const Avatar = ({ user, variant }: Props): ReactElement => {
-  const hashed = user.email.split('')
+  const hashed = user.id.split('')
     .map((char) => char.charCodeAt(0))
     .reduce(add, 0);
 
