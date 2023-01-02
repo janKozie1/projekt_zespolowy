@@ -19,18 +19,27 @@ export type Notification = Readonly<{
   to: User['id'];
 }>;
 
+export type Address = Readonly<{
+  nameAndSurname: string;
+  streetAddress: string;
+  town: string;
+  postalCode: string;
+}>;
+
+export type GiftReceiver = Readonly<{
+  id: string;
+  address: Address;
+  preferredCategories: GiftCategory['id'][];
+}>;
+
 export type User = Readonly<{
   id: string;
   email: string;
   password: string;
+  giftReceivers: GiftReceiver[];
   friends: User['id'][];
   details: Nullable<Partial<{
-    billingAddress: Readonly<{
-      nameAndSurname: string;
-      streetAddress: string;
-      town: string;
-      postalCode: string;
-    }>;
+    billingAddress: Address;
     payments: Readonly<{
       preferredPaymentMethod: string;
     }>;
@@ -53,6 +62,7 @@ export type Event = Readonly<{
   createdAt: Date;
   owner: User['id'];
   members: User['id'][];
+  needGifts: GiftReceiver['id'][];
   categories: EventCategory['id'][];
   repeatsEvery: RepeatsEvery;
 }>;

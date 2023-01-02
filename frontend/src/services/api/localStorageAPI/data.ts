@@ -12,6 +12,7 @@ export const admin: User = {
   password: 'admin',
   friends: [],
   details: null,
+  giftReceivers: [],
 };
 
 const builtInEventCategories = {
@@ -87,6 +88,7 @@ export const makeBuiltInEvents = (userId: User['id'], relativeTo: Date): Event[]
     owner: userId,
     repeated: false,
     repeatsEvery: RepeatsEvery.year,
+    needGifts: [],
   }));
 };
 type Defaults = Readonly<{
@@ -96,9 +98,26 @@ type Defaults = Readonly<{
 const defaults: Defaults = {
   events: [],
   users: [admin],
-  giftCategories: [],
   notifications: [],
   loggedInUser: null,
+  giftCategories: [
+    {
+      id: v4(),
+      name: 'Zabawki',
+    },
+    {
+      id: v4(),
+      name: 'Kosmetyki',
+    },
+    {
+      id: v4(),
+      name: 'Karnety',
+    },
+    {
+      id: v4(),
+      name: 'Narzędzia',
+    },
+  ],
   paymentMethods: [
     {
       id: v4(),

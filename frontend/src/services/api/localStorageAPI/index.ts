@@ -65,11 +65,12 @@ export const makeLocalStorageAPI = (): SyncApi => ({
       const validation = validators.auth.register(registerPayload);
 
       if (validation.ok) {
-        const newUser = {
+        const newUser: User = {
           id: v4(),
           email: registerPayload.email,
           password: registerPayload.password,
           friends: [],
+          giftReceivers: [],
           details: null,
         };
 
@@ -94,6 +95,7 @@ export const makeLocalStorageAPI = (): SyncApi => ({
           description: createPayload.description,
           repeatsEvery: createPayload.repeatsEvery,
           members: createPayload.members,
+          needGifts: createPayload.needGifts,
           name: createPayload.name,
           builtIn: false,
           owner: loggedInUser.id,
@@ -158,46 +160,77 @@ export const makeLocalStorageAPI = (): SyncApi => ({
         }
       });
     },
-    removeFromFriends: (payload) => {
-      const validation = validators.user.removeFromFriends(payload);
+    friends: {
+      remove: (payload) => {
+        const validation = validators.user.friends.remove(payload);
 
-      const friend = getter('users').find((user) => user.id === payload.friendId);
-      const loggedInUser = getter('loggedInUser');
+        const friend = getter('users').find((user) => user.id === payload.friendId);
+        const loggedInUser = getter('loggedInUser');
 
-      if (validation.ok && !isNil(friend) && !isNil(loggedInUser)) {
-        updateUser({ friends: loggedInUser.friends.filter((f) => f !== friend.id) }, loggedInUser);
-        updateUser({ friends: friend.friends.filter((f) => f !== loggedInUser.id) }, friend);
-      }
+        if (validation.ok && !isNil(friend) && !isNil(loggedInUser)) {
+          updateUser({ friends: loggedInUser.friends.filter((f) => f !== friend.id) }, loggedInUser);
+          updateUser({ friends: friend.friends.filter((f) => f !== loggedInUser.id) }, friend);
+        }
 
-      return validation;
+        return validation;
+      },
+      add: (payload) => {
+        const validation = validators.user.friends.add(payload);
+
+        const targetUser = getter('users').find((user) => user.email === payload.friendEmail);
+        const loggedInUser = getter('loggedInUser');
+
+        if (validation.ok && !isNil(loggedInUser) && !isNil(targetUser)) {
+          setter('notifications', (notifications = []) => notifications.concat([
+            {
+              id: v4(),
+              kind: 'friendRequest',
+              from: loggedInUser.id,
+              to: targetUser.id,
+            },
+          ]));
+        }
+
+        return validation;
+      },
+      cancelRequest: (payload) => {
+        const validation = validators.user.friends.cancelRequest(payload);
+
+        if (validation.ok) {
+          setter('notifications', (notifications = []) => notifications.filter((notification) => notification.id !== payload.requestId));
+        }
+
+        return validation;
+      },
     },
-    addToFriends: (payload) => {
-      const validation = validators.user.addToFriends(payload);
+    giftReceivers: {
+      add: (payload) => {
+        const validation = validators.user.giftReceivers.add(payload);
+        const loggedInUser = getter('loggedInUser');
 
-      const targetUser = getter('users').find((user) => user.email === payload.friendEmail);
-      const loggedInUser = getter('loggedInUser');
+        if (validation.ok && !isNil(loggedInUser)) {
+          updateUser({
+            giftReceivers: [{
+              id: v4(),
+              ...payload,
+            }, ...loggedInUser.giftReceivers],
+          });
+        }
 
-      if (validation.ok && !isNil(loggedInUser) && !isNil(targetUser)) {
-        setter('notifications', (notifications = []) => notifications.concat([
-          {
-            id: v4(),
-            kind: 'friendRequest',
-            from: loggedInUser.id,
-            to: targetUser.id,
-          },
-        ]));
-      }
+        return validation;
+      },
+      remove: (payload) => {
+        const validation = validators.user.giftReceivers.remove(payload);
+        const loggedInUser = getter('loggedInUser');
 
-      return validation;
-    },
-    cancelFriendRequest: (payload) => {
-      const validation = validators.user.cancelFriendRequest(payload);
+        if (validation.ok && !isNil(loggedInUser)) {
+          updateUser({
+            giftReceivers: loggedInUser.giftReceivers.filter((receiver) => receiver.id !== payload.receiverId),
+          });
+        }
 
-      if (validation.ok) {
-        setter('notifications', (notifications = []) => notifications.filter((notification) => notification.id !== payload.requestId));
-      }
-
-      return validation;
+        return validation;
+      },
     },
     allUsers: () => getter('users').filter((user) => user.email !== admin.email),
     updateBillingAddress: (updatePayload) => {
@@ -254,6 +287,9 @@ export const makeLocalStorageAPI = (): SyncApi => ({
 
       return validation;
     },
+  },
+  gifts: {
+    allCategories: () => getter('giftCategories'),
   },
 });
 

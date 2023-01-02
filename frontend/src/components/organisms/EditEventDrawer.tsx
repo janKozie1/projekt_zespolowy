@@ -55,13 +55,7 @@ const EditEventDrawer = ({ drawer }: Props): ReactElement => {
       <Rows gap={4}>
         <EventForm
           submitHandler={onSubmit}
-          initialData={{
-            categories: drawer.event.categories,
-            description: drawer.event.description,
-            name: drawer.event.name,
-            members: drawer.event.members,
-            repeatsEvery: drawer.event.repeatsEvery,
-          }}
+          initialData={drawer.event}
         />
         <Button variant="outlined" onClick={onRemove}>
           Usuń
