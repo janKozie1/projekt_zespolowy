@@ -9,4 +9,7 @@ setLocale({
     email: 'To pole musi być poprawnym emailem',
     min: 'To pole musi mieć co najmniej ${min} znaki',
   },
+  array: {
+    min: 'To pole musi mieć co najmniej ${min} wybranych opcji',
+  },
 });

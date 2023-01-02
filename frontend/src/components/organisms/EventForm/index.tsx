@@ -103,6 +103,30 @@ const EventForm = ({ submitHandler, initialData }: Props): ReactElement => {
           />
           <Controller
             control={form.control}
+            name="needGifts"
+            defaultValue={[]}
+            render={({ field, fieldState }) => (
+              <Autocomplete
+                {...field}
+                {...toAutocompleteProps(field, loggedInUser.giftReceivers)}
+                multiple
+                options={loggedInUser.giftReceivers}
+                getOptionLabel={(option) => option.address.nameAndSurname}
+                noOptionsText="Brak opcji"
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    {...parseFieldState(fieldState)}
+                    variant="outlined"
+                    label="Osoby potrzebujące prezentu"
+                    placeholder="Osoby potrzebujące prezentu"
+                  />
+                )}
+              />
+            )}
+          />
+          <Controller
+            control={form.control}
             name="repeatsEvery"
             defaultValue={RepeatsEvery.never}
             render={({ field }) => (
@@ -142,8 +166,8 @@ const EventForm = ({ submitHandler, initialData }: Props): ReactElement => {
                     {...params}
                     {...parseFieldState(fieldState)}
                     variant="outlined"
-                    label="Członkowie"
-                    placeholder="Członkowie"
+                    label="Członkowie zrzutki"
+                    placeholder="Członkowie zrzutki"
                   />
                 )}
               />

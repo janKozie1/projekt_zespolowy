@@ -36,6 +36,10 @@ export const ProfileRoutes = separateOptionalPaths({
   profile: '/profile',
 } as const);
 
+export const PeopleRoutes = separateOptionalPaths({
+  people: '/people',
+} as const);
+
 export const SettingsRoutes = separateOptionalPaths({
   SETTINGS: '/settings',
 } as const);

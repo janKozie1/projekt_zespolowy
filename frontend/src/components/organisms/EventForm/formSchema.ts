@@ -14,6 +14,11 @@ const formSchema = yup.object({
       .string()
       .required())
     .required(),
+  needGifts: yup
+    .array(yup
+      .string()
+      .required())
+    .required(),
   repeatsEvery: yup
     .mixed<RepeatsEvery>()
     .oneOf(Object.values(RepeatsEvery))

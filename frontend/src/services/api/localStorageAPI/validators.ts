@@ -9,6 +9,11 @@ import type { RequestWithValidationFN, SyncRequestWithValidationFN } from '../ty
 import { ERRORS } from './errors';
 import { getter } from './utils';
 
+const noValidation = {
+  ok: true,
+  errors: {},
+};
+
 type ToValidators<T> = T extends Literal
   ? {
     [key in keyof T]: T[key] extends RequestWithValidationFN<infer Arg>
@@ -246,95 +251,89 @@ export const validators: Validators = {
   user: {
     allUsers: null,
     notifications: null,
-    cancelFriendRequest: () => ({
-      ok: true,
-      errors: {},
-    }),
-    removeFromFriends: () => ({
-      ok: true,
-      errors: {},
-    }),
-    addToFriends: (payload) => {
-      const loggedInUser = getter('loggedInUser');
-      const targetUser = getter('users').find((user) => user.email === payload.friendEmail);
-      const notifications = getter('notifications');
+    giftReceivers: {
+      add: () => noValidation,
+      remove: () => noValidation,
+    },
+    friends: {
+      add: (payload) => {
+        const loggedInUser = getter('loggedInUser');
+        const targetUser = getter('users').find((user) => user.email === payload.friendEmail);
+        const notifications = getter('notifications');
 
-      if (isNil(targetUser)) {
-        return {
-          ok: false,
-          errors: {
-            friendEmail: 'Użytkownik o takim e-mailu nie istnieje',
-          },
-        };
-      }
-
-      if ((loggedInUser?.friends ?? []).some((friendId) => friendId === targetUser.id)) {
-        return {
-          ok: false,
-          errors: {
-            friendEmail: 'Już jesteście znajomymi',
-          },
-        };
-      }
-
-      if (targetUser.id === loggedInUser?.id) {
-        return {
-          ok: false,
-          errors: {
-            friendEmail: 'Nie możesz zaprosić samego siebie',
-          },
-        };
-      }
-
-      const existingRequest = notifications.find((notification) => {
-        if (notification.kind === 'friendRequest') {
-          return (notification.from === loggedInUser?.id && notification.to === targetUser.id)
-            || (notification.to === loggedInUser?.id && notification.from === targetUser.id);
-        }
-
-        return false;
-      });
-
-      if (!isNil(existingRequest)) {
-        if (existingRequest.to === loggedInUser?.id) {
+        if (isNil(targetUser)) {
           return {
             ok: false,
             errors: {
-              friendEmail: 'Użytkownik wysyłał Ci ju zaproszenie',
+              friendEmail: 'Użytkownik o takim e-mailu nie istnieje',
+            },
+          };
+        }
+
+        if ((loggedInUser?.friends ?? []).some((friendId) => friendId === targetUser.id)) {
+          return {
+            ok: false,
+            errors: {
+              friendEmail: 'Już jesteście znajomymi',
+            },
+          };
+        }
+
+        if (targetUser.id === loggedInUser?.id) {
+          return {
+            ok: false,
+            errors: {
+              friendEmail: 'Nie możesz zaprosić samego siebie',
+            },
+          };
+        }
+
+        const existingRequest = notifications.find((notification) => {
+          if (notification.kind === 'friendRequest') {
+            return (notification.from === loggedInUser?.id && notification.to === targetUser.id)
+              || (notification.to === loggedInUser?.id && notification.from === targetUser.id);
+          }
+
+          return false;
+        });
+
+        if (!isNil(existingRequest)) {
+          if (existingRequest.to === loggedInUser?.id) {
+            return {
+              ok: false,
+              errors: {
+                friendEmail: 'Użytkownik wysyłał Ci ju zaproszenie',
+              },
+            };
+          }
+
+          return {
+            ok: false,
+            errors: {
+              friendEmail: 'Użytkownik nie potwierdził jeszcze poprzedniego zaproszenia',
             },
           };
         }
 
         return {
-          ok: false,
-          errors: {
-            friendEmail: 'Użytkownik nie potwierdził jeszcze poprzedniego zaproszenia',
-          },
+          ok: true,
+          errors: {},
         };
-      }
-
-      return {
-        ok: true,
-        errors: {},
-      };
+      },
+      cancelRequest: () => noValidation,
+      remove: () => noValidation,
     },
-    updateBillingAddress: () => ({
-      ok: true,
-      errors: {},
-    }),
-    updatePaymentInfo: () => ({
-      ok: true,
-      errors: {},
-    }),
+    updateBillingAddress: () => noValidation,
+    updatePaymentInfo: () => noValidation,
   },
   payment: {
     availableMethods: null,
   },
   notifications: {
-    confirmNotification: () => ({
-      ok: true,
-      errors: {},
-    }),
+    confirmNotification: () => noValidation,
+  },
+  gifts: {
+    allCategories: null,
   },
 };
 

@@ -44,9 +44,9 @@ const CurrentDayWrapper = styled.div<CurrentDayWrapperProps>`
     aspect-ratio: 1/1;
     z-index: -1;
     border-radius: 50%;
-    left: 0;
-    top: 0;
-    transform: translate(-25%, -25%);
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
     padding: ${toSpacing(1.5)};
     background-color: ${({ theme }) => theme._.colors.accent.primary};
     display: ${({ current }) => (current ? 'block' : 'none')}

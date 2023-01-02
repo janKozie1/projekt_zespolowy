@@ -40,7 +40,7 @@ export const EditEventDrawerModel = (
 
 export type AddPersonDrawer = Drawer<'AddPerson'>;
 
-export const AddPersonDrawerModal = (
+export const AddPersonDrawerModel = (
 ): AddPersonDrawer => ({
   id: v4(),
   type: 'AddPerson',
