@@ -1,8 +1,9 @@
 import type { ReactElement, ReactNode } from 'react';
 
+import { createGlobalStyle, ThemeProvider as StyledThemeProvider } from 'styled-components/macro';
+
 import { ThemeProvider as MuiThemeProvider } from '@mui/material/styles';
 import { StyledEngineProvider } from '@mui/styled-engine';
-import { createGlobalStyle, ThemeProvider as StyledThemeProvider } from 'styled-components/macro';
 
 import theme from '../../config/theme';
 import globalStyle from '../../config/theme/globalStyles';

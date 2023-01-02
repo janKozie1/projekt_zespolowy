@@ -1,41 +1,49 @@
 import type { ReactNode, ReactElement } from 'react';
 
-import Chips from '@mui/material/Chip';
-import Icon from '@mui/material/Icon';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import styled from 'styled-components';
+
+import colors from '../../config/theme/fields/colors';
+import { toSpacing } from '../../config/theme/fields/spacing';
+
+import Text from '../atoms/Text';
+
+import Icon from './Icon';
+
+const variants = {
+  default: colors.greyscale[0],
+  error: colors.accent.error,
+  success: colors.accent.success,
+};
+
+type Variant = keyof typeof variants;
+
+const ChipContainer = styled.div<Pick<Props, 'variant'>>`
+  border: ${({ theme }) => theme._.borders.styles.thin.greyscale[50]};
+  border-radius: ${({ theme }) => theme._.borders.radii.lg};
+  background-color: ${({ variant }) => variants[variant]};
+  padding: ${toSpacing(1)} ${toSpacing(2)};
+  width: max-content;
+  & > * {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: ${toSpacing(2)};
+  }
+`;
 
 type Props = Readonly<{
-  label: ReactNode;
-  icons: ReactNode;
-  color: 'default' | 'error' | 'info' | 'primary' | 'secondary' | 'success' | 'warning' | undefined;
-  fontColor: string;
+  icon: ReactNode;
+  label: string;
+  variant: Variant;
 }>;
 
-const theme = createTheme({
-  palette: {
-    primary: {
-      main: '#81F689',
-    },
-    secondary: {
-      main: '#FF6868',
-    },
-    success: {
-      main: '#FFFFFF',
-    },
-  },
-});
-
-const Chip = ({
-  label, icons, color, fontColor,
-}: Props): ReactElement => (
-  <ThemeProvider theme={theme}>
-    <Chips
-      label={label}
-      icon={<Icon>{icons}</Icon>}
-      color={color}
-      style={{ color: fontColor, border: '1px solid', borderColor: '#A8A8A8' }}
-    />
-  </ThemeProvider>
+const Chip = ({ icon, label, variant }: Props): ReactElement => (
+  <ChipContainer variant={variant}>
+    <Text type="caption" variant="default" inverted={variant === 'error'}>
+      <Icon size="lg">{icon}</Icon>
+      {label}
+    </Text>
+  </ChipContainer>
 );
 
 export default Chip;

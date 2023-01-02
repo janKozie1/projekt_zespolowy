@@ -1,7 +1,10 @@
 import type { ReactElement } from 'react';
 
-import Box from '@mui/material/Box';
 import styled from 'styled-components';
+
+import { Add } from '@mui/icons-material';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 
 import { toSpacing } from '../../../config/theme/fields/spacing';
 
@@ -28,44 +31,48 @@ const Product = (): ReactElement => (
         <Rows gap={4}>
           <ProductLayout>
             <ProductImages
-              images={[
-                'https://gallery.yopriceville.com/var/resizes/Free-Clipart-Pictures/Gifts-and-Chocolates-PNG-/Red_Gift_PNG_Transparent_Clipart.png?m=1639734178',
-                'https://img.pikbest.com/png-images/20220312/gift-box-with-ribbons-cartoon-isolated_6291751.png!bwr800',
-                'https://img.pikbest.com/png-images/20220312/gift-box-with-ribbons-cartoon-isolated_6291751.png!bwr800',
-                'https://img.pikbest.com/png-images/20220312/gift-box-with-ribbons-cartoon-isolated_6291751.png!bwr800',
-                'https://img.pikbest.com/png-images/20220312/gift-box-with-ribbons-cartoon-isolated_6291751.png!bwr800',
-              ]}
+              mainImage="https://gallery.yopriceville.com/var/resizes/Free-Clipart-Pictures/Gifts-and-Chocolates-PNG-/Red_Gift_PNG_Transparent_Clipart.png?m=1639734178"
             />
-            <Box py={8}>
-              <Rows gap={16}>
-                <Rows gap={0}>
-                  <Rows gap={16}>
-                    <Text><h1>Title</h1></Text>
-                    <Text>
-                      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-                    </Text>
-                  </Rows>
-                  <Rows gap={2}>
-                    <Text>
-                      aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi
-                    </Text>
-                    <Text>
-                      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-                    </Text>
-                  </Rows>
-                  <Rows gap={8}>
-                    <Text>
-                      It is a long established fact that a reader will be distracted by the readable content
-                    </Text>
-                    <Text>
-                      packages and web page editors now use Lorem Ipsum as their
-                    </Text>
-                  </Rows>
+            <Box p={8}>
+              <Rows gap={8}>
+                <Rows gap={16}>
+                  <Text type="heading" variant="h4">Produkt</Text>
+                  <Text type="body" variant="default">
+                    Lorem ipsum dolor sit amet, consetetur sadipscing elitr,
+                    sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.
+                    At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren,
+                    no sea takimata sanctus est Lorem ipsum dolor sit amet.
+                    Lorem ipsum dolor sit amet, consetetur sadipscing elitr,
+                    sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
+                    sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.
+                    Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+                    Lorem ipsum dolor sit amet, consetetur sadipscing elitr,
+                    sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
+                    sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.
+                    Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+                    Lorem ipsum dolor sit amet, consetetur sadipscing elitr,
+                    sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.
+                    At vero eos et accusam et justo duo dolores et ea rebum.
+                    Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+                    Lorem ipsum dolor sit amet, consetetur sadipscing elitr,
+                    sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
+                    sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.
+                    Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+                    Lorem ipsum dolor sit amet, consetetur sadipscing elitr,
+                    sed diam nonumy eirmod tempor invidunt ut labore et dolore magna
+                  </Text>
                 </Rows>
-                <Columns gap={8}>
-                  <Text>#ŚWIĘTA</Text>
-                  <Text>#OZDOBNE</Text>
-                </Columns>
+                <Box display="flex" justifyContent="center">
+                  <Text type="heading" variant="h5">84,95 zł</Text>
+                </Box>
+                <Box width="100%" display="flex" justifyContent="center">
+                  <Box width="max-content">
+                    <Columns gap={2}>
+                      <Button variant="contained" startIcon={<Add />}>Dodaj do Ulubionych</Button>
+                      <Button variant="outlined">Kup Teraz</Button>
+                    </Columns>
+                  </Box>
+                </Box>
               </Rows>
             </Box>
           </ProductLayout>

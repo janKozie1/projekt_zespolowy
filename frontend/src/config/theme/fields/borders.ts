@@ -3,9 +3,10 @@ import colors from './colors';
 
 const widths = {
   thin: '1px',
+  default: '2px',
 };
 
-const createBorders = <T extends keyof Colors>(
+const createBorders = <T extends keyof Omit<Colors, 'avatars'>>(
   width: keyof typeof widths, color: T,
 ): Record<keyof Colors[T], string> => Object.fromEntries(
     Object.entries(colors[color]).map(([key, colorCode]) => [key, `${widths[width]} solid ${colorCode}`]),
@@ -20,15 +21,12 @@ const borders = {
   },
   widths,
   styles: {
-    active: {
-    },
-    focus: {
-
+    default: {
+      accent: createBorders('default', 'accent'),
+      greyscale: createBorders('default', 'greyscale'),
     },
     thin: {
-      grey: createBorders('thin', 'grey'),
-      black: createBorders('thin', 'black'),
-      white: createBorders('thin', 'white'),
+      greyscale: createBorders('thin', 'greyscale'),
     },
   },
 } as const;

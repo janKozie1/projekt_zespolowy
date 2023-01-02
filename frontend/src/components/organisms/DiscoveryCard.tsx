@@ -1,12 +1,10 @@
 import type { ReactElement } from 'react';
 
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
 import styled from 'styled-components';
 
-import { toSpacing } from '../../config/theme/fields/spacing';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 
-import Columns from '../atoms/Columns';
 import Rows from '../atoms/Rows';
 import Text from '../atoms/Text';
 
@@ -21,12 +19,11 @@ const CardContainer = styled.div`
 `;
 
 const CardMedia = styled.div`
-  height: 50%;
+  height: 42%;
   object-fit: cover;
   display: flex;
   align-items: center;
   justify-content: center;
-
   > img {
     object-fit: cover;
     max-height: 100%;
@@ -34,33 +31,22 @@ const CardMedia = styled.div`
   }
 `;
 
-const ButtonC = styled.div`
-  background-color:#D7CCC8;
-  margin-bottom:${toSpacing(3)};
-  margin-left:${toSpacing(26)};
-  border-radius: ${toSpacing(0.5)};
-`;
-
-const StyledButton = styled(Button)`
-  color: #303030;
-`;
-
 const DiscoveryCard = (): ReactElement => (
   <CardContainer>
     <CardMedia>
       <img src="https://placekitten.com/200/400" alt="kitten" />
     </CardMedia>
-    <Box p={2} display="flex" justifyContent="space-between" flexDirection="column" flexGrow="1">
+    <Box p={4} display="flex" justifyContent="space-between" flexDirection="column" flexGrow="1">
       <Rows gap={2}>
-        <Text>Loorem ipsum</Text>
-        <Text>Lorem ipsum bla Lorem ipsum bla Lorem ipsum bla Lorem ipsum bla Lorem ipsum bla Lore... ipsum bla</Text>
+        <Text type="heading" variant="h5">Tytuł</Text>
+        <Text type="caption" variant="default">Lorem ipsum bla Lorem ipsum bla Lorem ipsum bla Lorem ipsum bla Lorem ipsum bla Lore... ipsum bla</Text>
       </Rows>
+      <Box ml="auto" mt="auto">
+        <Button variant="contained">
+          Button
+        </Button>
+      </Box>
     </Box>
-    <Columns gap={2}>
-      <ButtonC>
-        <StyledButton variant="text">BUTTON</StyledButton>
-      </ButtonC>
-    </Columns>
   </CardContainer>
 );
 

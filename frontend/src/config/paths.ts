@@ -5,6 +5,13 @@ export const BaseRoutes = separateOptionalPaths({
   BASE: '/',
 } as const);
 
+export const AuthRoutes = separateOptionalPaths({
+  BASE: '/auth',
+  LOGIN: '/auth/login',
+  REGISTER: '/auth/register',
+  LOGOUT: '/auth/logout',
+} as const);
+
 export const DashboardRoutes = separateOptionalPaths({
   DASHBOARD: '/dashboard',
 } as const);
