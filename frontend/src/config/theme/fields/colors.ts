@@ -7,6 +7,9 @@ const colors = {
     90: '#303030',
     100: '#000',
   },
+  green: {
+    0: '#5ec31b',
+  },
   accent: {
     primary: '#BCAAA4',
     secondary: '#BCE0FD',
