@@ -4,6 +4,7 @@ import { v4 } from 'uuid';
 import type { Event, User } from '../types/data';
 import { RepeatsEvery, EventCategory } from '../types/data';
 
+import { repeatEvent } from './apis/utils';
 import type { LocalStorageShape } from './types';
 
 export const admin: User = {
@@ -76,7 +77,7 @@ export const makeBuiltInEvents = (userId: User['id'], relativeTo: Date): Event[]
     },
   ];
 
-  return config.map((event) => ({
+  return config.flatMap((event) => repeatEvent({
     builtIn: true,
     id: v4(),
     categories: [builtInEventCategories[event.type].id],
@@ -86,7 +87,7 @@ export const makeBuiltInEvents = (userId: User['id'], relativeTo: Date): Event[]
     members: [],
     name: event.name,
     owner: userId,
-    repeated: false,
+    originalEvent: null,
     repeatsEvery: RepeatsEvery.year,
     needGifts: [],
   }));
@@ -99,6 +100,8 @@ const defaults: Defaults = {
   events: [],
   users: [admin],
   notifications: [],
+  carts: [],
+  gifts: [],
   loggedInUser: null,
   giftCategories: [
     {

@@ -56,7 +56,7 @@ export type Event = Readonly<{
   id: string;
   name: string;
   description: string;
-  repeated: boolean;
+  originalEvent: Nullable<Event['id']>;
   builtIn: boolean;
   date: Date;
   createdAt: Date;
@@ -100,6 +100,7 @@ export type CategoryMapping = Readonly<{
 export type ShoppingCart = Readonly<{
   id: string;
   event: Event['id'];
+  date: Date;
   completed: boolean;
-  gifts: Gift[];
+  gifts: Gift['id'][];
 }>;

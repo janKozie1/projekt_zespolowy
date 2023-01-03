@@ -87,7 +87,6 @@ const ShopCard = (): ReactElement => {
         <Box ml="auto" width="max-content">
           <Columns gap={2}>
             <Button variant="contained">Dodaj do koszyka</Button>
-            <Button variant="outlined">Kup Teraz</Button>
           </Columns>
         </Box>
       </Box>

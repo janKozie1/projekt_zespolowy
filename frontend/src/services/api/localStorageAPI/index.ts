@@ -5,8 +5,9 @@ import { v4 } from 'uuid';
 import { deepMerge } from '../../../utils/object';
 
 import type { SyncApi } from '../types';
-import type { Event, User } from '../types/data';
+import type { User } from '../types/data';
 
+import eventApi from './apis/event';
 import { admin, makeBuiltInEvents } from './data';
 import { getter, setter } from './utils';
 import { validators } from './validators';
@@ -82,65 +83,7 @@ export const makeLocalStorageAPI = (): SyncApi => ({
       return validation;
     },
   },
-  event: {
-    create: (createPayload) => {
-      const validation = validators.event.create(createPayload);
-      const loggedInUser = getter('loggedInUser');
-
-      if (validation.ok && !isNil(loggedInUser)) {
-        const newEvent: Event = {
-          id: v4(),
-          categories: createPayload.categories,
-          date: createPayload.date,
-          description: createPayload.description,
-          repeatsEvery: createPayload.repeatsEvery,
-          members: createPayload.members,
-          needGifts: createPayload.needGifts,
-          name: createPayload.name,
-          builtIn: false,
-          owner: loggedInUser.id,
-          repeated: false,
-          createdAt: new Date(),
-        };
-
-        setter('events', (events = []) => events.concat([newEvent]));
-      }
-
-      return validation;
-    },
-    remove: (removePayload) => {
-      const validation = validators.event.remove(removePayload);
-
-      if (validation.ok) {
-        setter('events', (events = []) => events.filter((event) => event.id !== removePayload.eventId));
-      }
-
-      return validation;
-    },
-    update: (updatePayload) => {
-      const validation = validators.event.update(updatePayload);
-
-      if (validation.ok) {
-        setter('events', (events = []) => events.map((event) => (event.id === updatePayload.eventId ? {
-          ...event,
-          ...updatePayload,
-        } : event)));
-      }
-
-      return validation;
-    },
-    allCategories: () => getter('eventCategories'),
-    allUserEvents: () => {
-      const user = getter('loggedInUser');
-      const events = getter('events');
-
-      if (isNil(user)) {
-        return [];
-      }
-
-      return events.filter((event) => event.owner === user.id || event.members.includes(user.id));
-    },
-  },
+  event: eventApi,
   user: {
     notifications: () => {
       const loggedInUser = getter('loggedInUser');
@@ -290,6 +233,26 @@ export const makeLocalStorageAPI = (): SyncApi => ({
   },
   gifts: {
     allCategories: () => getter('giftCategories'),
+    allGifts: () => getter('gifts'),
+  },
+  cart: {
+    allCarts: () => {
+      const loggedInUser = getter('loggedInUser');
+      const events = getter('events');
+
+      if (isNil(loggedInUser)) {
+        return [];
+      }
+
+      return getter('carts')
+        .filter((cart) => {
+          const matchingEvent = events
+            .find((event) => event.id === cart.event);
+
+          return !isNil(matchingEvent) && (matchingEvent.owner === loggedInUser.id
+            || matchingEvent.members.includes(loggedInUser.id));
+        });
+    },
   },
 });
 

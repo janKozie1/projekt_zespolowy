@@ -53,7 +53,7 @@ const People = (): ReactElement => {
         <PageHeader title="Osoby" />
         <Tile>
           <TabContext value={activeTab}>
-            <TabList onChange={(_, newTab: Tabs) => setActiveTab(newTab)} aria-label="lab API tabs example">
+            <TabList onChange={(_, newTab: Tabs) => setActiveTab(newTab)}>
               <Tab label="Osoby" value={Tabs.people} />
               <Tab label="Znajomi" value={Tabs.friends} />
             </TabList>

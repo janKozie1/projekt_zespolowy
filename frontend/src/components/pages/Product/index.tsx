@@ -68,8 +68,7 @@ const Product = (): ReactElement => (
                 <Box width="100%" display="flex" justifyContent="center">
                   <Box width="max-content">
                     <Columns gap={2}>
-                      <Button variant="contained" startIcon={<Add />}>Dodaj do Ulubionych</Button>
-                      <Button variant="outlined">Kup Teraz</Button>
+                      <Button variant="contained" startIcon={<Add />}>Dodaj do Koszyka</Button>
                     </Columns>
                   </Box>
                 </Box>

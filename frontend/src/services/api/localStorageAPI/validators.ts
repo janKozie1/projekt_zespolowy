@@ -334,6 +334,10 @@ export const validators: Validators = {
   },
   gifts: {
     allCategories: null,
+    allGifts: null,
+  },
+  cart: {
+    allCarts: null,
   },
 };
 

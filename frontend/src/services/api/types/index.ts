@@ -1,7 +1,7 @@
 import type { Nullable } from '../../../utils/types';
 
 import type {
-  Event, EventCategory, PaymentMethod, RepeatsEvery, User, Notification, GiftCategory, GiftReceiver,
+  Event, EventCategory, PaymentMethod, RepeatsEvery, User, Notification, GiftCategory, GiftReceiver, Gift, ShoppingCart,
 } from './data';
 import type { APICallFN, RequestWithValidationFN, ToSyncAPI } from './utils';
 
@@ -87,6 +87,11 @@ type NotificationsAPI = Readonly<{
 
 type GiftsAPI = Readonly<{
   allCategories: APICallFN<null, GiftCategory[]>;
+  allGifts: APICallFN<null, Gift[]>;
+}>;
+
+type CartAPI = Readonly<{
+  allCarts: APICallFN<null, ShoppingCart[]>;
 }>;
 
 export type API = Readonly<{
@@ -96,6 +101,7 @@ export type API = Readonly<{
   payment: PaymentAPI;
   notifications: NotificationsAPI;
   gifts: GiftsAPI;
+  cart: CartAPI;
 }>;
 
 export type SyncApi = ToSyncAPI<API>;
