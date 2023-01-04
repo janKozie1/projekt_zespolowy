@@ -41,6 +41,7 @@ class Store(models.Model):
 
 class Gifts(models.Model):
     name = models.CharField(max_length=255)
+    description = models.CharField(max_length=255)
     price = models.FloatField()
     store_id = models.ForeignKey('Store', on_delete=models.CASCADE)
     picture = models.CharField(max_length=255)

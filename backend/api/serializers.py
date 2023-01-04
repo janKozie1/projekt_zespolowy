@@ -38,22 +38,32 @@ class StoreSerializer(serializers.ModelSerializer):
         fields = ['id', 'name']
 
 
-class GiftsSerializer(serializers.ModelSerializer):
+class CategoryGSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Gifts
-        fields = ['id', 'name', 'price', 'store_id', 'picture']
+        model = CategoriesG
+        fields = ['name', 'description']
 
 
 class GiftsCategoriesSerializer(serializers.ModelSerializer):
+    category = CategoryGSerializer(read_only=True)
+
     class Meta:
         model = GiftsCategories
-        fields = ['id', 'id_category', 'id_gift']
+        fields = ['id_category', 'category']
 
 
-class CategoriesGSerializer(serializers.ModelSerializer):
+class GiftsSerializer(serializers.ModelSerializer):
+    id_gift = serializers.IntegerField(source='id')
+    categories = GiftsCategoriesSerializer(many=True, read_only=True)
+
     class Meta:
-        model = CategoriesG
-        fields = ['id', 'name', 'description']
+        model = Gifts
+        fields = ['id_gift', 'name', 'description', 'price', 'picture', 'store_id', 'categories']
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        data['categories'] = GiftsCategoriesSerializer(instance.giftscategories_set.all(), many=True).data
+        return data
 
 
 class CartGiftsSerializer(serializers.ModelSerializer):
