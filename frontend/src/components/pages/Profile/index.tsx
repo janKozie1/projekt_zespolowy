@@ -29,12 +29,17 @@ import FriendsManagement from '../../organisms/FriendsManagement';
 import Notifications from '../../organisms/Notifications';
 import type { Props as PaymentMethodFormProps } from '../../organisms/PaymentMethodForm';
 import PaymentMethodForm from '../../organisms/PaymentMethodForm';
+/*
+import type { Props as SettingsMethodFormProps } from '../../organisms/SettingsForm';
+*/
+import SettingsForm from '../../organisms/SettingsForm';
 
 enum Tabs {
   notifications = 'notifications',
   security = 'security',
   paymentPreferences = 'paymentPreferences',
   friends = 'friends',
+  settings = 'settings',
 }
 
 const Profile = (): ReactElement => {
@@ -66,7 +71,12 @@ const Profile = (): ReactElement => {
     onSubmit: api.user.updatePaymentInfo,
     onSuccess: () => refreshQueries([api.auth.loggedInUser]),
   };
-
+  /*
+    const settingsMethodSubmitHandler: SettingsMethodFormProps['submitHandler'] = {
+      onSubmit: api.user.updateSettings,
+      onSuccess: () => refreshQueries([api.auth.loggedInUser]),
+    };
+  */
   const onAccountDelete = async () => {
     await api.auth.deleteAccount();
     navigate(HomeRoutes.HOME);
@@ -94,6 +104,7 @@ const Profile = (): ReactElement => {
                   <Tab label="Płatności" value={Tabs.paymentPreferences} />
                   <Tab label="Bezpieczeństwo" value={Tabs.security} />
                   <Tab label="Znajomi" value={Tabs.friends} />
+                  <Tab label="Ustawienia" value={Tabs.settings} />
                 </TabList>
                 <Box mt={-0.5} width="100%"><Divider /></Box>
                 <Box p={4}>
@@ -155,6 +166,14 @@ const Profile = (): ReactElement => {
                   </TabPanel>
                   <TabPanel value={Tabs.friends}>
                     <FriendsManagement />
+                  </TabPanel>
+                  <TabPanel value={Tabs.settings}>
+                    <SettingsForm
+                    /*
+                    submitHandler={settingsMethodSubmitHandler}
+                    initialData={loggedInUser.details?.settings}
+                    */
+                    />
                   </TabPanel>
                 </Box>
               </TabContext>

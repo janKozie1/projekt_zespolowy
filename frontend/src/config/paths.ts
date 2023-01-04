@@ -40,8 +40,4 @@ export const PeopleRoutes = separateOptionalPaths({
   people: '/people',
 } as const);
 
-export const SettingsRoutes = separateOptionalPaths({
-  SETTINGS: '/settings',
-} as const);
-
 export type BaseRoutesProps = RoutesToRoutesParams<typeof BaseRoutes>;

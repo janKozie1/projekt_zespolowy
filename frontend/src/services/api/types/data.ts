@@ -8,6 +8,29 @@ export enum RepeatsEvery {
   decade = 'decade',
 }
 
+export enum NotificationOptions {
+  none = 'none',
+  email = 'email',
+  phone = 'phone',
+}
+
+export enum ViewOptions {
+  light = 'light',
+  dark = 'dark',
+}
+
+export enum NotificationOptionsDay {
+  seven = '7 dni',
+  fourteen = '14 dni',
+  twentyone = '21 dni',
+  thirty = '30 dni',
+}
+
+export enum Logout {
+  yes = 'yes',
+  no = 'no',
+}
+
 export type Notification = Readonly<{
   id: string;
   kind: 'friendRequest';
