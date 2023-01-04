@@ -2,11 +2,11 @@ from django.contrib.auth import authenticate, login, logout
 from django.http import JsonResponse
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.views.decorators.http import require_POST
-from django.shortcuts import render
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from .serializers import *
 from django.db.models import Q
+import datetime
 
 
 class DashboardViewSet(viewsets.ModelViewSet):
@@ -94,6 +94,53 @@ class ProductsViewSet(viewsets.ModelViewSet):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+def get_random_records(model, num_records):
+    # Get a queryset of all the records in the model
+    records = model.objects.all()
+    # Order the records randomly
+    random_records = records.order_by('?')[:num_records]
+    return random_records
+
+class GiftDiscover(viewsets.ViewSet):
+    serializer_class = GiftsSerializer
+
+    def list(self, request):
+        random_gifts = get_random_records(Gifts, 3)
+        serializer = self.serializer_class(random_gifts, many=True)
+        return Response(serializer.data)
+
+
+class IncomingGifts(viewsets.ViewSet):
+    serializer_class = IncomingGiftsSerializer
+
+    def retrieve(self, request, pk=None):
+        today = datetime.date.today()
+        start_date = today
+        end_date = today + datetime.timedelta(days=90)
+        shopping_carts = ShoppingCart.objects.select_related('id_event').filter(id_event__date__range=(start_date, end_date), id_event__owner_id=pk).order_by('id_event__date')[:10]
+
+        # Convert the QuerySet to a list of dictionaries
+        shopping_carts_list = [
+            {
+                'id': shopping_cart.id,
+                'id_event': shopping_cart.id_event.id,
+                'due_date': shopping_cart.due_date,
+                'completed': shopping_cart.completed,
+                'tittle': shopping_cart.id_event.tittle,
+                'description': shopping_cart.id_event.description,
+                'date': shopping_cart.id_event.date,
+                'created_at': shopping_cart.id_event.created_at,
+                'owner_id': shopping_cart.id_event.owner_id.id,
+            }
+            for shopping_cart in shopping_carts
+        ]
+
+        # Serialize the data
+        serializer = self.serializer_class(shopping_carts_list, many=True)
+
+        return Response(serializer.data)
 
 
 @require_POST
