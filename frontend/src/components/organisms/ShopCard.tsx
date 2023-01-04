@@ -8,10 +8,15 @@ import Button from '@mui/material/Button';
 
 import { ProductRoutes } from '../../config/paths';
 import { toSpacing } from '../../config/theme/fields/spacing';
+import type { Gift } from '../../services/api/types/data';
+import { withStopPropagation } from '../../utils/fn';
+import { trimToLength } from '../../utils/string';
 
 import Columns from '../atoms/Columns';
 import Rows from '../atoms/Rows';
 import Text from '../atoms/Text';
+
+import { useAPI } from './ApiProvider';
 
 const CardContainer = styled.div`
   width: 100%;
@@ -46,24 +51,29 @@ const ImageContainer = styled.div`
   }
 `;
 
-const ShopCard = (): ReactElement => {
+type Props = Readonly<{
+  gift: Gift;
+}>;
+
+const ShopCard = ({ gift }: Props): ReactElement => {
+  const { api, refreshQueries } = useAPI();
   const navigate = useNavigate();
 
+  const addToCart = async () => {
+    await api.cart.temporaryCart.addGift(gift);
+    refreshQueries([api.auth.loggedInUser]);
+  };
+
   return (
-    <CardContainer onClick={() => navigate(generatePath(ProductRoutes.PRODUCT, { id: '1' }))}>
+    <CardContainer onClick={() => navigate(generatePath(ProductRoutes.PRODUCT, { id: gift.id }))}>
       <ImageContainer>
-        <img src="https://placekitten.com/512/512" alt="kitten" />
+        <img src={gift.imageURL} alt={gift.name} />
       </ImageContainer>
       <Box display="flex" justifyContent="space-between" flexDirection="column">
         <Rows gap={8}>
           <Text type="heading" variant="h4">Tytuł</Text>
           <Text type="subtitle" variant="default">
-            Lorem ipsum dolor sit amet, consetetur sadipscing elitr,
-            sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.
-            At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren,
-            no sea takimata sanctus est Lorem ipsum dolor sit amet.
-            Lorem ipsum dolor sit amet, consetetur sadipscing elitr,
-
+            {trimToLength(gift.description, 400)}
           </Text>
         </Rows>
       </Box>
@@ -83,10 +93,14 @@ const ShopCard = (): ReactElement => {
       </Box>
       <Box display="flex" flexDirection="column" justifyContent="space-between">
         <Box />
-        <Box ml="auto"><Text type="heading" variant="h2">84,99 zł</Text></Box>
+        <Box ml="auto">
+          <Text type="heading" variant="h2">
+            {`${gift.price} zł`}
+          </Text>
+        </Box>
         <Box ml="auto" width="max-content">
           <Columns gap={2}>
-            <Button variant="contained">Dodaj do koszyka</Button>
+            <Button variant="contained" onClick={withStopPropagation(addToCart)}>Dodaj do koszyka</Button>
           </Columns>
         </Box>
       </Box>

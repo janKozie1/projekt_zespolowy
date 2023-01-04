@@ -1,8 +1,11 @@
 import * as yup from 'yup';
 
+import { undefinedIfEmpty } from '../../../utils/forms';
+
 const formSchema = yup.object({
   preferredPaymentMethod: yup
     .string()
+    .transform(undefinedIfEmpty)
     .required(),
 });
 

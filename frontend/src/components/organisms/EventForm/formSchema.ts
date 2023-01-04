@@ -1,24 +1,26 @@
 import * as yup from 'yup';
 
 import { RepeatsEvery } from '../../../services/api/types/data';
+import { undefinedIfEmpty } from '../../../utils/forms';
 
 const formSchema = yup.object({
   name: yup
     .string()
+    .transform(undefinedIfEmpty)
     .required(),
   description: yup
     .string()
+    .transform(undefinedIfEmpty)
     .required(),
   members: yup
     .array(yup
       .string()
+      .transform(undefinedIfEmpty)
       .required())
     .required(),
-  needGifts: yup
-    .array(yup
-      .string()
-      .required())
-    .required(),
+  giftReceiver: yup
+    .string()
+    .transform(undefinedIfEmpty),
   repeatsEvery: yup
     .mixed<RepeatsEvery>()
     .oneOf(Object.values(RepeatsEvery))
@@ -26,6 +28,7 @@ const formSchema = yup.object({
   categories: yup
     .array(yup
       .string()
+      .transform(undefinedIfEmpty)
       .required())
     .min(1)
     .required(),

@@ -137,6 +137,7 @@ export const validators: Validators = {
   event: {
     allCategories: null,
     allUserEvents: null,
+    upcomfigUserEvents: null,
     create: (createPayload) => {
       const {
         categories, description, members, name,
@@ -335,9 +336,19 @@ export const validators: Validators = {
   gifts: {
     allCategories: null,
     allGifts: null,
+    gift: null,
   },
   cart: {
     allCarts: null,
+    removeGift: () => noValidation,
+    updateAmount: () => noValidation,
+    temporaryCart: {
+      addGift: () => noValidation,
+      removeGift: () => noValidation,
+      updateAmont: () => noValidation,
+      empty: null,
+    },
+    assignTemporaryCartToEvent: () => noValidation,
   },
 };
 

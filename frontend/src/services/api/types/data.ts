@@ -38,6 +38,10 @@ export type User = Readonly<{
   password: string;
   giftReceivers: GiftReceiver[];
   friends: User['id'][];
+  temporarilySelectedGifts: Readonly<{
+    id: Gift['id'];
+    amount: number;
+  }>[];
   details: Nullable<Partial<{
     billingAddress: Address;
     payments: Readonly<{
@@ -62,7 +66,7 @@ export type Event = Readonly<{
   createdAt: Date;
   owner: User['id'];
   members: User['id'][];
-  needGifts: GiftReceiver['id'][];
+  giftReceiver: Nullable<GiftReceiver['id']>;
   categories: EventCategory['id'][];
   repeatsEvery: RepeatsEvery;
 }>;
@@ -71,11 +75,6 @@ export type PaymentMethod = Readonly<{
   id: string;
   name: string;
   imageURL: string;
-}>;
-
-export type Store = Readonly<{
-  id: string;
-  name: string;
 }>;
 
 export type GiftCategory = Readonly<{
@@ -88,8 +87,8 @@ export type Gift = Readonly<{
   name: string;
   description: string;
   imageURL: string;
-  store: Store['id'];
   category: GiftCategory['id'][];
+  price: number;
 }>;
 
 export type CategoryMapping = Readonly<{
@@ -100,7 +99,9 @@ export type CategoryMapping = Readonly<{
 export type ShoppingCart = Readonly<{
   id: string;
   event: Event['id'];
-  date: Date;
   completed: boolean;
-  gifts: Gift['id'][];
+  gifts: Readonly<{
+    id: Gift['id'];
+    amount: number;
+  }>[];
 }>;

@@ -1,11 +1,13 @@
 import { DateTime } from 'luxon';
 import { v4 } from 'uuid';
 
-import type { Event, User } from '../types/data';
-import { RepeatsEvery, EventCategory } from '../types/data';
+import type { Event, User } from '../../types/data';
+import { RepeatsEvery, EventCategory } from '../../types/data';
 
-import { repeatEvent } from './apis/utils';
-import type { LocalStorageShape } from './types';
+import { repeatEvent } from '../apis/utils';
+import type { LocalStorageShape } from '../types';
+
+import gifts, { giftCategories } from './gifts';
 
 export const admin: User = {
   email: 'admin@giftology.com',
@@ -14,6 +16,7 @@ export const admin: User = {
   friends: [],
   details: null,
   giftReceivers: [],
+  temporarilySelectedGifts: [],
 };
 
 const builtInEventCategories = {
@@ -89,9 +92,10 @@ export const makeBuiltInEvents = (userId: User['id'], relativeTo: Date): Event[]
     owner: userId,
     originalEvent: null,
     repeatsEvery: RepeatsEvery.year,
-    needGifts: [],
+    giftReceiver: null,
   }));
 };
+
 type Defaults = Readonly<{
   [key in keyof LocalStorageShape]: LocalStorageShape[key]
 }>;
@@ -101,26 +105,9 @@ const defaults: Defaults = {
   users: [admin],
   notifications: [],
   carts: [],
-  gifts: [],
+  gifts,
   loggedInUser: null,
-  giftCategories: [
-    {
-      id: v4(),
-      name: 'Zabawki',
-    },
-    {
-      id: v4(),
-      name: 'Kosmetyki',
-    },
-    {
-      id: v4(),
-      name: 'Karnety',
-    },
-    {
-      id: v4(),
-      name: 'Narzędzia',
-    },
-  ],
+  giftCategories: Object.values(giftCategories),
   paymentMethods: [
     {
       id: v4(),

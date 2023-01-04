@@ -5,7 +5,7 @@ import * as yup from 'yup';
 
 import TextField from '@mui/material/TextField';
 
-import { parseFieldState } from '../../utils/forms';
+import { parseFieldState, undefinedIfEmpty } from '../../utils/forms';
 import { isEmpty } from '../../utils/guards';
 import { withNamePrefix } from '../../utils/string';
 
@@ -14,15 +14,19 @@ import Columns from '../atoms/Columns';
 export const addressFielGroupSchema = yup.object({
   nameAndSurname: yup
     .string()
+    .transform(undefinedIfEmpty)
     .required(),
   streetAddress: yup
     .string()
+    .transform(undefinedIfEmpty)
     .required(),
   town: yup
     .string()
+    .transform(undefinedIfEmpty)
     .required(),
   postalCode: yup
     .string()
+    .transform(undefinedIfEmpty)
     .required()
     .test('validPostalCode', 'Musi być w formacie 11-111', (value) => {
       if (isEmpty(value)) {

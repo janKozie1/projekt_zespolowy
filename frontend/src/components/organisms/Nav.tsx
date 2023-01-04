@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router';
 import styled from 'styled-components';
 
 import { Menu, ShoppingCartOutlined } from '@mui/icons-material';
-import { Box, IconButton } from '@mui/material';
+import { Badge, Box, IconButton } from '@mui/material';
 
 import type { NavGroup } from '../../config/navigation';
 import { CartRoutes } from '../../config/paths';
@@ -15,6 +15,8 @@ import type { NonMutable } from '../../utils/types';
 import Rows from '../atoms/Rows';
 import Icon from '../molecules/Icon';
 import NavItem from '../molecules/NavItem';
+
+import { useConstantData } from './ConstantDataProvider';
 
 type NavContainerProps = Readonly<{
   expanded: boolean;
@@ -56,6 +58,7 @@ type Props = Readonly<{
 
 const Nav = ({ navigation, authNav, children }: Props): ReactElement => {
   const navigate = useNavigate();
+  const { loggedInUser } = useConstantData();
 
   const [expanded, setExpanded] = useState(true);
 
@@ -68,11 +71,13 @@ const Nav = ({ navigation, authNav, children }: Props): ReactElement => {
               <Menu />
             </Icon>
           </IconButton>
-          <IconButton onClick={() => navigate(CartRoutes.CART)}>
-            <Icon size="lg">
-              <ShoppingCartOutlined />
-            </Icon>
-          </IconButton>
+          <Badge badgeContent={loggedInUser.temporarilySelectedGifts.length} color="info">
+            <IconButton onClick={() => navigate(CartRoutes.CART)}>
+              <Icon size="lg">
+                <ShoppingCartOutlined />
+              </Icon>
+            </IconButton>
+          </Badge>
         </Box>
       </NavHeaderContainer>
       <Box display="flex" flexDirection="row" width="100%" flexGrow="1" overflow="hidden" position="relative">

@@ -1,6 +1,8 @@
 import isNil from 'lodash/isNil';
+import { DateTime } from 'luxon';
 import { v4 } from 'uuid';
 
+import { compareDays } from '../../../../utils/date';
 import { isEmpty } from '../../../../utils/guards';
 import { getDiff } from '../../../../utils/object';
 import type { Nullable } from '../../../../utils/types';
@@ -40,7 +42,7 @@ const eventApi: SyncApi['event'] = {
         description: createPayload.description,
         repeatsEvery: createPayload.repeatsEvery,
         members: createPayload.members,
-        needGifts: createPayload.needGifts,
+        giftReceiver: createPayload.giftReceiver,
         name: createPayload.name,
         builtIn: false,
         owner: loggedInUser.id,
@@ -86,7 +88,24 @@ const eventApi: SyncApi['event'] = {
       return [];
     }
 
-    return events.filter((event) => event.owner === user.id || event.members.includes(user.id));
+    return events
+      .filter((event) => event.owner === user.id || event.members.includes(user.id))
+      .sort((eventA, eventB) => compareDays(eventA.date, eventB.date));
+  },
+  upcomfigUserEvents: () => {
+    const user = getter('loggedInUser');
+    const events = getter('events');
+
+    const now = DateTime.local();
+
+    if (isNil(user)) {
+      return [];
+    }
+
+    return events.filter((event) => (event.owner === user.id
+    || event.members.includes(user.id))
+    && DateTime.fromJSDate(event.date).diff(now).as('days') <= 30)
+      .sort((eventA, eventB) => compareDays(eventA.date, eventB.date));
   },
 };
 
