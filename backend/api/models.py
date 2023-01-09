@@ -16,6 +16,16 @@ class Users(models.Model):
     joined_at = models.DateTimeField(auto_now_add=True)
     email = models.CharField(max_length=255)
     role_id = models.ForeignKey('Roles', on_delete=models.CASCADE)
+    preferred_method_id = models.ForeignKey('PaymentMethods', default=1, on_delete=models.CASCADE)
+    billing_name = models.CharField(default='', max_length=255)
+    billing_address = models.CharField(default='', max_length=255)
+    billing_postcode = models.CharField(default='', max_length=255)
+    billing_city = models.CharField(default='', max_length=255)
+
+
+class PaymentMethods(models.Model):
+    name = models.CharField(max_length=255)
+    image_url = models.CharField(max_length=255)
 
 
 class Roles(models.Model):

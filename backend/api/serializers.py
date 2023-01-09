@@ -11,7 +11,8 @@ class ExampleSerializer(serializers.ModelSerializer):
 class UsersSerializer(serializers.ModelSerializer):
     class Meta:
         model = Users
-        fields = ['id', 'name', 'surname', 'password', 'joined_at', 'email', 'role_id']
+        fields = ['id', 'name', 'surname', 'joined_at', 'email', 'role_id', 'preferred_method_id',
+                  'billing_name', 'billing_address', 'billing_postcode', 'billing_city']
 
 
 class RoleSerializer(serializers.ModelSerializer):
