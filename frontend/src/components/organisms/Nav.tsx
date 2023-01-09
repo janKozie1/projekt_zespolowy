@@ -1,18 +1,22 @@
 import { useState } from 'react';
 import type { ReactElement, ReactNode } from 'react';
 
+import { useNavigate } from 'react-router';
 import styled from 'styled-components';
 
-import { Menu } from '@mui/icons-material';
-import { Box, IconButton } from '@mui/material';
+import { Menu, ShoppingCartOutlined } from '@mui/icons-material';
+import { Badge, Box, IconButton } from '@mui/material';
 
 import type { NavGroup } from '../../config/navigation';
+import { CartRoutes } from '../../config/paths';
 import { toSpacing } from '../../config/theme/fields/spacing';
 import type { NonMutable } from '../../utils/types';
 
 import Rows from '../atoms/Rows';
 import Icon from '../molecules/Icon';
 import NavItem from '../molecules/NavItem';
+
+import { useConstantData } from './ConstantDataProvider';
 
 type NavContainerProps = Readonly<{
   expanded: boolean;
@@ -53,16 +57,28 @@ type Props = Readonly<{
 }>;
 
 const Nav = ({ navigation, authNav, children }: Props): ReactElement => {
+  const navigate = useNavigate();
+  const { loggedInUser } = useConstantData();
+
   const [expanded, setExpanded] = useState(true);
 
   return (
     <Box display="flex" flexDirection="column" height="100%" width="100%">
       <NavHeaderContainer>
-        <IconButton onClick={() => setExpanded((prev) => !prev)}>
-          <Icon size="lg">
-            <Menu />
-          </Icon>
-        </IconButton>
+        <Box width="100%" display="flex" justifyContent="space-between" alignItems="center">
+          <IconButton onClick={() => setExpanded((prev) => !prev)}>
+            <Icon size="lg">
+              <Menu />
+            </Icon>
+          </IconButton>
+          <Badge badgeContent={loggedInUser.temporarilySelectedGifts.length} color="info">
+            <IconButton onClick={() => navigate(CartRoutes.CART)}>
+              <Icon size="lg">
+                <ShoppingCartOutlined />
+              </Icon>
+            </IconButton>
+          </Badge>
+        </Box>
       </NavHeaderContainer>
       <Box display="flex" flexDirection="row" width="100%" flexGrow="1" overflow="hidden" position="relative">
         <NavSidebarContaier expanded={expanded}>

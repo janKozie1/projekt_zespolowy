@@ -15,4 +15,12 @@ export const withNamePrefix = <Prefix extends string | undefined, FieldName exte
       ? `${prefix ?? ''}.${name}` : `${name}`
   ) as WithNamePrefixReturnType<Prefix, FieldName>;
 
+export const trimToLength = (content: string, maxLength: number): string => {
+  if (content.length > maxLength) {
+    return `${content.slice(0, maxLength)}...`;
+  }
+
+  return content;
+};
+
 export default {};

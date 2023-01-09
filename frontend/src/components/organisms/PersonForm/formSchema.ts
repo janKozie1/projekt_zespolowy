@@ -1,5 +1,7 @@
 import * as yup from 'yup';
 
+import { undefinedIfEmpty } from '../../../utils/forms';
+
 import { addressFielGroupSchema } from '../../molecules/AddressFieldGroup.index';
 
 const formSchema = yup.object({
@@ -7,6 +9,7 @@ const formSchema = yup.object({
   preferredCategories: yup
     .array(yup
       .string()
+      .transform(undefinedIfEmpty)
       .required())
     .required()
     .min(1),
