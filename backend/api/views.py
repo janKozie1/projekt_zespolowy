@@ -74,7 +74,7 @@ class ProductsViewSet(viewsets.ModelViewSet):
     serializer_class = GiftsSerializer
 
     def get_queryset(self):
-        queryset = Gifts.objects.all().order_by('id')
+        queryset = Gifts.objects.all()
         # TODO currently only one example to filter by query params - store_id
         store_id = self.request.query_params.get('storeid')
         if store_id is not None:
