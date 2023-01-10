@@ -24,7 +24,6 @@ const CardMedia = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-
   > img {
     object-fit: cover;
     max-height: 100%;

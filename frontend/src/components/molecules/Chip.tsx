@@ -23,7 +23,6 @@ const ChipContainer = styled.div<Pick<Props, 'variant'>>`
   background-color: ${({ variant }) => variants[variant]};
   padding: ${toSpacing(1)} ${toSpacing(2)};
   width: max-content;
-
   & > * {
     display: flex;
     align-items: center;

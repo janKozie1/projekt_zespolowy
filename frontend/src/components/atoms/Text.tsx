@@ -49,10 +49,30 @@ const types = {
       color: colors.greyscale[90],
       textTransform: 'uppercase',
     },
+    medium: {
+      size: sizes[500],
+      weight: 'medium',
+      color: colors.greyscale[90],
+      textTransform: 'uppercase',
+    },
+  },
+  roboto: {
+    regular: {
+      size: sizes[300],
+      weight: 'normal',
+      color: colors.greyscale[90],
+      textTransform: 'uppercase',
+    },
+    secondary: {
+      size: sizes[300],
+      weight: 'bold',
+      color: colors.green[0],
+      textTransform: 'uppercase',
+    },
   },
   caption: {
     default: {
-      size: sizes[200],
+      size: sizes[300],
       weight: 'normal',
       color: colors.greyscale[90],
       textTransform: 'none',
