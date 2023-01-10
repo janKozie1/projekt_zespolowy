@@ -89,7 +89,7 @@ const Profile = (): ReactElement => {
             </Box>
             <Box mt={-4} width="100%">
               <TabContext value={activeTab}>
-                <TabList onChange={(_, newTab: Tabs) => setActiveTab(newTab)} aria-label="lab API tabs example">
+                <TabList onChange={(_, newTab: Tabs) => setActiveTab(newTab)}>
                   <Tab label="Powiadomienia" value={Tabs.notifications} />
                   <Tab label="Płatności" value={Tabs.paymentPreferences} />
                   <Tab label="Bezpieczeństwo" value={Tabs.security} />

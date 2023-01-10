@@ -79,7 +79,6 @@ class CategoriesESerializer(serializers.ModelSerializer):
         model = CategoriesE
         fields = ['id', 'name', 'description']
 
-
 class IncomingGiftsSerializer(serializers.Serializer):
     id = serializers.IntegerField()
     id_event = serializers.IntegerField()
@@ -90,3 +89,15 @@ class IncomingGiftsSerializer(serializers.Serializer):
     date = serializers.DateTimeField()
     created_at = serializers.DateTimeField()
     owner_id = serializers.IntegerField()
+
+class FriendSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = FriendList
+        fields = ('user', 'friend', 'status', 'timestamp')
+
+
+class FriendListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Users
+        fields = ('id', 'name', 'surname', 'email')
+

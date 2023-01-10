@@ -103,26 +103,24 @@ const EventForm = ({ submitHandler, initialData }: Props): ReactElement => {
           />
           <Controller
             control={form.control}
-            name="needGifts"
-            defaultValue={[]}
-            render={({ field, fieldState }) => (
-              <Autocomplete
-                {...field}
-                {...toAutocompleteProps(field, loggedInUser.giftReceivers)}
-                multiple
-                options={loggedInUser.giftReceivers}
-                getOptionLabel={(option) => option.address.nameAndSurname}
-                noOptionsText="Brak opcji"
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    {...parseFieldState(fieldState)}
-                    variant="outlined"
-                    label="Osoby potrzebujące prezentu"
-                    placeholder="Osoby potrzebujące prezentu"
-                  />
-                )}
-              />
+            name="giftReceiver"
+            defaultValue=""
+            render={({ field }) => (
+              <FormControl>
+                <InputLabel id="gift-receiver-label">
+                  Prezent dla
+                </InputLabel>
+                <Select
+                  {...field}
+                  labelId="gift-receiver-label"
+                  label="Prezent dla"
+                >
+                  <MenuItem value=""><i>Nikogo</i></MenuItem>
+                  {loggedInUser.giftReceivers.map((receiver) => (
+                    <MenuItem key={receiver.id} value={receiver.id}>{receiver.address.nameAndSurname}</MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
             )}
           />
           <Controller

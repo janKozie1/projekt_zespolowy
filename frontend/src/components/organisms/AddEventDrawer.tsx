@@ -24,7 +24,7 @@ const AddEventDrawer = ({ drawer }: Props): ReactElement => {
       date: drawer.date,
     }),
     onSuccess: () => {
-      refreshQueries([api.event.allUserEvents]);
+      refreshQueries([api.event.allUserEvents, api.event.upcomfigUserEvents]);
       drawers.close();
     },
   };

@@ -1,6 +1,7 @@
 import { Fragment } from 'react';
 import type { ReactElement } from 'react';
 
+import { isNil } from 'lodash';
 import styled from 'styled-components';
 
 import { Cached, Group } from '@mui/icons-material';
@@ -29,8 +30,9 @@ const TooltipContainer = styled.div<TooltipContainerProps>`
   gap: ${toSpacing(1)} ${toSpacing(2)};
 `;
 
-type EventTileContainerProps = Pick<Event, 'builtIn' | 'repeated'> & Readonly<{
+type EventTileContainerProps = Pick<Event, 'builtIn'> & Readonly<{
   own: boolean;
+  repeated: boolean;
 }>;
 
 const EventTileContainer = styled.div<EventTileContainerProps>`
@@ -57,6 +59,7 @@ const EventTile = ({ event, onClick }: Props): ReactElement => {
   const [ref, { width }] = useDimensions();
 
   const userOwnsEvent = event.owner.id === loggedInUser.id;
+  const repeated = !isNil(event.originalEvent);
 
   const onEventClick = () => {
     if (userOwnsEvent) {
@@ -87,12 +90,18 @@ const EventTile = ({ event, onClick }: Props): ReactElement => {
         </TooltipContainer>
       )}
     >
-      <EventTileContainer ref={ref} {...event} own={userOwnsEvent} onClick={withStopPropagation(onEventClick)}>
+      <EventTileContainer
+        {...event}
+        ref={ref}
+        repeated={repeated}
+        own={userOwnsEvent}
+        onClick={withStopPropagation(onEventClick)}
+      >
         <Box display="flex" alignItems="center" justifyContent="space-between">
           <Text type="caption" variant="default">
             {event.name}
           </Text>
-          {event.repeated && !event.builtIn ? (
+          {repeated && !event.builtIn ? (
             <Icon size="md">
               <Cached />
             </Icon>

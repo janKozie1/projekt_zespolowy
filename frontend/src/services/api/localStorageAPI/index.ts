@@ -1,12 +1,15 @@
 
+import { uniqBy } from 'lodash';
 import isNil from 'lodash/isNil';
 import { v4 } from 'uuid';
 
+import { isEmpty } from '../../../utils/guards';
 import { deepMerge } from '../../../utils/object';
 
 import type { SyncApi } from '../types';
-import type { Event, User } from '../types/data';
+import type { User } from '../types/data';
 
+import eventApi from './apis/event';
 import { admin, makeBuiltInEvents } from './data';
 import { getter, setter } from './utils';
 import { validators } from './validators';
@@ -71,6 +74,7 @@ export const makeLocalStorageAPI = (): SyncApi => ({
           password: registerPayload.password,
           friends: [],
           giftReceivers: [],
+          temporarilySelectedGifts: [],
           details: null,
         };
 
@@ -82,65 +86,7 @@ export const makeLocalStorageAPI = (): SyncApi => ({
       return validation;
     },
   },
-  event: {
-    create: (createPayload) => {
-      const validation = validators.event.create(createPayload);
-      const loggedInUser = getter('loggedInUser');
-
-      if (validation.ok && !isNil(loggedInUser)) {
-        const newEvent: Event = {
-          id: v4(),
-          categories: createPayload.categories,
-          date: createPayload.date,
-          description: createPayload.description,
-          repeatsEvery: createPayload.repeatsEvery,
-          members: createPayload.members,
-          needGifts: createPayload.needGifts,
-          name: createPayload.name,
-          builtIn: false,
-          owner: loggedInUser.id,
-          repeated: false,
-          createdAt: new Date(),
-        };
-
-        setter('events', (events = []) => events.concat([newEvent]));
-      }
-
-      return validation;
-    },
-    remove: (removePayload) => {
-      const validation = validators.event.remove(removePayload);
-
-      if (validation.ok) {
-        setter('events', (events = []) => events.filter((event) => event.id !== removePayload.eventId));
-      }
-
-      return validation;
-    },
-    update: (updatePayload) => {
-      const validation = validators.event.update(updatePayload);
-
-      if (validation.ok) {
-        setter('events', (events = []) => events.map((event) => (event.id === updatePayload.eventId ? {
-          ...event,
-          ...updatePayload,
-        } : event)));
-      }
-
-      return validation;
-    },
-    allCategories: () => getter('eventCategories'),
-    allUserEvents: () => {
-      const user = getter('loggedInUser');
-      const events = getter('events');
-
-      if (isNil(user)) {
-        return [];
-      }
-
-      return events.filter((event) => event.owner === user.id || event.members.includes(user.id));
-    },
-  },
+  event: eventApi,
   user: {
     notifications: () => {
       const loggedInUser = getter('loggedInUser');
@@ -290,6 +236,135 @@ export const makeLocalStorageAPI = (): SyncApi => ({
   },
   gifts: {
     allCategories: () => getter('giftCategories'),
+    allGifts: () => getter('gifts'),
+    gift: ({ id }) => getter('gifts').find((gift) => gift.id === id),
+  },
+  cart: {
+    updateAmount: (payload) => {
+      const validation = validators.cart.updateAmount(payload);
+
+      if (validation.ok) {
+        setter('carts', (carts = []) => carts.map((cart) => (cart.id === payload.cartId ? {
+          ...cart,
+          gifts: cart.gifts.map((gift) => (gift.id === payload.giftId ? {
+            ...gift,
+            amount: payload.amount,
+          } : gift)),
+        } : cart)));
+      }
+
+      return validation;
+    },
+    allCarts: () => {
+      const loggedInUser = getter('loggedInUser');
+      const events = getter('events');
+
+      if (isNil(loggedInUser)) {
+        return [];
+      }
+
+      return getter('carts')
+        .filter((cart) => {
+          const matchingEvent = events
+            .find((event) => event.id === cart.event);
+
+          return !isNil(matchingEvent) && (matchingEvent.owner === loggedInUser.id
+            || matchingEvent.members.includes(loggedInUser.id));
+        });
+    },
+    assignTemporaryCartToEvent: (payload) => {
+      const validation = validators.cart.assignTemporaryCartToEvent(payload);
+      const loggedInUser = getter('loggedInUser');
+
+      if (validation.ok && !isNil(loggedInUser)) {
+        setter('carts', (carts = []) => {
+          const existingCart = carts.find((cart) => cart.event === payload.event);
+
+          if (!isNil(existingCart)) {
+            return carts.map((cart) => (cart === existingCart ? {
+              ...cart,
+              gifts: uniqBy([...loggedInUser.temporarilySelectedGifts, ...cart.gifts], (gift) => gift.id),
+            } : cart));
+          }
+
+          return carts.concat([{
+            id: v4(),
+            completed: false,
+            gifts: [...loggedInUser.temporarilySelectedGifts],
+            event: payload.event,
+          }]);
+        });
+
+        updateUser({
+          temporarilySelectedGifts: [],
+        });
+      }
+
+      return validation;
+    },
+    removeGift: (payload) => {
+      const validation = validators.cart.removeGift(payload);
+      const selectedCart = getter('carts').find((cart) => cart.id === payload.cartId);
+
+      if (validation.ok && !isNil(selectedCart)) {
+        setter('carts', (carts = []) => carts.map((cart) => (cart.id === payload.cartId ? {
+          ...cart,
+          gifts: cart.gifts.filter((gift) => gift.id !== payload.giftId),
+        } : cart))
+          .filter((cart) => !isEmpty(cart.gifts)));
+      }
+
+      return validation;
+    },
+    temporaryCart: {
+      addGift: (payload) => {
+        const validation = validators.cart.temporaryCart.addGift(payload);
+        const loggedInUser = getter('loggedInUser');
+
+        if (validation.ok && !isNil(loggedInUser)) {
+          updateUser({
+            temporarilySelectedGifts: uniqBy(loggedInUser.temporarilySelectedGifts.concat([{
+              id: payload.id,
+              amount: 1,
+            }]), (gift) => gift.id),
+          });
+        }
+
+        return validation;
+      },
+      updateAmont: (payload) => {
+        const validation = validators.cart.temporaryCart.updateAmont(payload);
+        const loggedInUser = getter('loggedInUser');
+
+        if (validation.ok && !isNil(loggedInUser)) {
+          updateUser({
+            temporarilySelectedGifts: loggedInUser
+              .temporarilySelectedGifts.map((gift) => (gift.id === payload.giftId ? {
+                ...gift,
+                amount: payload.amount,
+              } : gift)),
+          });
+        }
+
+        return validation;
+      },
+      removeGift: (payload) => {
+        const validation = validators.cart.temporaryCart.removeGift(payload);
+        const loggedInUser = getter('loggedInUser');
+
+        if (validation.ok && !isNil(loggedInUser)) {
+          updateUser({
+            temporarilySelectedGifts: loggedInUser.temporarilySelectedGifts.filter((gift) => gift.id !== payload.id),
+          });
+        }
+
+        return validation;
+      },
+      empty: () => {
+        updateUser({ temporarilySelectedGifts: [] });
+        return true;
+      },
+    },
   },
 });
 
