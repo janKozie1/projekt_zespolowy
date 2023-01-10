@@ -26,7 +26,15 @@ class Users(models.Model):
 class PaymentMethods(models.Model):
     name = models.CharField(max_length=255)
     image_url = models.CharField(max_length=255)
+    friend_request = models.ManyToManyField('self', through='FriendList', through_fields=('user', 'friend'), symmetrical=False)
 
+
+
+class FriendList(models.Model):
+    user = models.ForeignKey(Users, on_delete=models.CASCADE, related_name='user')
+    friend = models.ForeignKey(Users, on_delete=models.CASCADE, related_name='friend')
+    status = models.CharField(max_length=10, choices=(('pending', 'Pending'), ('accepted', 'Accepted'), ('rejected', 'Rejected')))
+    timestamp = models.DateTimeField(auto_now=True)
 
 class Roles(models.Model):
     name = models.CharField(max_length=255)

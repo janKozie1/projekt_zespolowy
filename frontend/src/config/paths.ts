@@ -44,4 +44,8 @@ export const SettingsRoutes = separateOptionalPaths({
   SETTINGS: '/settings',
 } as const);
 
+export const CartRoutes = separateOptionalPaths({
+  CART: '/cart',
+} as const);
+
 export type BaseRoutesProps = RoutesToRoutesParams<typeof BaseRoutes>;

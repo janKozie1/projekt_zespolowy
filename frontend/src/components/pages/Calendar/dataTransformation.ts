@@ -1,16 +1,14 @@
-import isNil from 'lodash/isNil';
-import type { DurationLike } from 'luxon';
 import { DateTime } from 'luxon';
 
 import type { Event, EventCategory, User } from '../../../services/api/types/data';
-import { RepeatsEvery } from '../../../services/api/types/data';
 import { isEmpty } from '../../../utils/guards';
 import type { Nullable } from '../../../utils/types';
 
-export type ParsedEvent = Omit<Event, 'categories' | 'members' | 'owner'> & Readonly<{
+export type ParsedEvent = Omit<Event, 'categories' | 'members' | 'originalEvent' | 'owner'> & Readonly<{
   categories: EventCategory[];
   members: User[];
-  originalEvent: Event;
+  originalEvent: Nullable<Event>;
+  unparsedEvent: Event;
   owner: User;
 }>;
 
@@ -18,7 +16,6 @@ export const parseEvents = (
   events: Nullable<Event[]>,
   categories: Nullable<EventCategory[]>,
   users: Nullable<User[]>,
-  year: number,
 ): Map<string, ParsedEvent[]> => {
   if (isEmpty(events) || isEmpty(categories) || isEmpty(users)) {
     return new Map<string, ParsedEvent[]>();
@@ -38,43 +35,13 @@ export const parseEvents = (
   const categoryMap = Object.fromEntries(categories.map((category) => [category.id, category] as const));
   const userMap = Object.fromEntries(users.map((user) => [user.id, user] as const));
 
-  events
-    .filter((event) => event.repeatsEvery !== RepeatsEvery.never)
-    .forEach((event) => {
-      let baseDate = DateTime.fromJSDate(event.date);
-      let increment: Nullable<DurationLike> = null;
-
-      if (event.repeatsEvery === RepeatsEvery.week) {
-        increment = { weeks: 1 };
-      } else if (event.repeatsEvery === RepeatsEvery.month) {
-        increment = { months: 1 };
-      } else if (event.repeatsEvery === RepeatsEvery.year) {
-        increment = { years: 1 };
-      } else if (event.repeatsEvery === RepeatsEvery.decade) {
-        increment = { years: 10 };
-      }
-
-      if (!isNil(increment)) {
-        baseDate = baseDate.plus(increment);
-
-        while (baseDate.year - 1 <= year) {
-          updateMap(base, {
-            ...event,
-            repeated: true,
-            date: baseDate.toJSDate(),
-          });
-
-          baseDate = baseDate.plus(increment);
-        }
-      }
-    });
-
   return new Map(Array.from(base.entries()).map(([date, eventsOnDay]) => [
     date,
     eventsOnDay.map((event) => {
       const parsedEvent: ParsedEvent = {
         ...event,
-        originalEvent: event,
+        unparsedEvent: event,
+        originalEvent: events.find((ev) => ev.id === event.originalEvent),
         categories: event.categories.map((categoryId) => categoryMap[categoryId]),
         members: event.members.map((userId) => userMap[userId]),
         owner: userMap[event.owner],
