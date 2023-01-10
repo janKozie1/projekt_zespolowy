@@ -11,7 +11,8 @@ class ExampleSerializer(serializers.ModelSerializer):
 class UsersSerializer(serializers.ModelSerializer):
     class Meta:
         model = Users
-        fields = ['id', 'name', 'surname', 'password', 'joined_at', 'email', 'role_id']
+        fields = ['id', 'name', 'surname', 'joined_at', 'email', 'role_id', 'preferred_method_id',
+                  'billing_name', 'billing_address', 'billing_postcode', 'billing_city']
 
 
 class RoleSerializer(serializers.ModelSerializer):
@@ -88,3 +89,25 @@ class CategoriesESerializer(serializers.ModelSerializer):
     class Meta:
         model = CategoriesE
         fields = ['id', 'name', 'description']
+
+class IncomingGiftsSerializer(serializers.Serializer):
+    id = serializers.IntegerField()
+    id_event = serializers.IntegerField()
+    due_date = serializers.DateTimeField()
+    completed = serializers.BooleanField()
+    tittle = serializers.CharField(max_length=255)
+    description = serializers.CharField(max_length=255)
+    date = serializers.DateTimeField()
+    created_at = serializers.DateTimeField()
+    owner_id = serializers.IntegerField()
+
+class FriendSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = FriendList
+        fields = ('user', 'friend', 'status', 'timestamp')
+
+class FriendListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Users
+        fields = ('id', 'name', 'surname', 'email')
+

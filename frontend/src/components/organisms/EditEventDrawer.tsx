@@ -34,6 +34,7 @@ const EditEventDrawer = ({ drawer }: Props): ReactElement => {
   const onSubmit: EventFormProps['submitHandler'] = {
     onSubmit: async (data) => api.event.update({
       ...data,
+      giftReceiver: data.giftReceiver ?? null,
       eventId: drawer.event.id,
       date: (allEvents?.data ?? []).find((event) => event.id === drawer.event.id)?.date ?? drawer.event.date,
     }),
@@ -55,7 +56,10 @@ const EditEventDrawer = ({ drawer }: Props): ReactElement => {
       <Rows gap={4}>
         <EventForm
           submitHandler={onSubmit}
-          initialData={drawer.event}
+          initialData={{
+            ...drawer.event,
+            giftReceiver: drawer.event.giftReceiver ?? undefined,
+          }}
         />
         <Button variant="outlined" onClick={onRemove}>
           Usuń

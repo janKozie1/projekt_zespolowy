@@ -29,6 +29,11 @@ router.register(r'products', views.ProductsViewSet, basename='products')
 router.register(r'cart', views.CartViewSet, basename='cart')
 router.register(r'profile', views.ProfileViewSet, basename='profile')
 router.register(r'calendar', views.CalendarViewSet, basename='calendar')
+router.register(r'gift-discover', views.GiftDiscover, basename='gift-discover')
+router.register(r'incoming-gifts', views.IncomingGifts, basename='incoming-gifts')
+router.register(r'friend', views.Friend, basename='friend')
+router.register(r'user-friend-list', views.FriendListView, basename='user-friend-list')
+
 
 
 urlpatterns = [

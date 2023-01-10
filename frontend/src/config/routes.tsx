@@ -1,6 +1,7 @@
 import SecureRoutesWrapper from '../components/organisms/SecureRoutesWrapper';
 import authRoutes from '../components/pages/Auth/config';
 import calendarRoutes from '../components/pages/Calendar/config';
+import cartRoutes from '../components/pages/Cart/config';
 import dashboardRoutes from '../components/pages/Dashboard/config';
 import homeRoutes from '../components/pages/Home/config';
 import peopleRoutes from '../components/pages/People/config';
@@ -30,6 +31,7 @@ const secureRoutes: AnyRoutesConfig = [
   productRoutes,
   profileRoutes,
   peopleRoutes,
+  cartRoutes,
   settingsRoutes,
   storeRoutes,
 ].reduce(mergeConfigs, emptyRoutesConfig);

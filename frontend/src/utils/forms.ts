@@ -1,4 +1,5 @@
 import { isNil } from 'lodash';
+import isString from 'lodash/isString';
 import type { ControllerFieldState, UseFormReturn } from 'react-hook-form';
 
 import type { TextFieldProps } from '@mui/material/TextField';
@@ -68,6 +69,20 @@ export const makeToAutocompleteProps = (form: UseFormReturn<AnyFormShape>) => {
       setValue(field.name, selectedOpts.map((opt) => opt.id));
     },
   });
+};
+
+export const undefinedIfEmpty = <FieldValue>(
+  parsed: FieldValue, input: string | null | undefined,
+): FieldValue | undefined => {
+  const isEmpty = input === null
+      || input === undefined
+      || (isString(input) && (input.trim() === ''));
+
+  if (isEmpty) {
+    return undefined;
+  }
+
+  return parsed;
 };
 
 export default {};

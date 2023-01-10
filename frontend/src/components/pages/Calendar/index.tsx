@@ -39,25 +39,22 @@ const Calendar = (): ReactElement => {
   const calendar = useCalendar();
   const drawers = useDrawers();
   const { eventCategories, users } = useConstantData();
-
   const { api } = useAPI();
-
-  const { year } = calendar.month;
 
   const [events, { loading: eventsLoading }] = useApiRequest(api.event.allUserEvents, {
     immediateArgs: emptyArgs,
   });
 
   const parsedEvents = useMemo(() => parseEvents(
-    events?.data, eventCategories, users, year,
-  ), [events, eventCategories, users, year]);
+    events?.data, eventCategories, users,
+  ), [events, eventCategories, users]);
 
   const onDayClick = (day: CalendarDay) => {
     drawers.open(AddEventDrawerModel({ date: day.date.toJSDate() }));
   };
 
   const onEventClick = (event: ParsedEvent) => {
-    drawers.open(EditEventDrawerModel({ event: event.originalEvent }));
+    drawers.open(EditEventDrawerModel({ event: event.unparsedEvent }));
   };
 
   const currentDay = DateTime.local().toISODate();

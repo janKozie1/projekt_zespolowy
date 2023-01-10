@@ -1,7 +1,7 @@
 import type { Nullable } from '../../../utils/types';
 
 import type {
-  Event, EventCategory, PaymentMethod, RepeatsEvery, User, Notification, GiftCategory, GiftReceiver,
+  Event, EventCategory, PaymentMethod, RepeatsEvery, User, Notification, GiftCategory, GiftReceiver, Gift, ShoppingCart,
 } from './data';
 import type { APICallFN, RequestWithValidationFN, ToSyncAPI } from './utils';
 
@@ -32,7 +32,7 @@ type EventAPI = Readonly<{
     date: Date;
     repeatsEvery: RepeatsEvery;
     members: User['id'][];
-    needGifts: GiftReceiver['id'][];
+    giftReceiver: Nullable<GiftReceiver['id']>;
     categories: EventCategory['id'][];
   }>;
   update: RequestWithValidationFN<{
@@ -41,12 +41,14 @@ type EventAPI = Readonly<{
     description: string;
     date: Date;
     members: User['id'][];
+    giftReceiver: Nullable<GiftReceiver['id']>;
     categories: EventCategory['id'][];
   }>;
   remove: RequestWithValidationFN<{
     eventId: string;
   }>;
   allUserEvents: APICallFN<null, Event[]>;
+  upcomfigUserEvents: APICallFN<null, Event[]>;
   allCategories: APICallFN<null, EventCategory[]>;
 }>;
 
@@ -87,6 +89,37 @@ type NotificationsAPI = Readonly<{
 
 type GiftsAPI = Readonly<{
   allCategories: APICallFN<null, GiftCategory[]>;
+  allGifts: APICallFN<null, Gift[]>;
+  gift: APICallFN<{ id: string }, Nullable<Gift>>;
+}>;
+
+type CartAPI = Readonly<{
+  allCarts: APICallFN<null, ShoppingCart[]>;
+  assignTemporaryCartToEvent: RequestWithValidationFN<{
+    event: Event['id'];
+  }>;
+  removeGift: RequestWithValidationFN<{
+    cartId: string;
+    giftId: string;
+  }>;
+  updateAmount: RequestWithValidationFN<{
+    cartId: string;
+    giftId: string;
+    amount: number;
+  }>;
+  temporaryCart: Readonly<{
+    addGift: RequestWithValidationFN<{
+      id: string;
+    }>;
+    updateAmont: RequestWithValidationFN<{
+      giftId: string;
+      amount: number;
+    }>;
+    removeGift: RequestWithValidationFN<{
+      id: string;
+    }>;
+    empty: APICallFN<null, boolean>;
+  }>;
 }>;
 
 export type API = Readonly<{
@@ -96,6 +129,7 @@ export type API = Readonly<{
   payment: PaymentAPI;
   notifications: NotificationsAPI;
   gifts: GiftsAPI;
+  cart: CartAPI;
 }>;
 
 export type SyncApi = ToSyncAPI<API>;
