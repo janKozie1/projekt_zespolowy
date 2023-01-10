@@ -78,3 +78,15 @@ class CategoriesESerializer(serializers.ModelSerializer):
     class Meta:
         model = CategoriesE
         fields = ['id', 'name', 'description']
+
+
+class FriendSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = FriendList
+        fields = ('user', 'friend', 'status', 'timestamp')
+
+
+class FriendListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Users
+        fields = ('id', 'name', 'surname', 'email')

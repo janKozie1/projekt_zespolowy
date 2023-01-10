@@ -2,7 +2,6 @@ from django.contrib.auth import authenticate, login, logout
 from django.http import JsonResponse
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.views.decorators.http import require_POST
-from django.shortcuts import render
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from .serializers import *
@@ -94,6 +93,72 @@ class ProductsViewSet(viewsets.ModelViewSet):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class Friend(viewsets.ViewSet):
+    serializer_class = FriendSerializer
+
+    def create(self, request):
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid():
+            user = serializer.validated_data.get('user')
+            friend = serializer.validated_data.get('friend')
+            status_request = serializer.validated_data.get('status')
+            if user == friend:
+                return Response({'error': 'User and friend cannot be the same'}, status=status.HTTP_400_BAD_REQUEST)
+            if user.id < 1 or friend.id < 1:
+                return Response({'error': 'User and friend IDs cannot be less than 1'}, status=status.HTTP_400_BAD_REQUEST)
+            new_friendship = FriendList.objects.create(user=user, friend=friend, status=status_request)
+            new_friendship.save()
+            return Response({'success': 'Friendship created successfully'}, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def update(self, request, pk=None):
+        try:
+            friend = FriendList.objects.get(pk=pk)
+        except FriendList.DoesNotExist:
+            return Response({'error': 'Friendship does not exist'}, status=status.HTTP_404_NOT_FOUND)
+
+        serializer = self.serializer_class(friend, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'success': 'Friendship updated successfully'}, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def destroy(self, request, pk=None):
+        try:
+            friend = FriendList.objects.get(pk=pk)
+            if friend.status != 'accepted':
+                raise Exception('Users are not friends')
+        except FriendList.DoesNotExist:
+            return Response({'error': 'Friendship does not exist'}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+        friend.delete()
+        return Response({'success': 'Friendship deleted successfully'}, status=status.HTTP_200_OK)
+
+
+
+class FriendListView(viewsets.ViewSet):
+    serializer_class = FriendListSerializer
+
+    def retrieve(self, request, pk=None):
+        users_data = FriendList.objects.select_related('friend').filter(status='accepted', user_id=pk)
+
+        # Convert the QuerySet to a list of dictionaries
+        friend_list = [
+            {
+                'id': user_data.friend.id,
+                'name': user_data.friend.name,
+                'surname': user_data.friend.surname,
+                'email': user_data.friend.email,
+            }
+            for user_data in users_data
+        ]
+
+        serializer = self.serializer_class(friend_list, many=True, partial=True)
+
+        return Response(serializer.data)
 
 
 @require_POST
