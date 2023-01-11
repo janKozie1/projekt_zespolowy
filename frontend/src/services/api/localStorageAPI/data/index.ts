@@ -101,7 +101,7 @@ export const makeBuiltInEvents = (userId: User['id'], relativeTo: Date): Event[]
     },
     {
       type: 'mothersDay',
-      date: new Date('2022-06-26'),
+      date: new Date('2022-05-26'),
       name: 'Dzień matki',
     },
     {
