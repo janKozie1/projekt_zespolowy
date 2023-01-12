@@ -1,9 +1,9 @@
 import { v4 } from 'uuid';
 
-import type { Event } from '../api/types/data';
+import type { Event, ShoppingCart } from '../api/types/data';
 
-export type AnyDrawerType = 'AddEvent' | 'AddPerson' | 'EditEvent';
-export type AnyDrawerModel = AddEventDrawer | AddPersonDrawer | EditEventDrawer;
+export type AnyDrawerType = 'AddEvent' | 'AddPerson' | 'EditEvent' | 'FinishCart';
+export type AnyDrawerModel = AddEventDrawer | AddPersonDrawer | EditEventDrawer | FinishCartDrawer;
 
 interface Drawer<T extends AnyDrawerType> {
   id: string;
@@ -44,6 +44,19 @@ export const AddPersonDrawerModel = (
 ): AddPersonDrawer => ({
   id: v4(),
   type: 'AddPerson',
+  visible: true,
+});
+
+export interface FinishCartDrawer extends Drawer<'FinishCart'> {
+  cart: ShoppingCart;
+}
+
+export const FinishCartDrawerModel = ({
+  cart,
+}: Omit<FinishCartDrawer, NonEditableParams>): FinishCartDrawer => ({
+  id: v4(),
+  cart,
+  type: 'FinishCart',
   visible: true,
 });
 

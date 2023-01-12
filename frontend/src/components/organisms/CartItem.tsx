@@ -1,5 +1,6 @@
 import type { ReactElement, ReactNode } from 'react';
 
+import { isNil } from 'lodash';
 import { useNavigate, generatePath } from 'react-router';
 import styled from 'styled-components';
 
@@ -32,7 +33,7 @@ const ItemContainer = styled.div`
 type Props = Readonly<{
   gift: Gift;
   children?: ReactNode;
-  onRemove: (gift: Gift) => void;
+  onRemove?: (gift: Gift) => void;
 }>;
 
 const CartItem = ({ gift, onRemove, children }: Props): ReactElement => {
@@ -54,13 +55,15 @@ const CartItem = ({ gift, onRemove, children }: Props): ReactElement => {
       {children}
       <Box ml="auto">
         <Columns gap={2}>
-          <IconButton
-            aria-label="delete"
-            onClick={() => onRemove(gift)}
-            color="error"
-          >
-            <CancelOutlined />
-          </IconButton>
+          {!isNil(onRemove) && (
+            <IconButton
+              aria-label="delete"
+              onClick={() => onRemove(gift)}
+              color="error"
+            >
+              <CancelOutlined />
+            </IconButton>
+          )}
           <IconButton
             onClick={() => navigate(generatePath(ProductRoutes.PRODUCT, {
               id: gift.id,

@@ -329,6 +329,7 @@ export const validators: Validators = {
   },
   payment: {
     availableMethods: null,
+    pay: () => noValidation,
   },
   notifications: {
     confirmNotification: () => noValidation,
@@ -342,6 +343,7 @@ export const validators: Validators = {
     allCarts: null,
     removeGift: () => noValidation,
     updateAmount: () => noValidation,
+    finalizeCart: () => noValidation,
     temporaryCart: {
       addGift: () => noValidation,
       removeGift: () => noValidation,
@@ -349,6 +351,7 @@ export const validators: Validators = {
       empty: null,
     },
     assignTemporaryCartToEvent: () => noValidation,
+    updateStatus: () => noValidation,
   },
 };
 

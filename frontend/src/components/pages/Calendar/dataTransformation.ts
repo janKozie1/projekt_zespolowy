@@ -1,7 +1,7 @@
 import { DateTime } from 'luxon';
 
 import type { Event, EventCategory, User } from '../../../services/api/types/data';
-import { isEmpty } from '../../../utils/guards';
+import { isEmpty, isNotNil } from '../../../utils/guards';
 import type { Nullable } from '../../../utils/types';
 
 export type ParsedEvent = Omit<Event, 'categories' | 'members' | 'originalEvent' | 'owner'> & Readonly<{
@@ -42,8 +42,8 @@ export const parseEvents = (
         ...event,
         unparsedEvent: event,
         originalEvent: events.find((ev) => ev.id === event.originalEvent),
-        categories: event.categories.map((categoryId) => categoryMap[categoryId]),
-        members: event.members.map((userId) => userMap[userId]),
+        categories: event.categories.map((categoryId) => categoryMap[categoryId]).filter(isNotNil),
+        members: event.members.map((userId) => userMap[userId]).filter(isNotNil),
         owner: userMap[event.owner],
       };
 

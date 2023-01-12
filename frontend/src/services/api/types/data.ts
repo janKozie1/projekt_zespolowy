@@ -8,6 +8,12 @@ export enum RepeatsEvery {
   decade = 'decade',
 }
 
+export enum CartStatus {
+  draft = 'draft',
+  ready = 'ready',
+  done = 'done',
+}
+
 export type Notification = Readonly<{
   id: string;
   kind: 'friendRequest';
@@ -96,10 +102,18 @@ export type CategoryMapping = Readonly<{
   event: EventCategory['id'];
 }>;
 
+export type Payment = Readonly<{
+  id: string;
+  userId: User['id'];
+  amount: number;
+}>;
+
 export type ShoppingCart = Readonly<{
   id: string;
   event: Event['id'];
-  completed: boolean;
+  status: CartStatus;
+  completionDate: Nullable<Date>;
+  payments: Payment[];
   gifts: Readonly<{
     id: Gift['id'];
     amount: number;

@@ -1,7 +1,17 @@
 import type { Nullable } from '../../../utils/types';
 
 import type {
-  Event, EventCategory, PaymentMethod, RepeatsEvery, User, Notification, GiftCategory, GiftReceiver, Gift, ShoppingCart,
+  Event,
+  EventCategory,
+  PaymentMethod,
+  RepeatsEvery,
+  User,
+  Notification,
+  GiftCategory,
+  GiftReceiver,
+  Gift,
+  ShoppingCart,
+  CartStatus,
 } from './data';
 import type { APICallFN, RequestWithValidationFN, ToSyncAPI } from './utils';
 
@@ -78,6 +88,10 @@ type UserAPI = Readonly<{
 
 type PaymentAPI = Readonly<{
   availableMethods: APICallFN<null, PaymentMethod[]>;
+  pay: RequestWithValidationFN<{
+    cartId: string;
+    amount: number;
+  }>;
 }>;
 
 type NotificationsAPI = Readonly<{
@@ -106,6 +120,13 @@ type CartAPI = Readonly<{
     cartId: string;
     giftId: string;
     amount: number;
+  }>;
+  updateStatus: RequestWithValidationFN<{
+    cartId: string;
+    status: CartStatus;
+  }>;
+  finalizeCart: RequestWithValidationFN<{
+    cartId: string;
   }>;
   temporaryCart: Readonly<{
     addGift: RequestWithValidationFN<{

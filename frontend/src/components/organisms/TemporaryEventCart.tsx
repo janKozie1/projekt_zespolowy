@@ -1,14 +1,12 @@
 import type { ReactElement } from 'react';
 import { useMemo, useState } from 'react';
 
-import { v4 } from 'uuid';
-
 import {
   Box, Button, Autocomplete, createFilterOptions, TextField, debounce,
 } from '@mui/material';
 
 import type { Event, Gift } from '../../services/api/types/data';
-import { formatDate, DateFormat } from '../../utils/date';
+import { formatDate, DateFormat, compareDays } from '../../utils/date';
 import { isEmpty } from '../../utils/guards';
 import type { Nullable } from '../../utils/types';
 
@@ -46,13 +44,15 @@ const TemporaryEventCart = ({ giftMap, events }: Props): ReactElement => {
       giftId: gift.id, amount: Number.isFinite(amount) ? Math.max(1, amount) : 1,
     });
 
-    refreshQueries([api.cart.allCarts]);
+    refreshQueries([api.auth.loggedInUser]);
   }, 100), [api, refreshQueries]);
 
-  const eventOptions = events.map((event) => ({
-    id: event.id,
-    label: `${event.name} - ${formatDate(event.date, DateFormat.dayMonthYear)}`,
-  }));
+  const eventOptions = events
+    .filter((event) => compareDays(event.date, new Date()) >= 0)
+    .map((event) => ({
+      id: event.id,
+      label: `${event.name} - ${formatDate(event.date, DateFormat.dayMonthYear)}`,
+    }));
 
   return (
     <EventCart
@@ -61,10 +61,8 @@ const TemporaryEventCart = ({ giftMap, events }: Props): ReactElement => {
       giftMap={giftMap}
       onRemove={removeTemporaryGift}
       onUpdateAmount={onAmountChange}
+      defaultExpanded
       cart={{
-        completed: false,
-        event: v4(),
-        id: v4(),
         gifts: loggedInUser.temporarilySelectedGifts,
       }}
     >
