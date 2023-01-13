@@ -1,11 +1,15 @@
 import type { ReactElement } from 'react';
 import { useMemo, useState } from 'react';
 
+import { isNil } from 'lodash';
+
 import {
   Box, Button, Autocomplete, createFilterOptions, TextField, debounce,
 } from '@mui/material';
 
+import useApiRequest, { emptyArgs } from '../../hooks/useApiRequest';
 import type { Event, Gift } from '../../services/api/types/data';
+import { CartStatus } from '../../services/api/types/data';
 import { formatDate, DateFormat, compareDays } from '../../utils/date';
 import { isEmpty } from '../../utils/guards';
 import type { Nullable } from '../../utils/types';
@@ -26,6 +30,10 @@ const TemporaryEventCart = ({ giftMap, events }: Props): ReactElement => {
   const { loggedInUser } = useConstantData();
 
   const [assignToEventId, setAssignToEventId] = useState<Nullable<string>>();
+
+  const [shoppingCarts] = useApiRequest(api.cart.allCarts, {
+    immediateArgs: emptyArgs,
+  });
 
   const removeTemporaryGift = async (gift: Gift) => {
     await api.cart.temporaryCart.removeGift(gift);
@@ -54,6 +62,12 @@ const TemporaryEventCart = ({ giftMap, events }: Props): ReactElement => {
       label: `${event.name} - ${formatDate(event.date, DateFormat.dayMonthYear)}`,
     }));
 
+  const eventHasAnActiveCart = (eventId: string): boolean => {
+    const cart = (shoppingCarts?.data ?? []).find((c) => c.event === eventId);
+
+    return !isNil(cart) && cart.status !== CartStatus.draft;
+  };
+
   return (
     <EventCart
       name="Nieprzypisane prezenty"
@@ -77,6 +91,7 @@ const TemporaryEventCart = ({ giftMap, events }: Props): ReactElement => {
               onChange={(_, newValue) => setAssignToEventId(newValue?.id)}
               options={eventOptions}
               filterOptions={createFilterOptions({ limit: 8 })}
+              getOptionDisabled={({ id }) => eventHasAnActiveCart(id)}
               sx={{ width: 300 }}
               renderInput={(params) => <TextField {...params} label="Wydarzenie" />}
             />

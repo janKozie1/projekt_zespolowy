@@ -59,6 +59,8 @@ const EventCart = ({
     </Text>
   );
 
+  const roundTotal = (total: number) => Math.round(total * 100) / 100;
+
   return (
     <Accordion defaultExpanded={defaultExpanded || !isEmpty(cart.gifts)}>
       <AccordionSummary expandIcon={<Box px={2}><ExpandMoreIcon /></Box>}>
@@ -118,7 +120,9 @@ const EventCart = ({
                 })}
                 <Divider />
                 <Box display="flex" justifyContent="flex-end">
-                  {(renderTotal ?? defaultRenderTotal)(gifts.reduce((acc, gift) => gift.price * gift.amount + acc, 0))}
+                  {(renderTotal ?? defaultRenderTotal)(
+                    roundTotal(gifts.reduce((acc, gift) => gift.price * gift.amount + acc, 0)),
+                  )}
                 </Box>
               </>
             )}

@@ -95,6 +95,8 @@ const Cart = (): ReactElement => {
   const giftMap = new Map((gifts?.data ?? []).map((gift) => [gift.id, gift]));
   const eventsMap = new Map((events?.data ?? []).map((event) => [event.id, event]));
 
+  const ownedByUser = (cart: ShoppingCart) => eventsMap.get(cart.event)?.owner === loggedInUser.id;
+
   const loading = cartsLoading
     || giftsLoading || eventsLoading || upcomingEventsLoading || usersLoading
     || isNil(gifts) || isNil(shoppingCarts) || isNil(upcomingEvents) || isNil(events) || isNil(users);
@@ -144,11 +146,13 @@ const Cart = (): ReactElement => {
                             emptyCartMessage="Brak prezentów"
                             cart={cart}
                           >
-                            <Box width="100%" display="flex" justifyContent="flex-end" mt={4}>
-                              <Button variant="outlined" onClick={async () => onCartConfirm(cart)}>
-                                Zatwierdź koszyk
-                              </Button>
-                            </Box>
+                            {ownedByUser(cart) && (
+                              <Box width="100%" display="flex" justifyContent="flex-end" mt={4}>
+                                <Button variant="outlined" onClick={async () => onCartConfirm(cart)}>
+                                  Zatwierdź koszyk
+                                </Button>
+                              </Box>
+                            )}
                           </EventCart>
                         );
                       })}
@@ -236,9 +240,14 @@ const Cart = (): ReactElement => {
                       >
                         <Box width="100%" display="flex" justifyContent="flex-end" mt={3}>
                           {remainingToPay <= 0 ? (
-                            <Button variant="contained" onClick={() => drawers.open(FinishCartDrawerModel({ cart }))}>
-                              Zakończ
-                            </Button>
+                            <>
+                              {ownedByUser(cart) && (
+                                <Button variant="contained" onClick={() => drawers.open(FinishCartDrawerModel({ cart }))}>
+                                  Zakończ
+                                </Button>
+                              )}
+                            </>
+
                           ) : (
                             <Box display="flex" gap={4} justifyContent="flex-end">
                               <Button variant="contained" onClick={async () => onAmountPaid(cart, remainingToPay)}>

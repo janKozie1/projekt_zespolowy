@@ -1,3 +1,4 @@
+
 import isNil from 'lodash/isNil';
 import { DateTime } from 'luxon';
 import { v4 } from 'uuid';
@@ -71,10 +72,15 @@ const eventApi: SyncApi['event'] = {
     if (validation.ok) {
       const { eventId } = updatePayload;
 
-      setter('events', (events = []) => events.map((event) => (shouldModifyEvent(eventId, events, event) ? {
-        ...event,
-        ...updatePayload,
-      } : event)));
+      setter('events', (events = []) => events.map((event) => {
+        const should = shouldModifyEvent(eventId, events, event);
+        const a = should ? {
+          ...event,
+          ...updatePayload,
+        } : event;
+
+        return a;
+      }));
     }
 
     return validation;
