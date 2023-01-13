@@ -9,9 +9,9 @@ import {
 import Box from '@mui/material/Box';
 
 import { toSpacing } from '../../../config/theme/fields/spacing';
-import useApiRequest, { emptyArgs } from '../../../hooks/useApiRequest';
+import useUpcomingEvents from '../../../hooks/useUpcomingEvents';
 import { CartStatus } from '../../../services/api/types/data';
-import { compareDays, DateFormat, formatDate } from '../../../utils/date';
+import { DateFormat, formatDate } from '../../../utils/date';
 
 import Columns from '../../atoms/Columns';
 import PageContainer from '../../atoms/PageContainer';
@@ -21,7 +21,6 @@ import Tile from '../../atoms/Tile';
 import Chip from '../../molecules/Chip';
 import Loading from '../../molecules/Loading';
 import PageHeader from '../../molecules/PageHeader';
-import { useAPI } from '../../organisms/ApiProvider';
 import Calendar from '../../organisms/Calendar';
 import { useConstantData } from '../../organisms/ConstantDataProvider';
 import DiscoveryCard from '../../organisms/DiscoveryCard';
@@ -39,44 +38,8 @@ const DashboardLayout = styled.div`
 `;
 
 const Dashboard = (): ReactElement => {
-  const { api } = useAPI();
   const { loggedInUser } = useConstantData();
-
-  const [events, { loading: eventsLoading }] = useApiRequest(api.event.allUserEvents, {
-    immediateArgs: emptyArgs,
-  });
-
-  const [shoppingCarts, { loading: cartsLoading }] = useApiRequest(api.cart.allCarts, {
-    immediateArgs: emptyArgs,
-  });
-
-  const [users, { loading: usersLoading }] = useApiRequest(api.user.allUsers, {
-    immediateArgs: emptyArgs,
-  });
-
-  const today = new Date();
-
-  const upcomingEvents = (events?.data ?? [])
-    .filter((event) => compareDays(today, event.date) <= 0)
-    .slice(0, 30)
-    .map((event) => {
-      const associatedShoppingCart = (shoppingCarts?.data ?? [])
-        .find((cart) => cart.event === event.id);
-
-      const owner = (users?.data ?? [])
-        .find((user) => user.id === event.owner);
-
-      const giftReceiver = owner?.giftReceivers
-        .find((receiver) => receiver.id === event.giftReceiver);
-
-      return {
-        ...event,
-        ownerId: event.owner,
-        associatedShoppingCart,
-        owner,
-        giftReceiver,
-      };
-    });
+  const { loading, upcomingEvents } = useUpcomingEvents();
 
   return (
     <PageContainer>
@@ -96,7 +59,7 @@ const Dashboard = (): ReactElement => {
               <Text type="heading" variant="h4">Nadchodzące</Text>
               <Box height="max-content" overflow="auto">
                 <Rows gap={4}>
-                  {eventsLoading || cartsLoading || usersLoading ? <Loading /> : (
+                  {loading ? <Loading /> : (
                     <>
                       {upcomingEvents
                         .map(({

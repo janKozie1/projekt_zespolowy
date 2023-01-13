@@ -1,10 +1,14 @@
 import { DateTime } from 'luxon';
 
-import type { Event, EventCategory, User } from '../../../services/api/types/data';
+import type { UpcomingEvent } from '../../../hooks/useUpcomingEvents';
+import { makeToUpcomingEvent } from '../../../hooks/useUpcomingEvents';
+import type {
+  Event, EventCategory, ShoppingCart, User,
+} from '../../../services/api/types/data';
 import { isEmpty, isNotNil } from '../../../utils/guards';
 import type { Nullable } from '../../../utils/types';
 
-export type ParsedEvent = Omit<Event, 'categories' | 'members' | 'originalEvent' | 'owner'> & Readonly<{
+type BaseParsedEvent = Readonly<{
   categories: EventCategory[];
   members: User[];
   originalEvent: Nullable<Event>;
@@ -12,14 +16,21 @@ export type ParsedEvent = Omit<Event, 'categories' | 'members' | 'originalEvent'
   owner: User;
 }>;
 
+export type ParsedEvent = BaseParsedEvent
+& Omit<Event, keyof BaseParsedEvent | 'giftReceiver'>
+& Omit<UpcomingEvent, keyof BaseParsedEvent>;
+
 export const parseEvents = (
   events: Nullable<Event[]>,
   categories: Nullable<EventCategory[]>,
+  shoppingCarts: Nullable<ShoppingCart[]>,
   users: Nullable<User[]>,
 ): Map<string, ParsedEvent[]> => {
-  if (isEmpty(events) || isEmpty(categories) || isEmpty(users)) {
+  if (isEmpty(events) || isEmpty(categories) || isEmpty(users) || isEmpty(shoppingCarts)) {
     return new Map<string, ParsedEvent[]>();
   }
+
+  const toUpcomingEvent = makeToUpcomingEvent(users, shoppingCarts);
 
   const updateMap = (map: Map<string, Event[]>, event: Event, date = event.date) => {
     const dateKey = DateTime.fromJSDate(date).toISODate();
@@ -37,18 +48,22 @@ export const parseEvents = (
 
   return new Map(Array.from(base.entries()).map(([date, eventsOnDay]) => [
     date,
-    eventsOnDay.map((event) => {
-      const parsedEvent: ParsedEvent = {
-        ...event,
-        unparsedEvent: event,
-        originalEvent: events.find((ev) => ev.id === event.originalEvent),
-        categories: event.categories.map((categoryId) => categoryMap[categoryId]).filter(isNotNil),
-        members: event.members.map((userId) => userMap[userId]).filter(isNotNil),
-        owner: userMap[event.owner],
-      };
+    eventsOnDay
+      .map((event) => {
+        const upcomingEvent = toUpcomingEvent(event);
 
-      return parsedEvent;
-    }),
+        const parsedEvent: ParsedEvent = {
+          ...event,
+          ...upcomingEvent,
+          unparsedEvent: event,
+          originalEvent: events.find((ev) => ev.id === event.originalEvent),
+          categories: event.categories.map((categoryId) => categoryMap[categoryId]).filter(isNotNil),
+          members: event.members.map((userId) => userMap[userId]).filter(isNotNil),
+          owner: userMap[event.owner],
+        };
+
+        return parsedEvent;
+      }),
   ]));
 };
 

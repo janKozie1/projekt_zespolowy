@@ -41,6 +41,12 @@ const types = {
       color: colors.greyscale[100],
       textTransform: 'none',
     },
+    secondary: {
+      size: sizes[400],
+      weight: 'normal',
+      color: colors.greyscale[50],
+      textTransform: 'none',
+    },
   },
   button: {
     default: {

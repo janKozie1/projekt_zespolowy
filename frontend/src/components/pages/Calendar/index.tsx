@@ -45,9 +45,13 @@ const Calendar = (): ReactElement => {
     immediateArgs: emptyArgs,
   });
 
+  const [carts, { loading: cartsLoading }] = useApiRequest(api.cart.allCarts, {
+    immediateArgs: emptyArgs,
+  });
+
   const parsedEvents = useMemo(() => parseEvents(
-    events?.data, eventCategories, users,
-  ), [events, eventCategories, users]);
+    events?.data, eventCategories, carts?.data, users,
+  ), [events, eventCategories, users, carts]);
 
   const onDayClick = (day: CalendarDay) => {
     drawers.open(AddEventDrawerModel({ date: day.date.toJSDate() }));
@@ -99,12 +103,12 @@ const Calendar = (): ReactElement => {
                     </Text>
                   ))}
                 </Columns>
-                <CalendarLayout>
+                <CalendarLayout gap={4}>
                   {calendar.days.map((day) => (
                     <Day
                       key={day.isoDate}
                       events={parsedEvents.get(day.isoDate) ?? []}
-                      loading={eventsLoading}
+                      loading={eventsLoading || cartsLoading}
                       onClick={onDayClick}
                       onEventClick={onEventClick}
                       day={day}
