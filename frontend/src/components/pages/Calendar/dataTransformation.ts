@@ -26,11 +26,11 @@ export const parseEvents = (
   shoppingCarts: Nullable<ShoppingCart[]>,
   users: Nullable<User[]>,
 ): Map<string, ParsedEvent[]> => {
-  if (isEmpty(events) || isEmpty(categories) || isEmpty(users) || isEmpty(shoppingCarts)) {
+  if (isEmpty(events) || isEmpty(categories) || isEmpty(users)) {
     return new Map<string, ParsedEvent[]>();
   }
 
-  const toUpcomingEvent = makeToUpcomingEvent(users, shoppingCarts);
+  const toUpcomingEvent = makeToUpcomingEvent(users, shoppingCarts ?? []);
 
   const updateMap = (map: Map<string, Event[]>, event: Event, date = event.date) => {
     const dateKey = DateTime.fromJSDate(date).toISODate();

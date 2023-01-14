@@ -57,7 +57,7 @@ const Dashboard = (): ReactElement => {
   useEffect(() => {
     const g = gifts?.data;
 
-    if (!isEmpty(g)) {
+    if (!isEmpty(g) && isEmpty(randomIndicesRef.current)) {
       randomIndicesRef.current = getNRandomIndices(g, 4);
     }
   }, [gifts]);

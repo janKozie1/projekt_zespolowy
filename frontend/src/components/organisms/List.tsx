@@ -1,6 +1,8 @@
 import type { ReactElement } from 'react';
 import { useState, Fragment } from 'react';
 
+import { isNil } from 'lodash';
+
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import { Box } from '@mui/material';
@@ -25,7 +27,7 @@ type ListItem = Readonly<{
 
 type Props = Readonly<{
   items: ListItem[];
-  selectedItems: string[];
+  selectedItems: Nullable<string[]>;
   onChange: (id: string) => void;
   padding?: number;
   listProps?: ListProps & Readonly<{ component: 'div' }>;
@@ -48,9 +50,13 @@ const List = ({
         if (isEmpty(item.children)) {
           return (
             <ListItemButton sx={{ pl: padding, py: 0 }} key={item.id} onClick={() => onChange(item.id)}>
-              <ListItemIcon>
-                <Checkbox checked={selectedItems.includes(item.id)} />
-              </ListItemIcon>
+              {isNil(selectedItems) ? (
+                <Box pl={4} />
+              ) : (
+                <ListItemIcon>
+                  <Checkbox checked={selectedItems.includes(item.id)} />
+                </ListItemIcon>
+              )}
               <ListItemText primary={<Text type="body" variant="small">{item.label}</Text>} />
             </ListItemButton>
           );

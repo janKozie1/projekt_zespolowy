@@ -8,6 +8,7 @@ import { IconButton } from '@mui/material';
 import Box from '@mui/material/Box';
 
 import useApiRequest, { emptyArgs } from '../../../hooks/useApiRequest';
+import type { Event, GiftReceiver } from '../../../services/api/types/data';
 import { toTree } from '../../../utils/array';
 import { isEmpty } from '../../../utils/guards';
 
@@ -21,6 +22,8 @@ import PageHeader from '../../molecules/PageHeader';
 import { useAPI } from '../../organisms/ApiProvider';
 import List from '../../organisms/List';
 import ShopCard from '../../organisms/ShopCard';
+
+import MatchTo from './components/molecules/MatchTo';
 
 const StoreLayout = styled.div`
   display: grid;
@@ -50,6 +53,14 @@ const Store = (): ReactElement => {
     setSelectedCategories((prev) => (prev.includes(id)
       ? prev.filter((category) => category !== id)
       : [...prev, id]));
+  };
+
+  const onGiftReceiverSelected = (giftReceiver: GiftReceiver) => {
+    setSelectedCategories(giftReceiver.preferredCategories);
+  };
+
+  const onEventSelected = (event: Event) => {
+    console.log(event);
   };
 
   const filteredGifts = useMemo(() => {
@@ -88,17 +99,26 @@ const Store = (): ReactElement => {
           </IconButton>
         </Box>
       </PageHeader>
+      <Box pt={4}>
+        <MatchTo
+          onEventSelected={onEventSelected}
+          onGiftReceiverSelected={onGiftReceiverSelected}
+        />
+      </Box>
       <StoreLayout>
-        <Box pl={4} pt={4} height="max-content">
-          <Tile>
-            {categoriesLoading ? <Loading /> : (
-              <List
-                items={categoriesAsTree}
-                onChange={onCategoryClick}
-                selectedItems={selectedCategories}
-              />
-            )}
-          </Tile>
+        <Box height="max-content" maxHeight="800px" overflow="auto" width="max-content">
+          <Box px={4} py={4}>
+            <Tile>
+              {categoriesLoading ? <Loading /> : (
+                <List
+                  items={categoriesAsTree}
+                  onChange={onCategoryClick}
+                  selectedItems={selectedCategories}
+                />
+              )}
+            </Tile>
+          </Box>
+          <Box pb={4} />
         </Box>
         <Box py={4} display="flex" flexDirection="row" overflow="auto" height="100%">
           <Box px={4} maxHeight="100%" width="100%">

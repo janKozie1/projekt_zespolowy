@@ -254,6 +254,7 @@ export const validators: Validators = {
     notifications: null,
     giftReceivers: {
       add: () => noValidation,
+      edit: () => noValidation,
       remove: () => noValidation,
     },
     friends: {

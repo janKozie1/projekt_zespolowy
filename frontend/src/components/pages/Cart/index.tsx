@@ -54,9 +54,6 @@ const Cart = (): ReactElement => {
   const [events, { loading: eventsLoading }] = useApiRequest(api.event.allUserEvents, {
     immediateArgs: emptyArgs,
   });
-  const [upcomingEvents, { loading: upcomingEventsLoading }] = useApiRequest(api.event.upcomfigUserEvents, {
-    immediateArgs: emptyArgs,
-  });
   const [gifts, { loading: giftsLoading }] = useApiRequest(api.gifts.allGifts, {
     immediateArgs: emptyArgs,
   });
@@ -98,8 +95,8 @@ const Cart = (): ReactElement => {
   const ownedByUser = (cart: ShoppingCart) => eventsMap.get(cart.event)?.owner === loggedInUser.id;
 
   const loading = cartsLoading
-    || giftsLoading || eventsLoading || upcomingEventsLoading || usersLoading
-    || isNil(gifts) || isNil(shoppingCarts) || isNil(upcomingEvents) || isNil(events) || isNil(users);
+    || giftsLoading || eventsLoading || usersLoading
+    || isNil(gifts) || isNil(shoppingCarts) || isNil(events) || isNil(users);
 
   const groupedByStatus = groupBy(
     shoppingCarts?.data, (cart) => cart.status,
@@ -112,196 +109,195 @@ const Cart = (): ReactElement => {
       <Rows gap={4}>
         <PageHeader title="Koszyk" />
         <Tile>
-          <TabContext value={activeTab}>
-            <TabList onChange={(_, newTab: Tabs) => setActiveTab(newTab)}>
-              <Tab label="Bieżące" value={Tabs.current} />
-              <Tab label="Zatwierdzone" value={Tabs.confirmed} />
-              <Tab label="Przeszłe" value={Tabs.past} />
-            </TabList>
-            <Box mt={-0.5} width="100%"><Divider /></Box>
-            <Box p={4} px={2}>
-              <TabPanel value={Tabs.current}>
-                {loading ? <Loading /> : (
-                  <>
-                    <TemporaryEventCart
-                      giftMap={giftMap}
-                      events={events.data ?? []}
-                    />
-                    {(groupedByStatus[CartStatus.draft] ?? [])
-                      .map((cart) => {
-                        const event = eventsMap.get(cart.event);
+          <Box width="100%">
+            <TabContext value={activeTab}>
+              <TabList onChange={(_, newTab: Tabs) => setActiveTab(newTab)}>
+                <Tab label="Bieżące" value={Tabs.current} />
+                <Tab label="Zatwierdzone" value={Tabs.confirmed} />
+                <Tab label="Przeszłe" value={Tabs.past} />
+              </TabList>
+              <Box mt={-0.5} width="100%"><Divider /></Box>
+              <Box p={4} px={2}>
+                <TabPanel value={Tabs.current}>
+                  {loading ? <Loading /> : (
+                    <>
+                      <TemporaryEventCart
+                        giftMap={giftMap}
+                        events={events.data ?? []}
+                      />
+                      {(groupedByStatus[CartStatus.draft] ?? [])
+                        .map((cart) => {
+                          const event = eventsMap.get(cart.event);
 
-                        if (isNil(event)) {
-                          return null;
-                        }
+                          if (isNil(event)) {
+                            return null;
+                          }
 
-                        return (
-                          <EventCart
-                            key={cart.id}
-                            onRemove={async (gift) => onRemoveGiftFromCart(cart, gift)}
-                            onUpdateAmount={async (gift, amount) => onUpdateGiftAmount(cart, gift, amount)}
-                            name={`${event.name} - ${formatDate(event.date, DateFormat.dayMonthYear)}`}
-                            giftMap={giftMap}
-                            receiver={loggedInUser.giftReceivers.find((receiver) => receiver.id === event.giftReceiver)}
-                            emptyCartMessage="Brak prezentów"
-                            cart={cart}
-                          >
-                            {ownedByUser(cart) && (
-                              <Box width="100%" display="flex" justifyContent="flex-end" mt={4}>
-                                <Button variant="outlined" onClick={async () => onCartConfirm(cart)}>
-                                  Zatwierdź koszyk
-                                </Button>
-                              </Box>
-                            )}
-                          </EventCart>
-                        );
-                      })}
-                  </>
-                )}
-              </TabPanel>
-              <TabPanel value={Tabs.confirmed}>
-                {isEmpty(groupedByStatus[CartStatus.ready]) ? (
-                  <Box width="100%" height="100%" flexDirection="column" display="flex" alignItems="center" justifyContent="center">
-                    <Text type="body" variant="default">Brak zatwierdzonych koszyków</Text>
-                    <Box mt={2}>
-                      <Icon size="lg">
-                        <ShoppingBagOutlined />
-                      </Icon>
+                          return (
+                            <EventCart
+                              key={cart.id}
+                              onRemove={async (gift) => onRemoveGiftFromCart(cart, gift)}
+                              onUpdateAmount={async (gift, amount) => onUpdateGiftAmount(cart, gift, amount)}
+                              name={`${event.name} - ${formatDate(event.date, DateFormat.dayMonthYear)}`}
+                              giftMap={giftMap}
+                              receiver={loggedInUser.giftReceivers
+                                .find((receiver) => receiver.id === event.giftReceiver)}
+                              emptyCartMessage="Brak prezentów"
+                              cart={cart}
+                            >
+                              {ownedByUser(cart) && (
+                                <Box width="100%" display="flex" justifyContent="flex-end" mt={4}>
+                                  <Button variant="outlined" onClick={async () => onCartConfirm(cart)}>
+                                    Zatwierdź koszyk
+                                  </Button>
+                                </Box>
+                              )}
+                            </EventCart>
+                          );
+                        })}
+                    </>
+                  )}
+                </TabPanel>
+                <TabPanel value={Tabs.confirmed}>
+                  {isEmpty(groupedByStatus[CartStatus.ready]) ? (
+                    <Box width="100%" height="100%" flexDirection="column" display="flex" alignItems="center" justifyContent="center">
+                      <Text type="body" variant="default">Brak zatwierdzonych koszyków</Text>
+                      <Box mt={2}>
+                        <Icon size="lg">
+                          <ShoppingBagOutlined />
+                        </Icon>
+                      </Box>
                     </Box>
-                  </Box>
-                ) : (groupedByStatus[CartStatus.ready] ?? [])
-                  .map((cart) => {
-                    const event = eventsMap.get(cart.event);
+                  ) : (groupedByStatus[CartStatus.ready] ?? [])
+                    .map((cart) => {
+                      const event = eventsMap.get(cart.event);
 
-                    if (isNil(event)) {
-                      return null;
-                    }
-
-                    const alreadyPaidAmount = cart.payments.reduce((acc, curr) => acc + curr.amount, 0);
-                    const remainingToPay = cart.gifts.map((gift) => gift.amount * (giftMap.get(gift.id)?.price ?? 0))
-                      .reduce(add) - alreadyPaidAmount;
-
-                    const paidByUsers = cart.payments
-                      .reduce<Writable<typeof cart['payments'][number]>[]>((acc, payment) => {
-                      const existing = acc.find((p) => p.userId === payment.userId);
-
-                      if (!isNil(existing)) {
-                        existing.amount += payment.amount;
-                      } else {
-                        acc.push({ ...payment });
+                      if (isNil(event)) {
+                        return null;
                       }
 
-                      return acc;
-                    }, [])
-                      .map((payment) => {
-                        const user = userMap.get(payment.userId);
+                      const alreadyPaidAmount = cart.payments.reduce((acc, curr) => acc + curr.amount, 0);
+                      const remainingToPay = cart.gifts.map((gift) => gift.amount * (giftMap.get(gift.id)?.price ?? 0))
+                        .reduce(add) - alreadyPaidAmount;
 
-                        if (isNil(user)) {
-                          return null;
+                      const paidByUsers = cart.payments
+                        .reduce<Writable<typeof cart['payments'][number]>[]>((acc, payment) => {
+                        const existing = acc.find((p) => p.userId === payment.userId);
+
+                        if (!isNil(existing)) {
+                          existing.amount += payment.amount;
+                        } else {
+                          acc.push({ ...payment });
                         }
 
-                        return {
-                          ...payment,
-                          user,
-                        };
-                      }).filter(isNotNil);
+                        return acc;
+                      }, [])
+                        .map((payment) => {
+                          const user = userMap.get(payment.userId);
 
-                    return (
-                      <EventCart
-                        key={cart.id}
-                        name={`${event.name} - ${formatDate(event.date, DateFormat.dayMonthYear)}`}
-                        giftMap={giftMap}
-                        receiver={loggedInUser.giftReceivers.find((receiver) => receiver.id === event.giftReceiver)}
-                        emptyCartMessage="Brak prezentów"
-                        cart={cart}
-                        renderTotal={(total) => (
-                          <Box display="flex" alignItems="center" gap={2}>
-                            <Text type="body" variant="default">
-                              {`Zapłacono ${alreadyPaidAmount}zł / ${total}zł`}
-                            </Text>
-                            <Box display="inline-flex">
-                              <Tooltip
-                                placement="top"
-                                title={isEmpty(paidByUsers)
-                                  ? 'Jeszcze nikt nie wpłacił pieniędzy'
-                                  : paidByUsers.map((payment) => (
-                                    <p key={payment.userId}>
-                                      {`${payment.user.id === loggedInUser.id ? 'Ty' : payment.user.email} - ${payment.amount}zł`}
-                                    </p>
-                                  ))}
-                              >
-                                <Icon size="md">
-                                  <InfoOutlined />
-                                </Icon>
-                              </Tooltip>
-                            </Box>
-                          </Box>
-                        )}
-                      >
-                        <Box width="100%" display="flex" justifyContent="flex-end" mt={3}>
-                          {remainingToPay <= 0 ? (
-                            <>
-                              {ownedByUser(cart) && (
-                                <Button variant="contained" onClick={() => drawers.open(FinishCartDrawerModel({ cart }))}>
-                                  Zakończ
-                                </Button>
-                              )}
-                            </>
+                          if (isNil(user)) {
+                            return null;
+                          }
 
-                          ) : (
-                            <Box display="flex" gap={4} justifyContent="flex-end">
-                              <Button variant="contained" onClick={async () => onAmountPaid(cart, remainingToPay)}>
-                                Zapłać
-                              </Button>
-                              <Box width="50%">
-                                <TextField
-                                  label="Kwota"
-                                  type="number"
-                                  size="small"
-                                  inputRef={inputRef}
-                                  InputProps={{ inputProps: { min: 0, max: remainingToPay } }}
-                                />
+                          return {
+                            ...payment,
+                            user,
+                          };
+                        }).filter(isNotNil);
+
+                      return (
+                        <EventCart
+                          key={cart.id}
+                          name={`${event.name} - ${formatDate(event.date, DateFormat.dayMonthYear)}`}
+                          giftMap={giftMap}
+                          receiver={loggedInUser.giftReceivers.find((receiver) => receiver.id === event.giftReceiver)}
+                          emptyCartMessage="Brak prezentów"
+                          cart={cart}
+                          renderTotal={(total) => (
+                            <Box display="flex" alignItems="center" gap={2}>
+                              <Text type="body" variant="default">
+                                {`Zapłacono ${alreadyPaidAmount}zł / ${total}zł`}
+                              </Text>
+                              <Box display="inline-flex">
+                                <Tooltip
+                                  placement="top"
+                                  title={isEmpty(paidByUsers)
+                                    ? 'Jeszcze nikt nie wpłacił pieniędzy'
+                                    : paidByUsers.map((payment) => (
+                                      <p key={payment.userId}>
+                                        {`${payment.user.id === loggedInUser.id ? 'Ty' : payment.user.email} - ${payment.amount}zł`}
+                                      </p>
+                                    ))}
+                                >
+                                  <Icon size="md">
+                                    <InfoOutlined />
+                                  </Icon>
+                                </Tooltip>
                               </Box>
                             </Box>
                           )}
-                        </Box>
-                      </EventCart>
-                    );
-                  })}
-              </TabPanel>
-              <TabPanel value={Tabs.past}>
-                {(groupedByStatus[CartStatus.done] ?? [])
-                  .map((cart) => {
-                    const event = eventsMap.get(cart.event);
-
-                    if (isNil(event)) {
-                      return null;
-                    }
-
-                    return (
-                      <EventCart
-                        key={cart.id}
-                        name={`${event.name} - ${formatDate(event.date, DateFormat.dayMonthYear)}`}
-                        giftMap={giftMap}
-                        receiver={loggedInUser.giftReceivers.find((receiver) => receiver.id === event.giftReceiver)}
-                        emptyCartMessage="Brak prezentów"
-                        cart={cart}
-                        renderTotal={(total) => (
-                          <Box width="max-content" ml="auto" display="flex" flexDirection="column" gap={2} alignItems="flex-end">
-                            <Text type="body" variant="default">
-                              {`Zapłacono ${total}zł`}
-                            </Text>
-                            <Text type="caption" variant="default">
-                              {`Data zakończenia: ${formatDate(cart.completionDate ?? new Date(), DateFormat.dayMonthYear)}`}
-                            </Text>
+                        >
+                          <Box width="100%" display="flex" justifyContent="flex-end" mt={3}>
+                            {remainingToPay <= 0 ? (
+                              <Button disabled={!ownedByUser(cart)} variant="contained" onClick={() => drawers.open(FinishCartDrawerModel({ cart }))}>
+                                Zakończ
+                              </Button>
+                            ) : (
+                              <Box display="flex" gap={4} justifyContent="flex-end">
+                                <Button variant="contained" onClick={async () => onAmountPaid(cart, remainingToPay)}>
+                                  Zapłać
+                                </Button>
+                                <Box width="50%">
+                                  <TextField
+                                    label="Kwota"
+                                    type="number"
+                                    size="small"
+                                    inputRef={inputRef}
+                                    InputProps={{ inputProps: { min: 0, max: remainingToPay } }}
+                                  />
+                                </Box>
+                              </Box>
+                            )}
                           </Box>
-                        )}
-                      />
-                    );
-                  })}
-              </TabPanel>
-            </Box>
-          </TabContext>
+                        </EventCart>
+                      );
+                    })}
+                </TabPanel>
+                <TabPanel value={Tabs.past}>
+                  {(groupedByStatus[CartStatus.done] ?? [])
+                    .map((cart) => {
+                      const event = eventsMap.get(cart.event);
+
+                      if (isNil(event)) {
+                        return null;
+                      }
+
+                      return (
+                        <EventCart
+                          key={cart.id}
+                          name={`${event.name} - ${formatDate(event.date, DateFormat.dayMonthYear)}`}
+                          giftMap={giftMap}
+                          receiver={loggedInUser.giftReceivers.find((receiver) => receiver.id === event.giftReceiver)}
+                          emptyCartMessage="Brak prezentów"
+                          cart={cart}
+                          renderTotal={(total) => (
+                            <Box width="max-content" ml="auto" display="flex" flexDirection="column" gap={2} alignItems="flex-end">
+                              <Text type="body" variant="default">
+                                {`Zapłacono ${total}zł`}
+                              </Text>
+                              <Text type="caption" variant="default">
+                                {`Data zakończenia: ${formatDate(cart.completionDate ?? new Date(), DateFormat.dayMonthYear)}`}
+                              </Text>
+                            </Box>
+                          )}
+                        />
+                      );
+                    })}
+                </TabPanel>
+              </Box>
+            </TabContext>
+          </Box>
+
         </Tile>
       </Rows>
     </PageContainer>

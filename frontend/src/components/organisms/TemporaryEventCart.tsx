@@ -35,6 +35,10 @@ const TemporaryEventCart = ({ giftMap, events }: Props): ReactElement => {
     immediateArgs: emptyArgs,
   });
 
+  const [users] = useApiRequest(api.user.allUsers, {
+    immediateArgs: emptyArgs,
+  });
+
   const removeTemporaryGift = async (gift: Gift) => {
     await api.cart.temporaryCart.removeGift(gift);
     refreshQueries([api.auth.loggedInUser]);
@@ -55,12 +59,22 @@ const TemporaryEventCart = ({ giftMap, events }: Props): ReactElement => {
     refreshQueries([api.auth.loggedInUser]);
   }, 100), [api, refreshQueries]);
 
+  const userMap = new Map((users?.data ?? []).map((user) => [user.id, user]));
+
   const eventOptions = events
     .filter((event) => compareDays(event.date, new Date()) >= 0)
-    .map((event) => ({
-      id: event.id,
-      label: `${event.name} - ${formatDate(event.date, DateFormat.dayMonthYear)}`,
-    }));
+    .map((event) => {
+      const owner = userMap.get(event.owner);
+
+      const suffix = isNil(owner) || owner.id === loggedInUser.id
+        ? ''
+        : owner.email;
+
+      return {
+        id: event.id,
+        label: `${event.name} - ${formatDate(event.date, DateFormat.dayMonthYear)} - ${suffix}`,
+      };
+    });
 
   const eventHasAnActiveCart = (eventId: string): boolean => {
     const cart = (shoppingCarts?.data ?? []).find((c) => c.event === eventId);
@@ -94,6 +108,7 @@ const TemporaryEventCart = ({ giftMap, events }: Props): ReactElement => {
               getOptionDisabled={({ id }) => eventHasAnActiveCart(id)}
               sx={{ width: 300 }}
               renderInput={(params) => <TextField {...params} label="Wydarzenie" />}
+
             />
           </Columns>
         </Box>

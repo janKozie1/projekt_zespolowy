@@ -1,17 +1,18 @@
 import type { ReactElement } from 'react';
 import { useState } from 'react';
 
-import { PeopleAltOutlined } from '@mui/icons-material';
+import { EditOutlined, PeopleAltOutlined } from '@mui/icons-material';
 import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
 import { Button, TextField } from '@mui/material';
 import Box from '@mui/material/Box';
+import IconButton from '@mui/material/IconButton';
 import Tab from '@mui/material/Tab';
 
 import { useDrawers } from '../../../hooks/useDrawers';
 import type { GiftReceiver } from '../../../services/api/types/data';
-import { AddPersonDrawerModel } from '../../../services/drawers/models';
+import { AddPersonDrawerModel, EditPersonDrawerModel } from '../../../services/drawers/models';
 import { isEmpty } from '../../../utils/guards';
 
 import Divider from '../../atoms/Divider';
@@ -33,6 +34,7 @@ enum Tabs {
 
 const People = (): ReactElement => {
   const { api, refreshQueries } = useAPI();
+  const drawers = useDrawers();
 
   const [activeTab, setActiveTab] = useState(Tabs.people);
   const [search, setSearch] = useState('');
@@ -42,6 +44,12 @@ const People = (): ReactElement => {
   const onPersonRemove = async (giftReceiver: GiftReceiver) => {
     await api.user.giftReceivers.remove({ receiverId: giftReceiver.id });
     refreshQueries([api.auth.loggedInUser]);
+  };
+
+  const onPersonEdit = (giftReceiver: GiftReceiver) => {
+    drawers.open(EditPersonDrawerModel({
+      person: giftReceiver,
+    }));
   };
 
   const matchesSearchQuery = (giftReceiver: GiftReceiver) => (isEmpty(search)
@@ -96,7 +104,11 @@ const People = (): ReactElement => {
                           email: `${receiver.address.nameAndSurname}`,
                         }}
                         onRemove={onPersonRemove}
-                      />
+                      >
+                        <IconButton onClick={() => onPersonEdit(receiver)}>
+                          <EditOutlined />
+                        </IconButton>
+                      </FriendListItem>
                     ))}
                   </Rows>
                 </TabPanel>

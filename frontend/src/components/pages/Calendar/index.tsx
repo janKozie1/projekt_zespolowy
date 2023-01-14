@@ -66,7 +66,6 @@ const Calendar = (): ReactElement => {
   const highlightedDate = isDrawer('AddEvent', drawers.drawer)
     ? DateTime.fromJSDate(drawers.drawer.date).toISODate()
     : null;
-
   return (
     <PageContainer>
       <Rows gap={4}>

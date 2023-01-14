@@ -79,6 +79,7 @@ type UserAPI = Readonly<{
   }>;
   giftReceivers: Readonly<{
     add: RequestWithValidationFN<Pick<GiftReceiver, 'address' | 'preferredCategories'>>;
+    edit: RequestWithValidationFN<Pick<GiftReceiver, 'address' | 'id' | 'preferredCategories'>>;
     remove: RequestWithValidationFN<{
       receiverId: string;
     }>;

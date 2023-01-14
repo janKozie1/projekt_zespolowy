@@ -62,6 +62,7 @@ const eventApi: SyncApi['event'] = {
 
       setter('events', (events = []) => events
         .filter((event) => !shouldModifyEvent(eventId, events, event)));
+      setter('carts', (carts = []) => carts.filter((cart) => cart.event !== removePayload.eventId));
     }
 
     return validation;
@@ -108,10 +109,12 @@ const eventApi: SyncApi['event'] = {
       return [];
     }
 
-    return events.filter((event) => (event.owner === user.id
-    || event.members.includes(user.id))
-    && DateTime.fromJSDate(event.date).diff(now).as('days') <= 30)
-      .sort((eventA, eventB) => compareDays(eventA.date, eventB.date));
+    return events.filter((event) => {
+      const diff = DateTime.fromJSDate(event.date).diff(now).as('days');
+
+      return diff >= 0 && diff <= 60 && (event.owner === user.id
+        || event.members.includes(user.id));
+    }).sort((eventA, eventB) => compareDays(eventA.date, eventB.date));
   },
 };
 

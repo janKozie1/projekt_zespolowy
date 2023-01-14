@@ -102,6 +102,21 @@ const userApi: SyncApi['user'] = {
 
       return validation;
     },
+    edit: (payload) => {
+      const validation = validators.user.giftReceivers.edit(payload);
+      const loggedInUser = getter('loggedInUser');
+
+      if (validation.ok && !isNil(loggedInUser)) {
+        updateUser({
+          giftReceivers: loggedInUser.giftReceivers.map((receiver) => (receiver.id === payload.id ? {
+            ...receiver,
+            ...payload,
+          } : receiver)),
+        });
+      }
+
+      return validation;
+    },
     remove: (payload) => {
       const validation = validators.user.giftReceivers.remove(payload);
       const loggedInUser = getter('loggedInUser');
@@ -110,6 +125,10 @@ const userApi: SyncApi['user'] = {
         updateUser({
           giftReceivers: loggedInUser.giftReceivers.filter((receiver) => receiver.id !== payload.receiverId),
         });
+        setter('events', (events = []) => events.map((event) => ({
+          ...event,
+          giftReceiver: event.giftReceiver === payload.receiverId ? null : event.giftReceiver,
+        })));
       }
 
       return validation;

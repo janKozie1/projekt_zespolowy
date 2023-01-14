@@ -46,10 +46,10 @@ const EventTileContainer = styled.div<EventTileContainerProps>`
   width: 100%;
   padding: ${toSpacing(1.5)} ${toSpacing(2)};
   border-radius: ${({ theme }) => theme._.borders.radii.sm};
-  cursor: ${({ own }) => (own ? 'pointer' : 'default')};
+  cursor: ${({ own, done }) => (own && !done ? 'pointer' : 'default')};
 
   &:hover {
-    box-shadow: ${({ theme, own }) => (!own ? null : theme._.shadows.weak)};
+    box-shadow: ${({ theme, own, done }) => (!own || done ? null : theme._.shadows.weak)};
   }
 `;
 
@@ -67,7 +67,7 @@ const EventTile = ({ event, onClick }: Props): ReactElement => {
   const done = event.associatedShoppingCart?.status === CartStatus.done;
 
   const onEventClick = () => {
-    if (userOwnsEvent) {
+    if (userOwnsEvent && !done) {
       onClick(event);
     }
   };
