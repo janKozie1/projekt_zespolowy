@@ -26,7 +26,7 @@ class Users(models.Model):
 class PaymentMethods(models.Model):
     name = models.CharField(max_length=255)
     image_url = models.CharField(max_length=255)
-    friend_request = models.ManyToManyField('self', through='FriendList', through_fields=('user', 'friend'), symmetrical=False)
+    # friend_request = models.ManyToManyField('self', through='FriendList', through_fields=('user', 'friend'), symmetrical=False)
 
 
 

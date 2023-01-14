@@ -45,8 +45,12 @@ urlpatterns = [
     path('logout/', views.logout_view, name='api-logout'),
     path('session/', views.session_view, name='api-session'),
     path('whoami/', views.whoami_view, name='api-whoami'),
+
     path('password/', views.PasswordsChangeView.as_view(), name='api-change_password' ),
     path('password_success/', views.password_success, name='api-password_success' ),
+
+    path('delete/', views.delete_profile, name = 'api-delete'),
+
     # OpenAPI 3 documentation with Swagger UI
     path("schema/", SpectacularAPIView.as_view(), name="schema"),
     path(

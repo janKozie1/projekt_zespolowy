@@ -9,6 +9,7 @@ from .serializers import *
 from django.db.models import Q
 from django.contrib.auth.views import PasswordChangeView
 from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib.auth.models import User
 import datetime
 
 
@@ -61,11 +62,11 @@ class CalendarViewSet(viewsets.ModelViewSet):
         # TODO Currently getting user id from variable / django builtin auth, need to switch to @VV1S version of auth
         # user_id = self.request.user.id
         user_id = 1
-        queryset = UserEvents.objects.all().order_by('id')
+        builtin_id = 99999
+        queryset = UserEvents.objects.all().order_by('id').filter(Q(owner_id=user_id) | Q(owner_id=builtin_id))
         # TODO filtering is done by query params, if it's not ok then we need to find out how to filter by /year/month
         calendar_year = self.request.query_params.get('year')
         calendar_month = self.request.query_params.get('month')
-        print(calendar_month, calendar_year)
         if calendar_year and calendar_month and user_id is not None:
             queryset = queryset.filter(
                 Q(date__year=calendar_year) & Q(date__month=calendar_month) & Q(owner_id=user_id)
@@ -98,6 +99,7 @@ class ProductsViewSet(viewsets.ModelViewSet):
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
 class Friend(viewsets.ViewSet):
     serializer_class = FriendSerializer
 
@@ -110,7 +112,8 @@ class Friend(viewsets.ViewSet):
             if user == friend:
                 return Response({'error': 'User and friend cannot be the same'}, status=status.HTTP_400_BAD_REQUEST)
             if user.id < 1 or friend.id < 1:
-                return Response({'error': 'User and friend IDs cannot be less than 1'}, status=status.HTTP_400_BAD_REQUEST)
+                return Response({'error': 'User and friend IDs cannot be less than 1'},
+                                status=status.HTTP_400_BAD_REQUEST)
             new_friendship = FriendList.objects.create(user=user, friend=friend, status=status_request)
             new_friendship.save()
             return Response({'success': 'Friendship created successfully'}, status=status.HTTP_201_CREATED)
@@ -142,7 +145,6 @@ class Friend(viewsets.ViewSet):
         return Response({'success': 'Friendship deleted successfully'}, status=status.HTTP_200_OK)
 
 
-
 class FriendListView(viewsets.ViewSet):
     serializer_class = FriendListSerializer
 
@@ -172,6 +174,7 @@ def get_random_records(model, num_records):
     random_records = records.order_by('?')[:num_records]
     return random_records
 
+
 class GiftDiscover(viewsets.ViewSet):
     serializer_class = GiftsSerializer
 
@@ -188,7 +191,8 @@ class IncomingGifts(viewsets.ViewSet):
         today = datetime.date.today()
         start_date = today
         end_date = today + datetime.timedelta(days=90)
-        shopping_carts = ShoppingCart.objects.select_related('id_event').filter(id_event__date__range=(start_date, end_date), id_event__owner_id=pk).order_by('id_event__date')[:10]
+        shopping_carts = ShoppingCart.objects.select_related('id_event').filter(
+            id_event__date__range=(start_date, end_date), id_event__owner_id=pk).order_by('id_event__date')[:10]
 
         # Convert the QuerySet to a list of dictionaries
         shopping_carts_list = [
@@ -211,12 +215,20 @@ class IncomingGifts(viewsets.ViewSet):
 
         return Response(serializer.data)
 
+
 class PasswordsChangeView(PasswordChangeView):
     from_class = PasswordChangeForm
     success_url = reverse_lazy('password_success')
 
 def password_success(request):
     return JsonResponse({'detail': 'Password changed successfully.'})
+
+def delete_profile(request):
+    profile = request.users
+    userProfile = Users.objects.get(User = profile)
+    userProfile.delete()
+    return JsonResponse({'detail': 'Account was deleted.'})
+
 
 @require_POST
 def login_view(request):
