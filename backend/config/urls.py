@@ -19,6 +19,7 @@ from django.urls import path, include
 from rest_framework import routers
 from api import views
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
+from django.contrib.auth import views as auth_views
 
 router = routers.DefaultRouter()
 # TODO I think we can attach authentication views created in issue #9 by @VV1S here
@@ -44,6 +45,8 @@ urlpatterns = [
     path('logout/', views.logout_view, name='api-logout'),
     path('session/', views.session_view, name='api-session'),
     path('whoami/', views.whoami_view, name='api-whoami'),
+    path('password/', views.PasswordsChangeView.as_view(), name='api-change_password' ),
+    path('password_success/', views.password_success, name='api-password_success' ),
     # OpenAPI 3 documentation with Swagger UI
     path("schema/", SpectacularAPIView.as_view(), name="schema"),
     path(

@@ -1,11 +1,14 @@
 from django.contrib.auth import authenticate, login, logout
 from django.http import JsonResponse
+from django.urls import reverse_lazy
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.views.decorators.http import require_POST
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from .serializers import *
 from django.db.models import Q
+from django.contrib.auth.views import PasswordChangeView
+from django.contrib.auth.forms import PasswordChangeForm
 import datetime
 
 
@@ -208,6 +211,12 @@ class IncomingGifts(viewsets.ViewSet):
 
         return Response(serializer.data)
 
+class PasswordsChangeView(PasswordChangeView):
+    from_class = PasswordChangeForm
+    success_url = reverse_lazy('password_success')
+
+def password_success(request):
+    return JsonResponse({'detail': 'Password changed successfully.'})
 
 @require_POST
 def login_view(request):
