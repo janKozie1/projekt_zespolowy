@@ -9,6 +9,10 @@ const Tile = styled(Box)`
   padding: ${toSpacing(4)} ${toSpacing(4)};
   border-radius: ${({ theme }) => theme._.borders.radii.md};
   box-shadow: ${({ theme }) => theme._.shadows.default};
+  display: flex;
+  align-items: center;
+  position:relative;
+  z-index: 3;
 `;
 
 export default Tile;

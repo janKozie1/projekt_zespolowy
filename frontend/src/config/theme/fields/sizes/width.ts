@@ -3,8 +3,8 @@ const width = {
   playButton: '84px',
   calendarCell: '44px',
   productMainImage: '669px',
-  productListImage: '256px',
-  discoveryCard: '180px',
+  productListImage: '200px',
+  discoveryCard: '200px',
   drawer: '360px',
 } as const;
 

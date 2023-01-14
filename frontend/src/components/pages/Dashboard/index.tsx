@@ -1,4 +1,5 @@
 import type { ReactElement } from 'react';
+import { useEffect, useRef } from 'react';
 
 import { isNil } from 'lodash';
 import styled from 'styled-components';
@@ -9,9 +10,12 @@ import {
 import Box from '@mui/material/Box';
 
 import { toSpacing } from '../../../config/theme/fields/spacing';
+import useApiRequest, { emptyArgs } from '../../../hooks/useApiRequest';
 import useUpcomingEvents from '../../../hooks/useUpcomingEvents';
 import { CartStatus } from '../../../services/api/types/data';
+import { getNRandomIndices } from '../../../utils/array';
 import { DateFormat, formatDate } from '../../../utils/date';
+import { isEmpty } from '../../../utils/guards';
 
 import Columns from '../../atoms/Columns';
 import PageContainer from '../../atoms/PageContainer';
@@ -21,6 +25,7 @@ import Tile from '../../atoms/Tile';
 import Chip from '../../molecules/Chip';
 import Loading from '../../molecules/Loading';
 import PageHeader from '../../molecules/PageHeader';
+import { useAPI } from '../../organisms/ApiProvider';
 import Calendar from '../../organisms/Calendar';
 import { useConstantData } from '../../organisms/ConstantDataProvider';
 import DiscoveryCard from '../../organisms/DiscoveryCard';
@@ -39,7 +44,23 @@ const DashboardLayout = styled.div`
 
 const Dashboard = (): ReactElement => {
   const { loggedInUser } = useConstantData();
+  const { api } = useAPI();
+
   const { loading, upcomingEvents } = useUpcomingEvents();
+
+  const [gifts, { loading: giftsLoading }] = useApiRequest(api.gifts.allGifts, {
+    immediateArgs: emptyArgs,
+  });
+
+  const randomIndicesRef = useRef<number[]>([]);
+
+  useEffect(() => {
+    const g = gifts?.data;
+
+    if (!isEmpty(g)) {
+      randomIndicesRef.current = getNRandomIndices(g, 4);
+    }
+  }, [gifts]);
 
   return (
     <PageContainer>
@@ -55,9 +76,9 @@ const Dashboard = (): ReactElement => {
             </Rows>
           </Tile>
           <Tile gridArea="upcoming">
-            <Box height="100%" overflow="hidden" display="flex" flexDirection="column" gap={4}>
+            <Box height="100%" overflow="hidden" display="flex" flexDirection="column" gap={4} width="100%">
               <Text type="heading" variant="h4">Nadchodzące</Text>
-              <Box height="max-content" overflow="auto">
+              <Box height="max-content" overflow="auto" width="100%">
                 <Rows gap={4}>
                   {loading ? <Loading /> : (
                     <>
@@ -96,15 +117,24 @@ const Dashboard = (): ReactElement => {
           <Tile gridArea="explore">
             <Rows gap={4}>
               <Text type="heading" variant="h4">Odkrywaj</Text>
-              <Box>
-                <DiscoveryCard />
+              <Box display="flex" gap={4}>
+                {giftsLoading ? <Loading /> : randomIndicesRef.current.map((index) => {
+                  const product = (gifts?.data ?? [])[index];
+
+                  return isNil(product) ? null : (
+                    <DiscoveryCard
+                      key={product.id}
+                      gift={product}
+                    />
+                  );
+                })}
               </Box>
             </Rows>
           </Tile>
           <Tile gridArea="news">
-            <Box display="flex" flexDirection="column" height="100%">
+            <Box display="flex" flexDirection="column" height="100%" width="100%">
               <Text type="heading" variant="h4">Powiadomienia</Text>
-              <Box flex="1">
+              <Box flex="1" width="100%">
                 <Notifications />
               </Box>
             </Box>

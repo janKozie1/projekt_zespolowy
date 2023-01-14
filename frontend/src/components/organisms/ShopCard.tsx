@@ -26,7 +26,7 @@ const CardContainer = styled.div`
   cursor: pointer;
 
   display: grid;
-  grid-template-columns: 2fr 6fr 2.5fr 4fr;
+  grid-template-columns: 2fr 6fr 3.5fr 4fr;
   grid-template-rows: 1fr;
   grid-auto-flow: column;
   gap: ${toSpacing(8)};;
@@ -71,7 +71,7 @@ const ShopCard = ({ gift }: Props): ReactElement => {
       </ImageContainer>
       <Box display="flex" justifyContent="space-between" flexDirection="column">
         <Rows gap={8}>
-          <Text type="heading" variant="h4">Tytuł</Text>
+          <Text type="heading" variant="h5">{gift.name}</Text>
           <Text type="subtitle" variant="default">
             {trimToLength(gift.description, 400)}
           </Text>
@@ -94,7 +94,7 @@ const ShopCard = ({ gift }: Props): ReactElement => {
       <Box display="flex" flexDirection="column" justifyContent="space-between">
         <Box />
         <Box ml="auto">
-          <Text type="heading" variant="h2">
+          <Text type="heading" variant="h3">
             {`${gift.price} zł`}
           </Text>
         </Box>

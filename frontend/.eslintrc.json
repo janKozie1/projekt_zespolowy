@@ -40,6 +40,7 @@
     "react/jsx-indent-props": [2, 2],
     "no-debugger": "warn",
     "no-nested-ternary": "off",
+    "no-useless-escape": "off",
     "no-multiple-empty-lines": ["error", { "max": 1 }],
     "@typescript-eslint/no-misused-promises": "off",
     "react/function-component-definition": "off",

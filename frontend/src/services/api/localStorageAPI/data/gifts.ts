@@ -1,71 +1,49 @@
 import { v4 } from 'uuid';
 
-import { GiftCategory } from '../../types/data';
 import type { Gift } from '../../types/data';
 
-export const giftCategories = {
-  toys: { id: v4(), name: 'Zabawki' },
-  cosmetics: { id: v4(), name: 'Kosmetyki' },
-  vouchers: { id: v4(), name: 'Kupony' },
-  tools: { id: v4(), name: 'Narzędzia' },
-} satisfies Record<string, GiftCategory>;
+import type { Categories } from './categories';
+import { categoryIdByName } from './categories';
+import agd from './products/agd';
+import agdDoZabudowy from './products/agdDoZabudowy';
+import agdMale from './products/agdMale';
+import fotografia from './products/fotografia';
+import komputery from './products/komputery';
+import konsole from './products/konsole';
+import telefony from './products/telefony';
+import telewizja from './products/telewizja';
 
-const placeholderDesc = `Lorem ipsum dolor sit amet, consetetur sadipscing elitr,
-sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.
-At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren,
-no sea takimata sanctus est Lorem ipsum dolor sit amet.
-Lorem ipsum dolor sit amet, consetetur sadipscing elitr,
-sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
-sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.
-Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
-Lorem ipsum dolor sit amet, consetetur sadipscing elitr,
-sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
-sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.
-Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
-Lorem ipsum dolor sit amet, consetetur sadipscing elitr,
-sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.
-At vero eos et accusam et justo duo dolores et ea rebum.
-Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
-Lorem ipsum dolor sit amet, consetetur sadipscing elitr,
-sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
-sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.
-Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
-Lorem ipsum dolor sit amet, consetetur sadipscing elitr,
-sed diam nonumy eirmod tempor invidunt ut labore et dolore magna`;
+export type BaseGift = Readonly<{
+  name: string;
+  price: number;
+  imageURL: string;
+  desc: string;
+}>;
 
-const gifts: Gift[] = [
-  {
-    id: v4(),
-    category: [giftCategories.cosmetics.id],
-    imageURL: 'https://placekitten.com/300/301',
-    description: placeholderDesc,
-    name: 'Kosmetyk',
-    price: 12.00,
-  },
-  {
-    id: v4(),
-    category: [giftCategories.tools.id],
-    imageURL: 'https://placekitten.com/305/301',
-    description: placeholderDesc,
-    name: 'Narzędzie',
-    price: 14.00,
-  },
-  {
-    id: v4(),
-    category: [giftCategories.toys.id],
-    imageURL: 'https://placekitten.com/300/301',
-    description: placeholderDesc,
-    name: 'Zabawka',
-    price: 34.33,
-  },
-  {
-    id: v4(),
-    category: [giftCategories.vouchers.id],
-    imageURL: 'https://placekitten.com/300/301',
-    description: placeholderDesc,
-    name: 'Kupon',
-    price: 7.49,
-  },
-];
+const baseGiftsToGifts = <T extends Categories>(
+  baseGifts: BaseGift[], category: T,
+): Record<T, Gift[]> => ({
+    [category]: baseGifts.map((gift): Gift => ({
+      id: v4(),
+      imageURL: gift.imageURL,
+      description: gift.desc,
+      name: gift.name,
+      price: gift.price,
+      category: [categoryIdByName[category]],
+    })),
+  }) as Record<T, Gift[]>;
+
+const products: Partial<Record<Categories, Gift[]>> = {
+  ...baseGiftsToGifts(telefony, 'Telefony i Akcesoria'),
+  ...baseGiftsToGifts(agdMale, 'AGD małe'),
+  ...baseGiftsToGifts(agd, 'AGD'),
+  ...baseGiftsToGifts(agdDoZabudowy, 'AGD do zabudowy'),
+  ...baseGiftsToGifts(telewizja, 'Telewizory i akcesoria'),
+  ...baseGiftsToGifts(konsole, 'Konsole i automaty'),
+  ...baseGiftsToGifts(fotografia, 'Fotografia'),
+  ...baseGiftsToGifts(komputery, 'Komputery'),
+};
+
+const gifts = Object.values(products).flat();
 
 export default gifts;

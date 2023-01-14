@@ -7,7 +7,8 @@ import { RepeatsEvery, EventCategory } from '../../types/data';
 import { repeatEvent } from '../apis/utils';
 import type { LocalStorageShape } from '../types';
 
-import gifts, { giftCategories } from './gifts';
+import giftCategories from './categories';
+import gifts from './gifts';
 
 export const admin: User = {
   email: 'admin@giftology.com',
@@ -107,7 +108,7 @@ const defaults: Defaults = {
   carts: [],
   gifts,
   loggedInUser: null,
-  giftCategories: Object.values(giftCategories),
+  giftCategories,
   paymentMethods: [
     {
       id: 'ad9d1c78-9f59-4190-89a2-3dfb2e37d3d8',

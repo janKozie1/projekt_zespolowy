@@ -86,6 +86,7 @@ export type PaymentMethod = Readonly<{
 export type GiftCategory = Readonly<{
   id: string;
   name: string;
+  parent: Nullable<GiftCategory['id']>;
 }>;
 
 export type Gift = Readonly<{
