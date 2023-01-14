@@ -33,17 +33,6 @@ const baseCategories = [
     ],
   },
   {
-    name: 'Moda',
-    subCategories: [
-      {
-        name: 'Sneakersy',
-      },
-      {
-        name: 'Trendy',
-      },
-    ],
-  },
-  {
     name: 'Dom i Ogród',
     subCategories: [
       {
@@ -51,32 +40,6 @@ const baseCategories = [
       },
       {
         name: 'Narzędzia',
-      },
-      {
-        name: 'Oświetlenie',
-      },
-      {
-        name: 'Meble',
-      },
-      {
-        name: 'Budownictwo',
-      },
-      {
-        name: 'Ogród',
-      },
-    ],
-  },
-  {
-    name: 'Supermarket',
-    subCategories: [
-      {
-        name: 'Produkty spożywcze',
-      },
-      {
-        name: 'Artykuły dla zwierząt',
-      },
-      {
-        name: 'Utrzymanie czystości',
       },
     ],
   },
@@ -87,46 +50,10 @@ const baseCategories = [
         name: 'Zabawki',
       },
       {
-        name: 'Okazje, przyjęcia',
-      },
-      {
         name: 'Zdrowie i higiena',
       },
       {
-        name: 'Wózki dziecięce',
-      },
-      {
         name: 'Artykuły szkolne',
-      },
-      {
-        name: 'Karmienie dziecka',
-      },
-      {
-        name: 'Rowery i pojazdy',
-      },
-      {
-        name: 'Odzież dziecięca',
-      },
-      {
-        name: 'Obuwie dla dzieci',
-      },
-      {
-        name: 'Foteliki samochodowe',
-      },
-      {
-        name: 'Pokój dziecięcy',
-      },
-      {
-        name: 'Pościel i kocyki',
-      },
-      {
-        name: 'Meble dziecięce',
-      },
-      {
-        name: 'Zabawki ogrodowe',
-      },
-      {
-        name: 'Akcesoria dla mamy',
       },
     ],
   },
@@ -145,32 +72,6 @@ const baseCategories = [
       {
         name: 'Perfumy',
       },
-      {
-        name: 'Wyposażenie salonów',
-      },
-    ],
-  },
-  {
-    name: 'Zdrowie',
-    subCategories: [
-      {
-        name: 'Domowa apteczka',
-      },
-      {
-        name: 'Higiena jamy ustnej',
-      },
-      {
-        name: 'Urządzenia medyczne',
-      },
-      {
-        name: 'Medycyna naturalna',
-      },
-      {
-        name: 'Higiena osobista',
-      },
-      {
-        name: 'Erotyka',
-      },
     ],
   },
   {
@@ -184,9 +85,6 @@ const baseCategories = [
       },
       {
         name: 'Instrumenty',
-      },
-      {
-        name: 'Kody i doładowania',
       },
       {
         name: 'Muzyka',
@@ -210,68 +108,6 @@ const baseCategories = [
       },
       {
         name: 'Wędkarstwo',
-      },
-      {
-        name: 'Bieganie',
-      },
-      {
-        name: 'Militaria',
-      },
-      {
-        name: 'Skating, slackline',
-      },
-      {
-        name: 'Elektronika sportowa',
-      },
-      {
-        name: 'Sporty walki',
-      },
-      {
-        name: 'Sporty ekstremalne',
-      },
-      {
-        name: 'Sporty wodne',
-      },
-      {
-        name: 'Sporty drużynowe',
-      },
-      {
-        name: 'Sporty towarzyskie',
-      },
-      {
-        name: 'Tenis i pokrewne',
-      },
-      {
-        name: 'Karty sportowe',
-      },
-      {
-        name: 'Sporty zimowe',
-      },
-    ],
-  },
-  {
-    name: 'Motoryzacja',
-    subCategories: [
-      {
-        name: 'Części samochodowe',
-      },
-      {
-        name: 'Akcesoria samochodowe',
-      },
-      {
-        name: 'Opony i felgi',
-      },
-      {
-        name: 'Warsztat',
-      },
-      {
-        name: 'Motocykle i quady',
-      },
-      {
-        name: 'Chemia',
-      },
-      {
-        name: 'Części do maszyn',
       },
     ],
   },

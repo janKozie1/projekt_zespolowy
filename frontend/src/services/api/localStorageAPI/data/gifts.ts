@@ -7,11 +7,29 @@ import { categoryIdByName } from './categories';
 import agd from './products/agd';
 import agdDoZabudowy from './products/agdDoZabudowy';
 import agdMale from './products/agdMale';
+import filmy from './products/filmy';
 import fotografia from './products/fotografia';
+import gry from './products/gry';
+import instrumenty from './products/instrumenty';
 import komputery from './products/komputery';
 import konsole from './products/konsole';
+import ksiazka from './products/ksiazka';
+import makijaz from './products/makijaz';
+import manicure from './products/manicure';
+import muzyka from './products/muzyka';
+import narzedzia from './products/narzedzia';
+import perfumy from './products/perfumy';
+import pielegnacja from './products/pielegnacja';
+import rowery from './products/rowery';
+import silownia from './products/silownia';
+import szkolne from './products/szkolne';
 import telefony from './products/telefony';
 import telewizja from './products/telewizja';
+import turystyka from './products/turystyka';
+import wedkarstwo from './products/wedkarstwo';
+import wyposazenie from './products/wyposazenie';
+import zabawki from './products/zabawki';
+import zdrowieHigiena from './products/zdrowieHigiena';
 
 export type BaseGift = Readonly<{
   name: string;
@@ -34,14 +52,32 @@ const baseGiftsToGifts = <T extends Categories>(
   }) as Record<T, Gift[]>;
 
 const products: Partial<Record<Categories, Gift[]>> = {
-  ...baseGiftsToGifts(telefony, 'Telefony i Akcesoria'),
-  ...baseGiftsToGifts(agdMale, 'AGD małe'),
   ...baseGiftsToGifts(agd, 'AGD'),
   ...baseGiftsToGifts(agdDoZabudowy, 'AGD do zabudowy'),
-  ...baseGiftsToGifts(telewizja, 'Telewizory i akcesoria'),
-  ...baseGiftsToGifts(konsole, 'Konsole i automaty'),
+  ...baseGiftsToGifts(agdMale, 'AGD małe'),
+  ...baseGiftsToGifts(filmy, 'Filmy'),
   ...baseGiftsToGifts(fotografia, 'Fotografia'),
+  ...baseGiftsToGifts(gry, 'Gry'),
+  ...baseGiftsToGifts(instrumenty, 'Instrumenty'),
   ...baseGiftsToGifts(komputery, 'Komputery'),
+  ...baseGiftsToGifts(konsole, 'Konsole i automaty'),
+  ...baseGiftsToGifts(ksiazka, 'Książki i Komiksy'),
+  ...baseGiftsToGifts(makijaz, 'Makijaż'),
+  ...baseGiftsToGifts(manicure, 'Manicure i pedicure'),
+  ...baseGiftsToGifts(muzyka, 'Muzyka'),
+  ...baseGiftsToGifts(narzedzia, 'Narzędzia'),
+  ...baseGiftsToGifts(perfumy, 'Perfumy'),
+  ...baseGiftsToGifts(pielegnacja, 'Pielęgnacja'),
+  ...baseGiftsToGifts(rowery, 'Rowery i akcesoria'),
+  ...baseGiftsToGifts(silownia, 'Siłownia i fitness'),
+  ...baseGiftsToGifts(szkolne, 'Artykuły szkolne'),
+  ...baseGiftsToGifts(telefony, 'Telefony i Akcesoria'),
+  ...baseGiftsToGifts(telewizja, 'Telewizory i akcesoria'),
+  ...baseGiftsToGifts(turystyka, 'Turystyka'),
+  ...baseGiftsToGifts(wedkarstwo, 'Wędkarstwo'),
+  ...baseGiftsToGifts(wyposazenie, 'Wyposażenie'),
+  ...baseGiftsToGifts(zabawki, 'Zabawki'),
+  ...baseGiftsToGifts(zdrowieHigiena, 'Zdrowie i higiena'),
 };
 
 const gifts = Object.values(products).flat();

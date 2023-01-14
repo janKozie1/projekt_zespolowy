@@ -68,11 +68,11 @@ const TemporaryEventCart = ({ giftMap, events }: Props): ReactElement => {
 
       const suffix = isNil(owner) || owner.id === loggedInUser.id
         ? ''
-        : owner.email;
+        : `- ${owner.email}`;
 
       return {
         id: event.id,
-        label: `${event.name} - ${formatDate(event.date, DateFormat.dayMonthYear)} - ${suffix}`,
+        label: `${event.name} - ${formatDate(event.date, DateFormat.dayMonthYear)} ${suffix}`,
       };
     });
 
