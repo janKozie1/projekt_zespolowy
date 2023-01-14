@@ -165,15 +165,15 @@ class FriendNotificationView(viewsets.ViewSet):
     serializer_class = FriendListSerializer
 
     def retrieve(self, request, pk=None):
-        users_data = FriendList.objects.select_related('friend').filter(status='pending', user_id=pk)
+        users_data = FriendList.objects.select_related('friend').filter(status='pending', friend_id=pk)
 
         # Convert the QuerySet to a list of dictionaries
         friend_list = [
             {
-                'id': user_data.friend.id,
-                'name': user_data.friend.name,
-                'surname': user_data.friend.surname,
-                'email': user_data.friend.email,
+                'id': user_data.user.id,
+                'name': user_data.user.name,
+                'surname': user_data.user.surname,
+                'email': user_data.user.email,
             }
             for user_data in users_data
         ]
