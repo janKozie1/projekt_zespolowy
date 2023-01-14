@@ -33,6 +33,7 @@ router.register(r'gift-discover', views.GiftDiscover, basename='gift-discover')
 router.register(r'incoming-gifts', views.IncomingGifts, basename='incoming-gifts')
 router.register(r'friend', views.Friend, basename='friend')
 router.register(r'user-friend-list', views.FriendListView, basename='user-friend-list')
+router.register(r'friend-notifications', views.FriendNotificationView, basename='friend-notifications')
 
 
 

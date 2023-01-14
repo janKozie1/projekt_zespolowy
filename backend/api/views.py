@@ -161,6 +161,27 @@ class FriendListView(viewsets.ViewSet):
 
         return Response(serializer.data)
 
+class FriendNotificationView(viewsets.ViewSet):
+    serializer_class = FriendListSerializer
+
+    def retrieve(self, request, pk=None):
+        users_data = FriendList.objects.select_related('friend').filter(status='pending', user_id=pk)
+
+        # Convert the QuerySet to a list of dictionaries
+        friend_list = [
+            {
+                'id': user_data.friend.id,
+                'name': user_data.friend.name,
+                'surname': user_data.friend.surname,
+                'email': user_data.friend.email,
+            }
+            for user_data in users_data
+        ]
+
+        serializer = self.serializer_class(friend_list, many=True, partial=True)
+
+        return Response(serializer.data)
+
 
 def get_random_records(model, num_records):
     # Get a queryset of all the records in the model
