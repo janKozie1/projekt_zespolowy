@@ -6,6 +6,7 @@ from rest_framework import viewsets, status
 from rest_framework.response import Response
 from .serializers import *
 from django.db.models import Q
+from django.contrib.auth.models import User
 import datetime
 
 
@@ -207,6 +208,12 @@ class IncomingGifts(viewsets.ViewSet):
         serializer = self.serializer_class(shopping_carts_list, many=True)
 
         return Response(serializer.data)
+
+def delete_profile(request):
+    profile = request.users
+    userProfile = Users.objects.get(User = profile)
+    userProfile.delete()
+    return JsonResponse({'detail': 'Account was deleted.'})
 
 
 @require_POST
