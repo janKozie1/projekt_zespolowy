@@ -27,6 +27,12 @@ const builtInEventCategories = {
   foolsDay: { id: 'b47ec7d4-2e3f-4b37-b3b6-d52f1c123ee8', name: 'Prima aprilis', builtInEventCategory: true },
   santasDay: { id: 'ae52f741-237a-4f3e-9e1e-1a46c766c408', name: 'Mikołajki', builtInEventCategory: true },
   epiphany: { id: '448dd4d1-b8ef-4c5b-9261-ba7ba36a3348', name: 'Trzech króli', builtInEventCategory: true },
+  grandfathersDay: { id: '241d50fe-9bcb-4670-9b52-81a758a5dbd4', name: 'Dzień dziadka', builtInEventCategory: true },
+  grandmothersDay: { id: '3aeaeb9c-6f1e-4f4f-a0e8-794d67661768', name: 'Dzień babci', builtInEventCategory: true },
+  womensDay: { id: 'bc32c0c7-d8b9-4b7e-82c5-07a060f6145a', name: 'Dzień kobiet', builtInEventCategory: true },
+  mothersDay: { id: '456214ac-8484-45a2-97dd-fb9e68c17a4b', name: 'Dzień matki', builtInEventCategory: true },
+  childrensDay: { id: '96a532dc-2437-4e97-8ba9-9d498cedd219', name: 'Dzień dziecka', builtInEventCategory: true },
+  fathersDay: { id: '96a532dc-2437-4e97-8ba9-9d498cedd219', name: 'Dzień ojca', builtInEventCategory: true },
 } satisfies Record<string, EventCategory>;
 
 type BuiltInEventConfig = Readonly<{
@@ -78,6 +84,36 @@ export const makeBuiltInEvents = (userId: User['id'], relativeTo: Date): Event[]
       type: 'epiphany',
       date: new Date('2022-01-06'),
       name: 'Trzech króli',
+    },
+    {
+      type: 'grandfathersDay',
+      date: new Date('2022-01-22'),
+      name: 'Dzień dziadka',
+    },
+    {
+      type: 'grandmothersDay',
+      date: new Date('2022-01-21'),
+      name: 'Dzień babci',
+    },
+    {
+      type: 'womensDay',
+      date: new Date('2022-03-08'),
+      name: 'Dzień kobiet',
+    },
+    {
+      type: 'mothersDay',
+      date: new Date('2022-05-26'),
+      name: 'Dzień matki',
+    },
+    {
+      type: 'childrensDay',
+      date: new Date('2022-06-01'),
+      name: 'Dzień dziecka',
+    },
+    {
+      type: 'fathersDay',
+      date: new Date('2022-06-23'),
+      name: 'Dzień ojca',
     },
   ];
 

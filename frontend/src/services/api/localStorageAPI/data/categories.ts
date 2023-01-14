@@ -111,6 +111,17 @@ const baseCategories = [
       },
     ],
   },
+  {
+    name: 'Dodatki',
+    subCategories: [
+      {
+        name: 'Opakowania',
+      },
+      {
+        name: 'Kwiaty',
+      },
+    ],
+  },
 ] as const;
 
 export type Categories = typeof baseCategories[number]['subCategories'][number]['name'];

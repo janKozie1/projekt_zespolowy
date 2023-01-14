@@ -14,10 +14,12 @@ import instrumenty from './products/instrumenty';
 import komputery from './products/komputery';
 import konsole from './products/konsole';
 import ksiazka from './products/ksiazka';
+import kwiaty from './products/kwiaty';
 import makijaz from './products/makijaz';
 import manicure from './products/manicure';
 import muzyka from './products/muzyka';
 import narzedzia from './products/narzedzia';
+import opakowania from './products/opakowania';
 import perfumy from './products/perfumy';
 import pielegnacja from './products/pielegnacja';
 import rowery from './products/rowery';
@@ -78,6 +80,8 @@ const products: Partial<Record<Categories, Gift[]>> = {
   ...baseGiftsToGifts(wyposazenie, 'Wyposażenie'),
   ...baseGiftsToGifts(zabawki, 'Zabawki'),
   ...baseGiftsToGifts(zdrowieHigiena, 'Zdrowie i higiena'),
+  ...baseGiftsToGifts(opakowania, 'Opakowania'),
+  ...baseGiftsToGifts(kwiaty, 'Kwiaty'),
 };
 
 const gifts = Object.values(products).flat();
