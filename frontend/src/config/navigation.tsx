@@ -5,7 +5,6 @@ import {
   LocalGroceryStoreOutlined,
   CalendarMonthOutlined,
   PersonOutlined,
-  SettingsOutlined,
   LogoutOutlined,
   PeopleOutline,
 } from '@mui/icons-material';
@@ -15,7 +14,6 @@ import {
   StoreRoutes,
   CalendarRoutes,
   ProfileRoutes,
-  SettingsRoutes,
   AuthRoutes,
   PeopleRoutes,
 } from './paths';
@@ -68,12 +66,6 @@ const navigation: readonly NavGroup[] = [
         title: 'Osoby',
         icon: <PeopleOutline />,
         url: PeopleRoutes.people,
-      },
-      {
-        id: 'settings',
-        title: 'Ustawienia',
-        icon: <SettingsOutlined />,
-        url: SettingsRoutes.SETTINGS,
       },
     ],
   },

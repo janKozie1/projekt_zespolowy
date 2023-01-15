@@ -11,6 +11,7 @@ import AccordionSummary from '@mui/material/AccordionSummary';
 
 import type { Gift, GiftReceiver, ShoppingCart } from '../../services/api/types/data';
 import { isEmpty, isNotNil } from '../../utils/guards';
+import { roundMoney } from '../../utils/number';
 
 import Divider from '../atoms/Divider';
 import Rows from '../atoms/Rows';
@@ -59,8 +60,6 @@ const EventCart = ({
     </Text>
   );
 
-  const roundTotal = (total: number) => Math.round(total * 100) / 100;
-
   return (
     <Accordion defaultExpanded={defaultExpanded || !isEmpty(cart.gifts)}>
       <AccordionSummary expandIcon={<Box px={2}><ExpandMoreIcon /></Box>}>
@@ -94,7 +93,7 @@ const EventCart = ({
                     ? null
                     : (
                       <CartItem key={gift.id} gift={product} onRemove={onRemove}>
-                        <Box ml="auto" mr="auto" width="10%" position="relative">
+                        <Box width="100%" position="relative">
                           <TextField
                             label="Ilość"
                             type={isNil(onUpdateAmount) ? 'text' : 'number'}
@@ -121,7 +120,7 @@ const EventCart = ({
                 <Divider />
                 <Box display="flex" justifyContent="flex-end">
                   {(renderTotal ?? defaultRenderTotal)(
-                    roundTotal(gifts.reduce((acc, gift) => gift.price * gift.amount + acc, 0)),
+                    roundMoney(gifts.reduce((acc, gift) => gift.price * gift.amount + acc, 0)),
                   )}
                 </Box>
               </>

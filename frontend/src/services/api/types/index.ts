@@ -51,6 +51,7 @@ type EventAPI = Readonly<{
     name: string;
     description: string;
     date: Date;
+    repeatsEvery: RepeatsEvery;
     members: User['id'][];
     giftReceiver: Nullable<GiftReceiver['id']>;
     categories: EventCategory['id'][];

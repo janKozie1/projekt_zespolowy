@@ -28,6 +28,11 @@ const ItemContainer = styled.div`
   cursor: pointer;
   display: flex;
   align-items: center;
+
+  display: grid;
+  grid-template-columns: 7fr 2fr 1fr;
+  grid-template-rows: 1fr;
+  grid-auto-flow: column;
 `;
 
 type Props = Readonly<{
@@ -41,16 +46,18 @@ const CartItem = ({ gift, onRemove, children }: Props): ReactElement => {
 
   return (
     <ItemContainer>
-      <ImageContainer>
-        <img src={gift.imageURL} alt={gift.name} />
-      </ImageContainer>
-      <Box maxWidth="50%" ml={6} display="flex" flexDirection="column" gap={6}>
-        <Text type="body" variant="default">
-          {`${gift.name} - ${gift.price} zł`}
-        </Text>
-        <Text type="caption" variant="default">
-          {trimToLength(gift.description, 200)}
-        </Text>
+      <Box display="flex" alignItems="center">
+        <ImageContainer>
+          <img src={gift.imageURL} alt={gift.name} />
+        </ImageContainer>
+        <Box maxWidth="50%" ml={6} display="flex" flexDirection="column" gap={6}>
+          <Text type="body" variant="default">
+            {`${gift.name} - ${gift.price} zł`}
+          </Text>
+          <Text type="caption" variant="default">
+            {trimToLength(gift.description, 200)}
+          </Text>
+        </Box>
       </Box>
       {children}
       <Box ml="auto">

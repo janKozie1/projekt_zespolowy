@@ -9,7 +9,7 @@ const gifts: unknown = [
   },
   {
     name: 'Dron DJI Matrice 300 RTK + 2x Bateria TB60 + Care',
-    price: null,
+    price: 1999.99,
     imageURL: 'https://a.allegroimg.com/s180/11eadd/ba891c5b4725b708713d577a123f/Dron-DJI-Matrice-300-RTK-2x-Bateria-TB60-Care',
     desc: 'Stan: Nowy, Marka: DJI, Czas lotu: 55 min, Pojemność baterii: 5936 mAh, Zasięg kontroli lotu: 8000 m',
   },
@@ -153,7 +153,7 @@ const gifts: unknown = [
   },
   {
     name: 'Dron DJI Matrice 300 RTK + 2x Bateria TB60 + Care',
-    price: null,
+    price: 423.99,
     imageURL: 'https://a.allegroimg.com/s180/11eadd/ba891c5b4725b708713d577a123f/Dron-DJI-Matrice-300-RTK-2x-Bateria-TB60-Care',
     desc: 'Stan: Nowy, Marka: DJI, Czas lotu: 55 min, Pojemność baterii: 5936 mAh, Zasięg kontroli lotu: 8000 m',
   },
@@ -183,7 +183,7 @@ const gifts: unknown = [
   },
   {
     name: 'Panasonic DC-S5K Bezlusterkowy aparat cyfrowy',
-    price: null,
+    price: 4000.00,
     imageURL: 'https://a.allegroimg.com/s180/119cdf/45c60ef94325951c54ad42dbf44b/Panasonic-DC-S5K-Bezlusterkowy-aparat-cyfrowy',
     desc: 'Stan: Nowy, Rozdzielczość: 24.2 Mpx, W zestawie: korpus + obiektyw, Rozmiar matrycy: pełna klatka, Stabilizacja: mechaniczna matrycy, Jakość video: 4K',
   },

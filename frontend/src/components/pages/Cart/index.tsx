@@ -19,6 +19,7 @@ import { CartStatus } from '../../../services/api/types/data';
 import { FinishCartDrawerModel } from '../../../services/drawers/models';
 import { DateFormat, formatDate } from '../../../utils/date';
 import { isNotNil } from '../../../utils/guards';
+import { roundMoney } from '../../../utils/number';
 import type { Nullable } from '../../../utils/types';
 
 import PageContainer from '../../atoms/PageContainer';
@@ -216,7 +217,7 @@ const Cart = (): ReactElement => {
                           renderTotal={(total) => (
                             <Box display="flex" alignItems="center" gap={2}>
                               <Text type="body" variant="default">
-                                {`Zapłacono ${alreadyPaidAmount}zł / ${total}zł`}
+                                {`Zapłacono ${roundMoney(alreadyPaidAmount)}zł / ${roundMoney(total)}zł`}
                               </Text>
                               <Box display="inline-flex">
                                 <Tooltip
@@ -225,7 +226,7 @@ const Cart = (): ReactElement => {
                                     ? 'Jeszcze nikt nie wpłacił pieniędzy'
                                     : paidByUsers.map((payment) => (
                                       <p key={payment.userId}>
-                                        {`${payment.user.id === loggedInUser.id ? 'Ty' : payment.user.email} - ${payment.amount}zł`}
+                                        {`${payment.user.id === loggedInUser.id ? 'Ty' : payment.user.email} - ${roundMoney(payment.amount)}zł`}
                                       </p>
                                     ))}
                                 >

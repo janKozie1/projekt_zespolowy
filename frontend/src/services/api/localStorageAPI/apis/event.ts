@@ -9,6 +9,7 @@ import { getDiff } from '../../../../utils/object';
 import type { Nullable } from '../../../../utils/types';
 import type { SyncApi } from '../../types';
 import type { Event } from '../../types/data';
+import { RepeatsEvery } from '../../types/data';
 
 import { getter, setter } from '../utils';
 import { validators } from '../validators';
@@ -72,15 +73,47 @@ const eventApi: SyncApi['event'] = {
 
     if (validation.ok) {
       const { eventId } = updatePayload;
+      const prev = getter('events').find((e) => e.id === eventId);
+
+      const shouldCreateNewEvents = !isNil(prev)
+        && prev.repeatsEvery === RepeatsEvery.never
+        && updatePayload.repeatsEvery !== RepeatsEvery.never
+        && !isNil(updatePayload.repeatsEvery);
+
+      if (shouldCreateNewEvents) {
+        setter('events', (events = []) => {
+          const [, ...others] = repeatEvent({
+            ...prev,
+            ...updatePayload,
+          });
+          return events.concat(others);
+        });
+      }
 
       setter('events', (events = []) => events.map((event) => {
         const should = shouldModifyEvent(eventId, events, event);
-        const a = should ? {
-          ...event,
-          ...updatePayload,
-        } : event;
+        const original = event.id === eventId;
 
-        return a;
+        if (should) {
+          if (original) {
+            return {
+              ...event,
+              ...updatePayload,
+            };
+          }
+
+          return {
+            ...event,
+            repeatsEvery: updatePayload.repeatsEvery,
+            categories: updatePayload.categories,
+            description: updatePayload.description,
+            name: updatePayload.name,
+            giftReceiver: updatePayload.giftReceiver,
+            members: updatePayload.members,
+          };
+        }
+
+        return event;
       }));
     }
 

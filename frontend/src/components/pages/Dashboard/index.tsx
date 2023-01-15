@@ -1,5 +1,5 @@
 import type { ReactElement } from 'react';
-import { useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 
 import { isNil } from 'lodash';
 import styled from 'styled-components';
@@ -52,15 +52,15 @@ const Dashboard = (): ReactElement => {
     immediateArgs: emptyArgs,
   });
 
-  const randomIndicesRef = useRef<number[]>([]);
+  const [randomIndices, setRandomIndices] = useState<number[]>([]);
 
   useEffect(() => {
     const g = gifts?.data;
 
-    if (!isEmpty(g) && isEmpty(randomIndicesRef.current)) {
-      randomIndicesRef.current = getNRandomIndices(g, 4);
+    if (!isEmpty(g) && isEmpty(randomIndices)) {
+      setRandomIndices(getNRandomIndices(g, 4));
     }
-  }, [gifts]);
+  }, [gifts, randomIndices]);
 
   return (
     <PageContainer>
@@ -118,7 +118,7 @@ const Dashboard = (): ReactElement => {
             <Rows gap={4}>
               <Text type="heading" variant="h4">Odkrywaj</Text>
               <Box display="flex" gap={4}>
-                {giftsLoading ? <Loading /> : randomIndicesRef.current.map((index) => {
+                {giftsLoading ? <Loading /> : randomIndices.map((index) => {
                   const product = (gifts?.data ?? [])[index];
 
                   return isNil(product) ? null : (

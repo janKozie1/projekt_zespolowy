@@ -7,6 +7,7 @@ import { Box } from '@mui/material';
 import useApiRequest, { emptyArgs } from '../../hooks/useApiRequest';
 import { useDrawers } from '../../hooks/useDrawers';
 import type { FinishCartDrawer as FinishCartDrawerModel } from '../../services/drawers/models';
+import { roundMoney } from '../../utils/number';
 
 import Rows from '../atoms/Rows';
 import Text from '../atoms/Text';
@@ -69,7 +70,7 @@ const FinishCartDrawer = ({ drawer }: Props): ReactElement => {
                 return (
                   <li key={payment.id}>
                     <Text type="caption" variant="default">
-                      {`- ${user.email} - ${payment.amount}zł`}
+                      {`- ${user.email} - ${roundMoney(payment.amount)}zł`}
                     </Text>
                   </li>
                 );
