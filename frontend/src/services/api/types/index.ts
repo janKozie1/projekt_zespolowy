@@ -12,6 +12,7 @@ import type {
   Gift,
   ShoppingCart,
   CartStatus,
+  CategoryMapping,
 } from './data';
 import type { APICallFN, RequestWithValidationFN, ToSyncAPI } from './utils';
 
@@ -60,6 +61,7 @@ type EventAPI = Readonly<{
   allUserEvents: APICallFN<null, Event[]>;
   upcomfigUserEvents: APICallFN<null, Event[]>;
   allCategories: APICallFN<null, EventCategory[]>;
+  categoryMappings: APICallFN<null, CategoryMapping[]>;
 }>;
 
 type UserAPI = Readonly<{

@@ -138,6 +138,7 @@ export const validators: Validators = {
     allCategories: null,
     allUserEvents: null,
     upcomfigUserEvents: null,
+    categoryMappings: null,
     create: (createPayload) => {
       const {
         categories, description, members, name,

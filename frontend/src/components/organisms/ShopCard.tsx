@@ -8,8 +8,9 @@ import Button from '@mui/material/Button';
 
 import { ProductRoutes } from '../../config/paths';
 import { toSpacing } from '../../config/theme/fields/spacing';
-import type { Gift } from '../../services/api/types/data';
+import type { Event, Gift, GiftReceiver } from '../../services/api/types/data';
 import { withStopPropagation } from '../../utils/fn';
+import { isEmpty } from '../../utils/guards';
 import { trimToLength } from '../../utils/string';
 
 import Columns from '../atoms/Columns';
@@ -53,9 +54,11 @@ const ImageContainer = styled.div`
 
 type Props = Readonly<{
   gift: Gift;
+  idealFor: GiftReceiver[];
+  idealOn: Event[];
 }>;
 
-const ShopCard = ({ gift }: Props): ReactElement => {
+const ShopCard = ({ gift, idealFor, idealOn }: Props): ReactElement => {
   const { api, refreshQueries } = useAPI();
   const navigate = useNavigate();
 
@@ -81,13 +84,19 @@ const ShopCard = ({ gift }: Props): ReactElement => {
         <Box flex="1" width="max-content">
           <Rows gap={2}>
             <Text type="heading" variant="h5">Idealny dla:</Text>
-            <Text type="caption" variant="default">Zosia, Tomek</Text>
+            <Text type="caption" variant="default">
+              {isEmpty(idealFor) ? '-'
+                : idealFor.map((e) => e.address.nameAndSurname.split(' ')[0]).join(', ')}
+            </Text>
           </Rows>
         </Box>
         <Box flex="1" width="max-content">
           <Rows gap={2}>
             <Text type="heading" variant="h5">Idealny na:</Text>
-            <Text type="caption" variant="default">Walentynki, urodziny</Text>
+            <Text type="caption" variant="default">
+              {isEmpty(idealOn) ? '-'
+                : idealOn.map((e) => e.name).join(', ')}
+            </Text>
           </Rows>
         </Box>
       </Box>

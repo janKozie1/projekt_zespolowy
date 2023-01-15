@@ -99,6 +99,7 @@ const eventApi: SyncApi['event'] = {
       .filter((event) => event.owner === user.id || event.members.includes(user.id))
       .sort((eventA, eventB) => compareDays(eventA.date, eventB.date));
   },
+  categoryMappings: () => getter('categoryMappings'),
   upcomfigUserEvents: () => {
     const user = getter('loggedInUser');
     const events = getter('events');

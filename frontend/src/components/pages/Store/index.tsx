@@ -1,6 +1,7 @@
 import type { ReactElement } from 'react';
 import { useMemo, useState } from 'react';
 
+import { uniqBy } from 'lodash';
 import styled from 'styled-components';
 
 import { ArrowBackIos, ArrowForwardIos, ShoppingBag } from '@mui/icons-material';
@@ -10,7 +11,8 @@ import Box from '@mui/material/Box';
 import useApiRequest, { emptyArgs } from '../../../hooks/useApiRequest';
 import type { Event, GiftReceiver } from '../../../services/api/types/data';
 import { toTree } from '../../../utils/array';
-import { isEmpty } from '../../../utils/guards';
+import { isEmpty, isNotNil } from '../../../utils/guards';
+import type { Nullable } from '../../../utils/types';
 
 import PageContainer from '../../atoms/PageContainer';
 import Rows from '../../atoms/Rows';
@@ -20,6 +22,7 @@ import Icon from '../../molecules/Icon';
 import Loading from '../../molecules/Loading';
 import PageHeader from '../../molecules/PageHeader';
 import { useAPI } from '../../organisms/ApiProvider';
+import { useConstantData } from '../../organisms/ConstantDataProvider';
 import List from '../../organisms/List';
 import ShopCard from '../../organisms/ShopCard';
 
@@ -29,7 +32,7 @@ const StoreLayout = styled.div`
   display: grid;
   height: 100%;
   grid-template-columns: 1fr 6fr;
-  grid-template-rows: 749px;
+  grid-template-rows: 689px;
   overflow: hidden;
 `;
 
@@ -38,11 +41,25 @@ const giftsPerPage = 30;
 const Store = (): ReactElement => {
   const { api } = useAPI();
 
+  const { loggedInUser } = useConstantData();
+
   const [gifts, { loading: giftsLoading }] = useApiRequest(api.gifts.allGifts, {
     immediateArgs: emptyArgs,
   });
 
   const [categories, { loading: categoriesLoading }] = useApiRequest(api.gifts.allCategories, {
+    immediateArgs: emptyArgs,
+  });
+
+  const [categoryMappings] = useApiRequest(api.event.categoryMappings, {
+    immediateArgs: emptyArgs,
+  });
+
+  const [users] = useApiRequest(api.user.allUsers, {
+    immediateArgs: emptyArgs,
+  });
+
+  const [events] = useApiRequest(api.event.allUserEvents, {
     immediateArgs: emptyArgs,
   });
 
@@ -60,7 +77,14 @@ const Store = (): ReactElement => {
   };
 
   const onEventSelected = (event: Event) => {
-    console.log(event);
+    const matchingMappings = (categoryMappings?.data ?? [])
+      .filter((mapping) => event.categories.includes(mapping.event));
+
+    const giftFor = users?.data
+      ?.find((user) => user.id === event.owner)?.giftReceivers
+      .find((receiver) => receiver.id === event.giftReceiver)?.preferredCategories ?? [];
+
+    setSelectedCategories([...giftFor, ...matchingMappings.map((mapping) => mapping.gift)]);
   };
 
   const filteredGifts = useMemo(() => {
@@ -77,6 +101,30 @@ const Store = (): ReactElement => {
     label: category.name,
     parent: category.parent,
   }))), [categories]);
+
+  const receiversMap = useMemo(() => loggedInUser.giftReceivers
+    .reduce<Record<string, Nullable<GiftReceiver[]>>>((acc, curr) => {
+    curr.preferredCategories.forEach((cat) => {
+      const existing = acc[cat] ?? [];
+      existing.push(curr);
+      acc[cat] = existing;
+    });
+    return acc;
+  }, {}), [loggedInUser]);
+
+  const eventMap = useMemo(() => (events?.data ?? []).reduce<Record<string, Nullable<Event[]>>>((acc, curr) => {
+    curr.categories.forEach((cat) => {
+      const giftCategories = categoryMappings?.data?.filter((e) => e.event === cat).map((e) => e.gift) ?? [];
+
+      giftCategories.forEach((giftCat) => {
+        const existing = acc[giftCat] ?? [];
+        existing.push(curr);
+        acc[giftCat] = uniqBy(existing, (e) => e.name);
+      });
+    });
+
+    return acc;
+  }, {}), [events, categoryMappings]);
 
   return (
     <PageContainer>
@@ -138,7 +186,12 @@ const Store = (): ReactElement => {
                   ) : (
                     <Rows gap={8}>
                       {filteredGifts.slice(page * giftsPerPage, (page + 1) * giftsPerPage).map((gift) => (
-                        <ShopCard gift={gift} key={gift.id} />
+                        <ShopCard
+                          gift={gift}
+                          key={gift.id}
+                          idealFor={gift.category.flatMap((e) => receiversMap[e]).filter(isNotNil)}
+                          idealOn={gift.category.flatMap((e) => eventMap[e]).filter(isNotNil)}
+                        />
                       ))}
                     </Rows>
                   )}

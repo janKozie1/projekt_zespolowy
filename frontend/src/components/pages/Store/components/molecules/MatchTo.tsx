@@ -10,6 +10,7 @@ import useApiRequest, { emptyArgs } from '../../../../../hooks/useApiRequest';
 import useOnClickOutside from '../../../../../hooks/useOnClickOtuside';
 import type { Event, GiftReceiver } from '../../../../../services/api/types/data';
 import { DateFormat, formatDate } from '../../../../../utils/date';
+import { isEmpty } from '../../../../../utils/guards';
 import FloatingContainer from '../../../../atoms/FloatingContainer';
 import { useAPI } from '../../../../organisms/ApiProvider';
 import { useConstantData } from '../../../../organisms/ConstantDataProvider';
@@ -77,14 +78,17 @@ const MatchTo = ({ onEventSelected, onGiftReceiverSelected }: Props): ReactEleme
                         label: `${event.name} - ${formatDate(event.date, DateFormat.dayMonthYear)}`,
                       })),
                     },
-                    {
-                      id: 'people',
-                      label: 'Osoby',
-                      children: loggedInUser.giftReceivers.map((receiver) => ({
-                        id: receiver.id,
-                        label: receiver.address.nameAndSurname,
-                      })),
-                    },
+                    ...isEmpty(loggedInUser.giftReceivers) ? [] : [
+                      {
+                        id: 'people',
+                        label: 'Osoby',
+                        children: loggedInUser.giftReceivers.map((receiver) => ({
+                          id: receiver.id,
+                          label: receiver.address.nameAndSurname,
+                        })),
+                      },
+                    ],
+
                   ]}
                   onChange={onItemSelected}
                 />

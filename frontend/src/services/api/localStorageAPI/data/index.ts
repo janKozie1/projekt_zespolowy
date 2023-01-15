@@ -7,7 +7,7 @@ import { RepeatsEvery, EventCategory } from '../../types/data';
 import { repeatEvent } from '../apis/utils';
 import type { LocalStorageShape } from '../types';
 
-import giftCategories from './categories';
+import giftCategories, { categoryIdByName } from './categories';
 import gifts from './gifts';
 
 export const admin: User = {
@@ -144,6 +144,48 @@ const defaults: Defaults = {
   carts: [],
   gifts,
   loggedInUser: null,
+  categoryMappings: [
+    {
+      event: builtInEventCategories.childrensDay.id,
+      gift: categoryIdByName.Zabawki,
+    },
+    {
+      event: builtInEventCategories.valentines.id,
+      gift: categoryIdByName.Kwiaty,
+    },
+    {
+      event: builtInEventCategories.valentines.id,
+      gift: categoryIdByName.Makijaż,
+    },
+    {
+      event: builtInEventCategories.valentines.id,
+      gift: categoryIdByName['Manicure i pedicure'],
+    },
+    {
+      event: builtInEventCategories.grandfathersDay.id,
+      gift: categoryIdByName.Wędkarstwo,
+    },
+    {
+      event: builtInEventCategories.grandfathersDay.id,
+      gift: categoryIdByName.Narzędzia,
+    },
+    {
+      event: builtInEventCategories.grandmothersDay.id,
+      gift: categoryIdByName['Zdrowie i higiena'],
+    },
+    {
+      event: builtInEventCategories.womensDay.id,
+      gift: categoryIdByName.Zabawki,
+    },
+    {
+      event: builtInEventCategories.womensDay.id,
+      gift: categoryIdByName.Kwiaty,
+    },
+    {
+      event: builtInEventCategories.womensDay.id,
+      gift: categoryIdByName.Makijaż,
+    },
+  ],
   giftCategories,
   paymentMethods: [
     {
@@ -176,12 +218,22 @@ const defaults: Defaults = {
     },
     {
       id: 'd2662740-f265-4bb0-a9a8-622561cd6cae',
-      name: 'Rocznica',
+      name: 'Jubileusz',
       builtInEventCategory: false,
     },
     {
       id: 'af8eeafc-2560-495d-844d-9dc44022c0e4',
       name: 'Święto',
+      builtInEventCategory: false,
+    },
+    {
+      id: 'c6670325-b289-4e38-9b52-1039c03dacdc',
+      name: 'Ślub',
+      builtInEventCategory: false,
+    },
+    {
+      id: '0d8071e6-e773-4637-8b93-a12438be5ef1',
+      name: 'Impreza',
       builtInEventCategory: false,
     },
   ],
