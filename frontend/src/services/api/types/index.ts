@@ -1,7 +1,18 @@
 import type { Nullable } from '../../../utils/types';
 
 import type {
-  Event, EventCategory, PaymentMethod, RepeatsEvery, User, Notification, GiftCategory, GiftReceiver, Gift, ShoppingCart,
+  Event,
+  EventCategory,
+  PaymentMethod,
+  RepeatsEvery,
+  User,
+  Notification,
+  GiftCategory,
+  GiftReceiver,
+  Gift,
+  ShoppingCart,
+  CartStatus,
+  CategoryMapping,
 } from './data';
 import type { APICallFN, RequestWithValidationFN, ToSyncAPI } from './utils';
 
@@ -40,6 +51,7 @@ type EventAPI = Readonly<{
     name: string;
     description: string;
     date: Date;
+    repeatsEvery: RepeatsEvery;
     members: User['id'][];
     giftReceiver: Nullable<GiftReceiver['id']>;
     categories: EventCategory['id'][];
@@ -50,6 +62,7 @@ type EventAPI = Readonly<{
   allUserEvents: APICallFN<null, Event[]>;
   upcomfigUserEvents: APICallFN<null, Event[]>;
   allCategories: APICallFN<null, EventCategory[]>;
+  categoryMappings: APICallFN<null, CategoryMapping[]>;
 }>;
 
 type UserAPI = Readonly<{
@@ -69,6 +82,7 @@ type UserAPI = Readonly<{
   }>;
   giftReceivers: Readonly<{
     add: RequestWithValidationFN<Pick<GiftReceiver, 'address' | 'preferredCategories'>>;
+    edit: RequestWithValidationFN<Pick<GiftReceiver, 'address' | 'id' | 'preferredCategories'>>;
     remove: RequestWithValidationFN<{
       receiverId: string;
     }>;
@@ -78,6 +92,10 @@ type UserAPI = Readonly<{
 
 type PaymentAPI = Readonly<{
   availableMethods: APICallFN<null, PaymentMethod[]>;
+  pay: RequestWithValidationFN<{
+    cartId: string;
+    amount: number;
+  }>;
 }>;
 
 type NotificationsAPI = Readonly<{
@@ -106,6 +124,13 @@ type CartAPI = Readonly<{
     cartId: string;
     giftId: string;
     amount: number;
+  }>;
+  updateStatus: RequestWithValidationFN<{
+    cartId: string;
+    status: CartStatus;
+  }>;
+  finalizeCart: RequestWithValidationFN<{
+    cartId: string;
   }>;
   temporaryCart: Readonly<{
     addGift: RequestWithValidationFN<{

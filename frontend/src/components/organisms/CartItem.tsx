@@ -1,5 +1,6 @@
 import type { ReactElement, ReactNode } from 'react';
 
+import { isNil } from 'lodash';
 import { useNavigate, generatePath } from 'react-router';
 import styled from 'styled-components';
 
@@ -27,12 +28,17 @@ const ItemContainer = styled.div`
   cursor: pointer;
   display: flex;
   align-items: center;
+
+  display: grid;
+  grid-template-columns: 7fr 2fr 1fr;
+  grid-template-rows: 1fr;
+  grid-auto-flow: column;
 `;
 
 type Props = Readonly<{
   gift: Gift;
   children?: ReactNode;
-  onRemove: (gift: Gift) => void;
+  onRemove?: (gift: Gift) => void;
 }>;
 
 const CartItem = ({ gift, onRemove, children }: Props): ReactElement => {
@@ -40,27 +46,31 @@ const CartItem = ({ gift, onRemove, children }: Props): ReactElement => {
 
   return (
     <ItemContainer>
-      <ImageContainer>
-        <img src={gift.imageURL} alt={gift.name} />
-      </ImageContainer>
-      <Box maxWidth="50%" ml={6} display="flex" flexDirection="column" gap={6}>
-        <Text type="body" variant="default">
-          {`${gift.name} - ${gift.price} zł`}
-        </Text>
-        <Text type="caption" variant="default">
-          {trimToLength(gift.description, 200)}
-        </Text>
+      <Box display="flex" alignItems="center">
+        <ImageContainer>
+          <img src={gift.imageURL} alt={gift.name} />
+        </ImageContainer>
+        <Box maxWidth="50%" ml={6} display="flex" flexDirection="column" gap={6}>
+          <Text type="body" variant="default">
+            {`${gift.name} - ${gift.price} zł`}
+          </Text>
+          <Text type="caption" variant="default">
+            {trimToLength(gift.description, 200)}
+          </Text>
+        </Box>
       </Box>
       {children}
       <Box ml="auto">
         <Columns gap={2}>
-          <IconButton
-            aria-label="delete"
-            onClick={() => onRemove(gift)}
-            color="error"
-          >
-            <CancelOutlined />
-          </IconButton>
+          {!isNil(onRemove) && (
+            <IconButton
+              aria-label="delete"
+              onClick={() => onRemove(gift)}
+              color="error"
+            >
+              <CancelOutlined />
+            </IconButton>
+          )}
           <IconButton
             onClick={() => navigate(generatePath(ProductRoutes.PRODUCT, {
               id: gift.id,

@@ -1,3 +1,4 @@
+
 import isNil from 'lodash/isNil';
 import { DateTime } from 'luxon';
 import { v4 } from 'uuid';
@@ -8,6 +9,7 @@ import { getDiff } from '../../../../utils/object';
 import type { Nullable } from '../../../../utils/types';
 import type { SyncApi } from '../../types';
 import type { Event } from '../../types/data';
+import { RepeatsEvery } from '../../types/data';
 
 import { getter, setter } from '../utils';
 import { validators } from '../validators';
@@ -61,6 +63,7 @@ const eventApi: SyncApi['event'] = {
 
       setter('events', (events = []) => events
         .filter((event) => !shouldModifyEvent(eventId, events, event)));
+      setter('carts', (carts = []) => carts.filter((cart) => cart.event !== removePayload.eventId));
     }
 
     return validation;
@@ -70,11 +73,48 @@ const eventApi: SyncApi['event'] = {
 
     if (validation.ok) {
       const { eventId } = updatePayload;
+      const prev = getter('events').find((e) => e.id === eventId);
 
-      setter('events', (events = []) => events.map((event) => (shouldModifyEvent(eventId, events, event) ? {
-        ...event,
-        ...updatePayload,
-      } : event)));
+      const shouldCreateNewEvents = !isNil(prev)
+        && prev.repeatsEvery === RepeatsEvery.never
+        && updatePayload.repeatsEvery !== RepeatsEvery.never
+        && !isNil(updatePayload.repeatsEvery);
+
+      if (shouldCreateNewEvents) {
+        setter('events', (events = []) => {
+          const [, ...others] = repeatEvent({
+            ...prev,
+            ...updatePayload,
+          });
+          return events.concat(others);
+        });
+      }
+
+      setter('events', (events = []) => events.map((event) => {
+        const should = shouldModifyEvent(eventId, events, event);
+        const original = event.id === eventId;
+
+        if (should) {
+          if (original) {
+            return {
+              ...event,
+              ...updatePayload,
+            };
+          }
+
+          return {
+            ...event,
+            repeatsEvery: updatePayload.repeatsEvery,
+            categories: updatePayload.categories,
+            description: updatePayload.description,
+            name: updatePayload.name,
+            giftReceiver: updatePayload.giftReceiver,
+            members: updatePayload.members,
+          };
+        }
+
+        return event;
+      }));
     }
 
     return validation;
@@ -92,6 +132,7 @@ const eventApi: SyncApi['event'] = {
       .filter((event) => event.owner === user.id || event.members.includes(user.id))
       .sort((eventA, eventB) => compareDays(eventA.date, eventB.date));
   },
+  categoryMappings: () => getter('categoryMappings'),
   upcomfigUserEvents: () => {
     const user = getter('loggedInUser');
     const events = getter('events');
@@ -102,10 +143,12 @@ const eventApi: SyncApi['event'] = {
       return [];
     }
 
-    return events.filter((event) => (event.owner === user.id
-    || event.members.includes(user.id))
-    && DateTime.fromJSDate(event.date).diff(now).as('days') <= 30)
-      .sort((eventA, eventB) => compareDays(eventA.date, eventB.date));
+    return events.filter((event) => {
+      const diff = DateTime.fromJSDate(event.date).diff(now).as('days');
+
+      return diff >= 0 && diff <= 60 && (event.owner === user.id
+        || event.members.includes(user.id));
+    }).sort((eventA, eventB) => compareDays(eventA.date, eventB.date));
   },
 };
 

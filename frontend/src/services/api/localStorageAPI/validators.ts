@@ -138,6 +138,7 @@ export const validators: Validators = {
     allCategories: null,
     allUserEvents: null,
     upcomfigUserEvents: null,
+    categoryMappings: null,
     create: (createPayload) => {
       const {
         categories, description, members, name,
@@ -254,6 +255,7 @@ export const validators: Validators = {
     notifications: null,
     giftReceivers: {
       add: () => noValidation,
+      edit: () => noValidation,
       remove: () => noValidation,
     },
     friends: {
@@ -329,6 +331,7 @@ export const validators: Validators = {
   },
   payment: {
     availableMethods: null,
+    pay: () => noValidation,
   },
   notifications: {
     confirmNotification: () => noValidation,
@@ -342,6 +345,7 @@ export const validators: Validators = {
     allCarts: null,
     removeGift: () => noValidation,
     updateAmount: () => noValidation,
+    finalizeCart: () => noValidation,
     temporaryCart: {
       addGift: () => noValidation,
       removeGift: () => noValidation,
@@ -349,6 +353,7 @@ export const validators: Validators = {
       empty: null,
     },
     assignTemporaryCartToEvent: () => noValidation,
+    updateStatus: () => noValidation,
   },
 };
 

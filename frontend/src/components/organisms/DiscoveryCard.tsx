@@ -1,12 +1,17 @@
 import type { ReactElement } from 'react';
 
+import { generatePath, useNavigate } from 'react-router';
 import styled from 'styled-components';
 
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 
-import Rows from '../atoms/Rows';
+import { ProductRoutes } from '../../config/paths';
+import type { Gift } from '../../services/api/types/data';
+import { trimToLength } from '../../utils/string';
+
 import Text from '../atoms/Text';
+import TextGroup from '../molecules/TextGroup';
 
 const CardContainer = styled.div`
   display: flex;
@@ -32,23 +37,37 @@ const CardMedia = styled.div`
   }
 `;
 
-const DiscoveryCard = (): ReactElement => (
-  <CardContainer>
-    <CardMedia>
-      <img src="https://placekitten.com/200/400" alt="kitten" />
-    </CardMedia>
-    <Box p={4} display="flex" justifyContent="space-between" flexDirection="column" flexGrow="1">
-      <Rows gap={2}>
-        <Text type="heading" variant="h5">Tytuł</Text>
-        <Text type="caption" variant="default">Lorem ipsum bla Lorem ipsum bla Lorem ipsum bla Lorem ipsum bla Lorem ipsum bla Lore... ipsum bla</Text>
-      </Rows>
-      <Box ml="auto" mt="auto">
-        <Button variant="contained">
-          Button
-        </Button>
+type Props = Readonly<{
+  gift: Gift;
+}>;
+
+const DiscoveryCard = ({ gift }: Props): ReactElement => {
+  const navigate = useNavigate();
+  return (
+    <CardContainer>
+      <CardMedia>
+        <img src={gift.imageURL} alt={gift.name} />
+      </CardMedia>
+      <Box p={4} display="flex" justifyContent="space-between" flexDirection="column" flexGrow="1">
+        <TextGroup gap={2} hideOverflow>
+          <Text type="body" variant="default">{gift.name}</Text>
+        </TextGroup>
+        <Box mt={2}>
+          <Text type="caption" variant="default">{trimToLength(gift.description, 100)}</Text>
+        </Box>
+        <Box ml="auto" mt="auto">
+          <Button
+            variant="contained"
+            onClick={() => navigate(generatePath(ProductRoutes.PRODUCT, {
+              id: gift.id,
+            }))}
+          >
+            Zobacz więcej
+          </Button>
+        </Box>
       </Box>
-    </Box>
-  </CardContainer>
-);
+    </CardContainer>
+  );
+};
 
 export default DiscoveryCard;

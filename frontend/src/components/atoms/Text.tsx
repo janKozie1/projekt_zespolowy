@@ -13,6 +13,12 @@ const types = {
       color: colors.greyscale[100],
       textTransform: 'none',
     },
+    h3: {
+      size: sizes[800],
+      weight: 'normal',
+      color: colors.greyscale[100],
+      textTransform: 'none',
+    },
     h4: {
       size: sizes[700],
       weight: 'normal',
@@ -37,6 +43,18 @@ const types = {
   body: {
     default: {
       size: sizes[400],
+      weight: 'normal',
+      color: colors.greyscale[100],
+      textTransform: 'none',
+    },
+    secondary: {
+      size: sizes[400],
+      weight: 'normal',
+      color: colors.greyscale[50],
+      textTransform: 'none',
+    },
+    small: {
+      size: sizes[300],
       weight: 'normal',
       color: colors.greyscale[100],
       textTransform: 'none',

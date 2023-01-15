@@ -1,14 +1,16 @@
 import type { ReactElement } from 'react';
 import { useMemo, useState } from 'react';
 
-import { v4 } from 'uuid';
+import { isNil } from 'lodash';
 
 import {
   Box, Button, Autocomplete, createFilterOptions, TextField, debounce,
 } from '@mui/material';
 
+import useApiRequest, { emptyArgs } from '../../hooks/useApiRequest';
 import type { Event, Gift } from '../../services/api/types/data';
-import { formatDate, DateFormat } from '../../utils/date';
+import { CartStatus } from '../../services/api/types/data';
+import { formatDate, DateFormat, compareDays } from '../../utils/date';
 import { isEmpty } from '../../utils/guards';
 import type { Nullable } from '../../utils/types';
 
@@ -29,6 +31,14 @@ const TemporaryEventCart = ({ giftMap, events }: Props): ReactElement => {
 
   const [assignToEventId, setAssignToEventId] = useState<Nullable<string>>();
 
+  const [shoppingCarts] = useApiRequest(api.cart.allCarts, {
+    immediateArgs: emptyArgs,
+  });
+
+  const [users] = useApiRequest(api.user.allUsers, {
+    immediateArgs: emptyArgs,
+  });
+
   const removeTemporaryGift = async (gift: Gift) => {
     await api.cart.temporaryCart.removeGift(gift);
     refreshQueries([api.auth.loggedInUser]);
@@ -46,13 +56,31 @@ const TemporaryEventCart = ({ giftMap, events }: Props): ReactElement => {
       giftId: gift.id, amount: Number.isFinite(amount) ? Math.max(1, amount) : 1,
     });
 
-    refreshQueries([api.cart.allCarts]);
+    refreshQueries([api.auth.loggedInUser]);
   }, 100), [api, refreshQueries]);
 
-  const eventOptions = events.map((event) => ({
-    id: event.id,
-    label: `${event.name} - ${formatDate(event.date, DateFormat.dayMonthYear)}`,
-  }));
+  const userMap = new Map((users?.data ?? []).map((user) => [user.id, user]));
+
+  const eventOptions = events
+    .filter((event) => compareDays(event.date, new Date()) >= 0)
+    .map((event) => {
+      const owner = userMap.get(event.owner);
+
+      const suffix = isNil(owner) || owner.id === loggedInUser.id
+        ? ''
+        : `- ${owner.email}`;
+
+      return {
+        id: event.id,
+        label: `${event.name} - ${formatDate(event.date, DateFormat.dayMonthYear)} ${suffix}`,
+      };
+    });
+
+  const eventHasAnActiveCart = (eventId: string): boolean => {
+    const cart = (shoppingCarts?.data ?? []).find((c) => c.event === eventId);
+
+    return !isNil(cart) && cart.status !== CartStatus.draft;
+  };
 
   return (
     <EventCart
@@ -61,10 +89,8 @@ const TemporaryEventCart = ({ giftMap, events }: Props): ReactElement => {
       giftMap={giftMap}
       onRemove={removeTemporaryGift}
       onUpdateAmount={onAmountChange}
+      defaultExpanded
       cart={{
-        completed: false,
-        event: v4(),
-        id: v4(),
         gifts: loggedInUser.temporarilySelectedGifts,
       }}
     >
@@ -79,8 +105,10 @@ const TemporaryEventCart = ({ giftMap, events }: Props): ReactElement => {
               onChange={(_, newValue) => setAssignToEventId(newValue?.id)}
               options={eventOptions}
               filterOptions={createFilterOptions({ limit: 8 })}
+              getOptionDisabled={({ id }) => eventHasAnActiveCart(id)}
               sx={{ width: 300 }}
               renderInput={(params) => <TextField {...params} label="Wydarzenie" />}
+
             />
           </Columns>
         </Box>

@@ -8,6 +8,8 @@ import type { Nullable } from '../../utils/types';
 import AddEventDrawer from './AddEventDrawer';
 import AddPersonDrawer from './AddPersonDrawer';
 import EditEventDrawer from './EditEventDrawer';
+import EditPersonDrawer from './EditPersonDrawer';
+import FinishCartDrawer from './FinishCartDrawer';
 
 type DrawerComponent<Drawer> = (arg: { drawer: Drawer }) => ReactElement;
 
@@ -16,7 +18,9 @@ const drawerMap: Readonly<{
 }> = {
   AddEvent: AddEventDrawer,
   EditEvent: EditEventDrawer,
+  EditPerson: EditPersonDrawer,
   AddPerson: AddPersonDrawer,
+  FinishCart: FinishCartDrawer,
 };
 
 type Props = Readonly<{

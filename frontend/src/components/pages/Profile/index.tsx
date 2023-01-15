@@ -77,7 +77,7 @@ const Profile = (): ReactElement => {
       <Rows gap={4}>
         <PageHeader title="Profil" />
         <Tile>
-          <Box display="flex" height="100%">
+          <Box display="flex" height="100%" width="100%">
             <Box p={4} display="flex" flexDirection="column" gap={10} alignItems="center">
               <Avatar user={loggedInUser} variant="xxl" />
               <Text type="heading" variant="h5">
@@ -96,7 +96,7 @@ const Profile = (): ReactElement => {
                   <Tab label="Znajomi" value={Tabs.friends} />
                 </TabList>
                 <Box mt={-0.5} width="100%"><Divider /></Box>
-                <Box p={4}>
+                <Box p={4} width="100%">
                   <TabPanel value={Tabs.notifications}>
                     <Notifications />
                   </TabPanel>

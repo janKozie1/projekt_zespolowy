@@ -1,6 +1,7 @@
 import type { ReactElement } from 'react';
 
 import './services/validation/yup';
+import 'react-calendar/dist/Calendar.css';
 
 import { Helmet } from 'react-helmet';
 import {

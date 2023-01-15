@@ -101,19 +101,25 @@ export const deepMerge = <T extends Literal, U extends Partial<T>>(
   oldData: T, newData: U,
 ): T => {
   const recurse = (oldObj: Literal, newObj: Literal): Literal => {
-    const plainValues = Object.fromEntries(Object.entries(newObj).filter(([, value]) => !isLiteral(value)));
+    const plainValues = Object.fromEntries(
+      Object.entries(newObj).filter(([key, value]) => !(key in oldObj) || !isLiteral(value)),
+    );
 
     return mapValues({
       ...oldObj,
       ...plainValues,
     }, (value, key) => {
+      if (!(key in newObj)) {
+        return value;
+      }
+
       const newValue = newObj[key];
 
       if (isLiteral(value) && isLiteral(newValue)) {
-        return deepMerge(value, newValue);
+        return recurse(value, newValue);
       }
 
-      return value;
+      return newValue;
     });
   };
 

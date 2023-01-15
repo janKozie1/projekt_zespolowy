@@ -1,6 +1,7 @@
 import type { ReactElement } from 'react';
 
 import { yupResolver } from '@hookform/resolvers/yup';
+import { isNil } from 'lodash';
 import { FormProvider, useForm, Controller } from 'react-hook-form';
 
 import Autocomplete from '@mui/material/Autocomplete';
@@ -28,6 +29,8 @@ export type Props = Readonly<{
 const PersonForm = ({ submitHandler, initialData }: Props): ReactElement => {
   const { giftCategories } = useConstantData();
 
+  const allowedGiftCategories = giftCategories.filter((category) => !isNil(category.parent));
+
   const form = useForm<UserInput>({
     resolver: yupResolver(formSchema),
     defaultValues: initialData,
@@ -51,9 +54,9 @@ const PersonForm = ({ submitHandler, initialData }: Props): ReactElement => {
             render={({ field, fieldState }) => (
               <Autocomplete
                 {...field}
-                {...toAutocompleteProps(field, giftCategories)}
+                {...toAutocompleteProps(field, allowedGiftCategories)}
                 multiple
-                options={giftCategories}
+                options={allowedGiftCategories}
                 getOptionLabel={(option) => option.name}
                 noOptionsText="Brak opcji"
                 renderInput={(params) => (

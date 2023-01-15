@@ -1,5 +1,5 @@
 
-import type { ReactElement } from 'react';
+import type { ReactElement, ReactNode } from 'react';
 
 import { CancelOutlined } from '@mui/icons-material';
 import Box from '@mui/material/Box';
@@ -18,9 +18,12 @@ type Props<T extends BaseUser> = Readonly<{
   user: T;
   pending?: boolean;
   onRemove: (user: T) => void;
+  children?: ReactNode;
 }>;
 
-const FriendListItem = <T extends BaseUser>({ user, pending = false, onRemove }: Props<T>): ReactElement => (
+const FriendListItem = <T extends BaseUser>({
+  user, pending = false, onRemove, children,
+}: Props<T>): ReactElement => (
   <ListItem>
     <ListItemAvatar>
       <Avatar user={user} variant="md" />
@@ -29,6 +32,7 @@ const FriendListItem = <T extends BaseUser>({ user, pending = false, onRemove }:
       primary={`${user.email} ${pending ? '(oczekuje na potwierdzenie)' : ''}`}
     />
     <Box ml="auto">
+      {children}
       <IconButton
         aria-label="delete"
         onClick={() => onRemove(user)}
@@ -38,6 +42,6 @@ const FriendListItem = <T extends BaseUser>({ user, pending = false, onRemove }:
       </IconButton>
     </Box>
   </ListItem>
-);
+  );
 
 export default FriendListItem;
